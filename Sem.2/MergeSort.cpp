@@ -9,10 +9,10 @@ template <class T> void Merge(T* arr1,int len1,T* arr2,int len2);
 
 int main()
 {
- int arr[] = {9,8,7,6,5,4,3,2,1};
- MergeSort<int>(arr,9);
- for(int i = 0;i<9;i++)
-    std::cout<<arr[i]<<" " ;
+    int arr[] = {9,8,7,6,5,4,3,2,1};
+    MergeSort<int>(arr,9);
+    for(int i = 0;i<9;i++)
+        std::cout<<arr[i]<<" " ;
     
 }
 template <class T>
