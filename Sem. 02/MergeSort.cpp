@@ -41,7 +41,7 @@ void  Merge(T* arr1,int len1,T* arr2,int len2)
     int resultCursor=0;
     while(cursor1<len1&&cursor2<len2)
     {
-        if(arr1[cursor1]<arr2[cursor2])
+        if(arr1[cursor1]<=arr2[cursor2])
             result[resultCursor++]=arr1[cursor1++];
         else  
             result[resultCursor++]=arr2[cursor2++];
