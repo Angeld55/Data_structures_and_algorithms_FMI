@@ -1,28 +1,32 @@
-#include "Collection.h"
+#include "List.h"
 using namespace std;
 
 template <typename T>
-class Vector : public Collection<T>
+class Vector : public List<T>
 {
 	T* data;
 	int count;
 	int capacity;
-	void CopyFrom(const Vector& other);
+	void CopyFrom(const Vector<T>& other);
 	void Free();
 	void Resize(int newCap);
 public:
 	Vector();
 	Vector(int capacity);
 
-	void push_back(const T& el); // O(1)
-	void push_front(const T& el); // O(n)
-	void insert_At(const T& el, int index); // O(n)
+	Vector(const Vector<T>& other);
+	Vector<T>& operator=(const Vector<T>& other);
+	~Vector();
 
-	T peek(int index); // O(1)
+	void pushBack(const T& el); // O(1)
+	void pushFront(const T& el); // O(n)
+	void insertAt(const T& el, int index); // O(n)
 
-	T pop_back(); // O(1)
-	T pop_front(); // O(n)
-	T remove_At(int index);
+	T getAt(int index); // O(1)
+
+	T popBack(); // O(1)
+	T popFront(); // O(n)
+	T removeAt(int index); //O(n)
 
 	void print() const;
 };
@@ -61,24 +65,25 @@ void Vector<T>::Resize(int newCap)
 }
 
 template <typename T>
-void Vector<T>::push_back(const T& el)
+void Vector<T>::pushBack(const T& el)
 {
 	if (count == capacity)
 		Resize(count * 2);
 	data[count++] = el;
 }
 template <typename T>
-void Vector<T>::push_front(const T& el)
+void Vector<T>::pushFront(const T& el)
 {
 	if (count == capacity)
 		Resize(count * 2);
 	for (int i = count; i >= 1; i--)
 		data[i] = data[i - 1];
 	data[0] = el;
+	count++;
 }
 
 template <typename T>
-void Vector<T>::insert_At(const T& el, int index)
+void Vector<T>::insertAt(const T& el, int index)
 {
 	if (index > count)
 		throw "Error! Not a valid index!";
@@ -92,14 +97,14 @@ void Vector<T>::insert_At(const T& el, int index)
 
 }
 template <typename T>
-T Vector<T>::peek(int index)
+T Vector<T>::getAt(int index)
 {
 	if (index < 0 || index >= count)
 		throw "Invalid index!";
 	return data[index];
 }
 template <typename T>
-T Vector<T>::pop_back()
+T Vector<T>::popBack()
 {
 	if (count == 0)
 		throw "Empty!";
@@ -110,7 +115,7 @@ T Vector<T>::pop_back()
 
 }
 template <typename T>
-T Vector<T>::pop_front()
+T Vector<T>::popFront()
 {
 	if (count == 0)
 		throw "Empty!";
@@ -123,7 +128,7 @@ T Vector<T>::pop_front()
 }
 
 template <typename T>
-T Vector<T>::remove_At(int index)
+T Vector<T>::removeAt(int index)
 {
 	if (index < 0 || index >= count)
 		throw "Invalid index!";
@@ -145,4 +150,40 @@ void Vector<T>::print() const
 	for (int i = count; i < capacity; i++)
 		cout << "_ ";
 	cout << endl;
+}
+
+template <typename T>
+Vector<T>::Vector(const Vector<T>& other)
+{
+	CopyFrom(other);
+}
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& other)
+{
+	if (this != &other)
+	{
+		Free();
+		CopyFrom(other);
+	}
+	return *this;
+}
+template <typename T>
+Vector<T>::~Vector()
+{
+	Free();
+}
+
+template <typename T>
+void Vector<T>::CopyFrom(const Vector<T>& other)
+{
+	data = new T[other.capacity];
+	for (int i = 0; i < other.count; i++)
+		data[i] = other.data[i];
+	count = other.count;
+}
+template <typename T>
+void Vector<T>::Free()
+{
+	delete[] data;
 }
