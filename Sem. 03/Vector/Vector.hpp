@@ -10,6 +10,7 @@ class Vector : public List<T>
 	void CopyFrom(const Vector<T>& other);
 	void Free();
 	void Resize(int newCap);
+	int closestPowerOfTwo(int n);
 public:
 	Vector();
 	Vector(int capacity);
@@ -24,14 +25,18 @@ public:
 
 	T getAt(int index); // O(1)
 
+	const T& operator[](size_t index) const;
+	T& operator[](size_t index);
+
 	T popBack(); // O(1)
 	T popFront(); // O(n)
 	T removeAt(int index); //O(n)
 
+	size_t getSize() const;
 	void print() const;
 };
-
-int closestPowerOfTwo(int n)
+template <typename T>
+int Vector<T>::closestPowerOfTwo(int n)
 {
 	n--;
 	n |= n >> 1;
@@ -86,7 +91,7 @@ template <typename T>
 void Vector<T>::insertAt(const T& el, int index)
 {
 	if (index > count)
-		throw "Error! Not a valid index!";
+		throw std::out_of_range("Out of range!");
 	if (count == capacity)
 		Resize(capacity * 2);
 
@@ -100,14 +105,14 @@ template <typename T>
 T Vector<T>::getAt(int index)
 {
 	if (index < 0 || index >= count)
-		throw "Invalid index!";
+		throw std::out_of_range("Out of range!");
 	return data[index];
 }
 template <typename T>
 T Vector<T>::popBack()
 {
 	if (count == 0)
-		throw "Empty!";
+		throw std::out_of_range("Empty!");
 	T el = data[--count];
 	if (count < capacity / 2)
 		Resize(capacity / 2);
@@ -118,7 +123,7 @@ template <typename T>
 T Vector<T>::popFront()
 {
 	if (count == 0)
-		throw "Empty!";
+		throw std::out_of_range("Empty!");
 	T el = data[0];
 	for (int i = 1; i < count; i++)
 		data[i - 1] = data[i];
@@ -131,7 +136,7 @@ template <typename T>
 T Vector<T>::removeAt(int index)
 {
 	if (index < 0 || index >= count)
-		throw "Invalid index!";
+		throw std::out_of_range("Out of range!");
 	T el = data[index];
 
 	for (int i = index; i < count - 1; i++)
@@ -140,6 +145,30 @@ T Vector<T>::removeAt(int index)
 		Resize(capacity / 2);
 	return el;
 }
+template<typename T>
+inline size_t Vector<T>::getSize() const
+{
+	return count;
+}
+
+template<typename T>
+const T& Vector<T>::operator[](size_t index) const
+{
+
+	if (index > count)
+		throw std::out_of_range("Out of range!");
+	return data[index];
+}
+
+
+template<typename T>
+T& Vector<T>::operator[](size_t index)
+{
+	if (index > count)
+		throw std::out_of_range("Out of range!");
+	return data[index];
+}
+
 template <typename T>
 void Vector<T>::print() const
 {

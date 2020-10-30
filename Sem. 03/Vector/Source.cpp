@@ -5,10 +5,7 @@ int main()
 	Vector<int> v;
 
 	v.pushBack(4);
-	
-	Vector<int> v2(v);
-
+	v.insertAt(0, 44);
+	v.insertAt(2, 55);
 	v.print();
-
-	while (1){}
 }
