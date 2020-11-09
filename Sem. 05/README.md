@@ -27,7 +27,7 @@
 | SinglyLinkedList |  O(1)    |  O(1)    |   |
 | DoublyLinkedList |  O(1)    |  O(1)    |   |
 
-*2 вариант: pushFront + popBack *
+*2 вариант: pushFront + popBack*
 
 |                  | pushFront | popBack |   |
 |------------------|----------|----------|---|
