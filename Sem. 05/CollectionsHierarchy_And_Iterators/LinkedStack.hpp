@@ -13,16 +13,16 @@ public:
 template <typename T>
 void LinkedStack<T>::push(const T& el)
 {
-	pushBack(el);
+	pushFront(el);
 }
 template <typename T>
 T LinkedStack<T>::pop()
 {
-	return popBack();
+	return popFront();
 }
 
 template <typename T>
 T LinkedStack<T>::peek()
 {
-	return getAt(count - 1);
+	return getAt(0);
 }
