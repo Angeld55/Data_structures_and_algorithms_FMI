@@ -29,7 +29,7 @@ int main()
     }
 ```
 
-##### Пример за езика L = {ww^rev | n \in {a,b}* }
+##### Пример за езика L = {ww^rev | w \in {a,b}* }
 
 ```c++
 int main()
@@ -55,7 +55,7 @@ int main()
     
     automation2.addTransition(1,'$','#', 2, "$");
     
-    automation2.accepts("abbba"); //true
+    automation2.accepts("abbbba"); //true
     automation2.accepts("abab"); //false
     
     
