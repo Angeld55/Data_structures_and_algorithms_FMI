@@ -26,7 +26,7 @@ int main()
     }
 ```
 
-##### Пример за езика L = {ww^rev | n \in N}
+##### Пример за езика L = {ww^rev | n \in {a,b}^* }
 
 ```c++
 int main()
