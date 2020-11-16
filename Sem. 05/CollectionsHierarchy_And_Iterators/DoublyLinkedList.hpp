@@ -267,9 +267,8 @@ const T& DoublyLinkedList<T>::operator[](size_t index) const
 
 	if (index > count)
 		throw std::out_of_range("Out of range!");
-	Node* ptr = head;
-	for (int i = 0; i < index; i++)
-		ptr = ptr->next;
+	Node* ptr = nullptr;
+	getAtIndex(index, ptr);
 	return ptr->data;
 }
 

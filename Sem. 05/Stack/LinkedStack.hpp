@@ -46,6 +46,7 @@ void LinkedStack<T>::Free()
 template <typename T>
 void LinkedStack<T>::CopyFrom(const LinkedStack& other)
 {
+	head = nullptr;
 	if (other.isEmpty())
 		return;
 
