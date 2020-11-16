@@ -33,7 +33,7 @@ int main()
 {
     NondeterministicPushdownAutomaton automation2(3); //3 initial states
     
-    automation2.makeStateFinal(3);    
+    automation2.makeStateFinal(2);    
     automation2.addTransition(0,'a','#', 0, "A#");
     automation2.addTransition(0,'b','#', 0, "B#");
     automation2.addTransition(0,'$','#', 2, "$");
