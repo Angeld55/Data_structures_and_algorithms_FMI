@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Iterator.hpp"
+#include "../Iterators/Iterator.hpp"
 
 template <typename T>
 bool Search(Iterator<T>& begin, Iterator<T>& end, T el)

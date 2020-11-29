@@ -1,5 +1,6 @@
 #pragma once
-#include "List.h"
+#include "../List_interface/List.h"
+#include "../Iterators/Iterator.hpp"
 
 
 template <typename T>
@@ -43,6 +44,7 @@ public:
 	void print() const;
 
 	size_t getSize() const;
+
 
 };
 

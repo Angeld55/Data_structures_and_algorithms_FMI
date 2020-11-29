@@ -30,16 +30,13 @@ public:
 
 	void pushBack(const T& el); //O(1)
 	void pushFront(const T& el); //O(1)
-	void insertAt(const T& el, int index); // O(n)
+	void insertAt(const T& el, int index); // O(n) - better use iterators!
 
 	T getAt(int index); // O(n)
 
-	const T& operator[](size_t index) const;
-	T& operator[](size_t index);
-
 	T popBack(); // O(1)
 	T popFront(); // O(1)
-	T removeAt(int index); // O(n)
+	T removeAt(int index); // O(n) - better use iterators!
 
 	void print() const;
 	size_t getSize() const;
@@ -224,28 +221,6 @@ size_t DoublyLinkedList<T>::getSize() const
 	return count;
 }
 
-template<typename T>
-const T& DoublyLinkedList<T>::operator[](size_t index) const
-{
-
-	if (index > count)
-		throw std::out_of_range("Out of range!");
-	Node* ptr = head;
-	for (int i = 0; i < index; i++)
-		ptr = ptr->next;
-	return ptr->data;
-}
-
-template<typename T>
-T& DoublyLinkedList<T>::operator[](size_t index)
-{
-
-	if (index > count)
-		throw std::out_of_range("Out of range!");
-	Node* ptr;
-	getAtIndex(index, ptr);
-	return ptr->data;
-}
 
 template <typename T>
 DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other)

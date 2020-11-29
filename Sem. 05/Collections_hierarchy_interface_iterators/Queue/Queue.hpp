@@ -1,5 +1,5 @@
-#include "SinlgyLinkedList.hpp"
 
+#include "../SinglyLinkedList/SinlgyLinkedList.hpp"
 template <typename T>
 class Queue : private SinglyLinkedList<T>
 {

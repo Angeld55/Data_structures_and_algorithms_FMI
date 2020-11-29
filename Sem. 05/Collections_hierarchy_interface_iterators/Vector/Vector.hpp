@@ -1,7 +1,8 @@
 #pragma once
 
-#include "List.h"
-#include "Iterator.hpp"
+#include "../List_interface/List.h"
+#include "../Iterators/Iterator.hpp"
+
 
 
 using namespace std;

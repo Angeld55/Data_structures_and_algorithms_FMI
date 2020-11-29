@@ -1,6 +1,6 @@
 #pragma once
-#include "List.h"
-#include "Iterator.hpp"
+#include "../List_interface/List.h"
+#include "../Iterators/Iterator.hpp"
 
 template <typename T> 
 class DoublyLinkedList : public List<T>
@@ -268,7 +268,8 @@ const T& DoublyLinkedList<T>::operator[](size_t index) const
 	if (index > count)
 		throw std::out_of_range("Out of range!");
 	Node* ptr = nullptr;
-	getAtIndex(index, ptr);
+	for (int i = 0; i < index; i++)
+		ptr = ptr->next;
 	return ptr->data;
 }
 
