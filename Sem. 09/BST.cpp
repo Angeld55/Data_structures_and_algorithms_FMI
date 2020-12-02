@@ -8,9 +8,7 @@ bool BST::contains_rec(int n, Node* currentNode, Node*& prev)
 	if (!currentNode)
 		return false;
 	if (n == currentNode->data)
-	{
 		return true;
-	}
 	prev = currentNode;
 	if (n > currentNode->data)
 		return contains_rec(n, currentNode->right, prev);
@@ -33,7 +31,7 @@ bool BST::insert(int n)
 	bool found = contains_rec(n, root, prev);
 	if (found)
 		return false;
-	// pos е непосредствено преди правилната позиция за новия връх
+	// prev е непосредствено преди правилната позиция за новия връх
 	if (n > prev->data)          
 		prev->right = new Node(n);
 	else
