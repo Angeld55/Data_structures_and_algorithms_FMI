@@ -5,6 +5,7 @@
  - изваждане на елемента с най-висок приоритет
  
  Реализация с **двоична пирамида** **(Binary heap)**.
+ 
 ![enter image description here](https://i.ibb.co/yf7TVSY/1200px-Max-Heap-svg.png)
 
 Забележка: В примерите е реализирана макс. двоична пирамида - max binary heap.(Съществува и  min binary heap)
