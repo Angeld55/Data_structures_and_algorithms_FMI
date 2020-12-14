@@ -14,12 +14,13 @@ int PriorityQueue::parent(int i)
 }
 int PriorityQueue::get()
 {
-	int toReturn = data[0];
-	data[0] = data[data.size() - 1];
+	int toReturn = data[0]; //Най-големият елемент е корена.
+	data[0] = data[data.size() - 1]; // Новият корен става последният елемент.
 	data.pop_back();
-	heapify(0);
+	heapify(0); // Коренът започва да се "спуска" надолу, за да се запази пирамидалното свойство.
 	return toReturn;
 }
+//Функция, която "спуска елемент". Елементът ако има ляво поддърво, което е пирамида и дясно поддърво, което е пирамида, образува нова пирамида, обединявайки двете + корена.
 void PriorityQueue::heapify(int ind)
 {
 	int currentElementIndex = ind;
@@ -28,12 +29,14 @@ void PriorityQueue::heapify(int ind)
 		int leftChildIndex = leftChild(currentElementIndex);
 		int rightChildIndex = rightChild(currentElementIndex);
 
+		//Проверяваме дали има ляв/десен наследник и дали той е по-голям от текущия елемент.
 		bool shouldGoLeft = leftChildIndex < data.size() && data[leftChildIndex] > data[currentElementIndex];
 		bool shouldGoRight = rightChildIndex < data.size() && data[rightChildIndex] > data[currentElementIndex];
 
 
 		if (shouldGoLeft && shouldGoRight)
 		{
+			//Ако и двата наследника са по-големи, се "спускаме" към по големия.
 			if (data[leftChildIndex] > data[rightChildIndex])
 			{
 				std::swap(data[currentElementIndex], data[leftChildIndex]);
@@ -66,7 +69,8 @@ void PriorityQueue::insert(int el)
 	data.push_back(el);
 	int ind = data.size() - 1;
 	int parentIndex = parent(ind);
-
+	
+	//Елементът е поставен на дъното на пирамидата и той се опитва да "изплува" нагоре, докато родителят е по-малък от него.
 	while (ind >= 0 && data[ind] > data[parentIndex])
 	{
 		std::swap(data[ind], data[parentIndex]);
