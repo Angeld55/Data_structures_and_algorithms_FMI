@@ -5,8 +5,11 @@
  - изваждане на елемента с най-висок приоритет
  
  Реализация с **двоична пирамида** **(Binary heap)**.
-![enter image description here](https://i.ibb.co/yfvt79G/1200px-Max-Heap-svg.png)
+![enter image description here](https://i.ibb.co/yf7TVSY/1200px-Max-Heap-svg.png)
+
 **Задача 1:** Да се реализира строене на двоична пирамида от произволен масив със сложност **О(n)**.
-Подсказка: Използвайте функцията **heapify**.
+Използвайте функцията **heapify**.
+
 ![enter image description here](https://i.ibb.co/K9DsZTg/Untitled-Diagram.png)
+
 **Задача 2:** Да се реализира сортиращия алгоритъм **HeapSort**.
