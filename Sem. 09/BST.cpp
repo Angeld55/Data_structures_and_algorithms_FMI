@@ -1,14 +1,16 @@
 #include "BST.h"
-
-
-//–ê–∫–æ –≥–æ –∏–º–∞ - prev —â–µ –±—ä–¥–µ –∞–¥—Ä–µ—Å—ä—Ç –Ω–∞ –ø—Ä–µ–¥–∏—à–∏–Ω–∏—è.
-//–ê–∫–æ –≥–æ –Ω—è–º–∞ - searched  –µ –∞–¥—Ä–µ—Å—ä—Ç –Ω–∞ –ø–æ—Å–ª–µ–¥–Ω–∏—è –≤—Ä—ä—Ö, –ø—Ä–µ–¥–∏ –ø–æ–∑–∏—Ü–∏—è—Ç–∞, –∫–æ—è—Ç–æ —Ç—Ä—è–±–≤–∞ –¥–∞ –∑–∞–µ–º–µ —Ç–æ–∑–∏ –µ–ª–µ–º–µ–Ω—Ç.
+#include <algorithm> 
+#include <string>
+//¿ÍÓ „Ó ËÏ‡ - prev ˘Â ·˙‰Â ‡‰ÂÒ˙Ú Ì‡ ÔÂ‰Ë¯ËÌËˇ.
+//¿ÍÓ „Ó ÌˇÏ‡ - searched  Â ‡‰ÂÒ˙Ú Ì‡ ÔÓÒÎÂ‰ÌËˇ ‚˙ı, ÔÂ‰Ë ÔÓÁËˆËˇÚ‡, ÍÓˇÚÓ Úˇ·‚‡ ‰‡ Á‡ÂÏÂ ÚÓÁË ÂÎÂÏÂÌÚ.
 bool BST::contains_rec(int n, Node* currentNode, Node*& prev) 
 {
 	if (!currentNode)
 		return false;
 	if (n == currentNode->data)
+	{
 		return true;
+	}
 	prev = currentNode;
 	if (n > currentNode->data)
 		return contains_rec(n, currentNode->right, prev);
@@ -31,7 +33,7 @@ bool BST::insert(int n)
 	bool found = contains_rec(n, root, prev);
 	if (found)
 		return false;
-	// prev –µ –Ω–µ–ø–æ—Å—Ä–µ–¥—Å—Ç–≤–µ–Ω–æ –ø—Ä–µ–¥–∏ –ø—Ä–∞–≤–∏–ª–Ω–∞—Ç–∞ –ø–æ–∑–∏—Ü–∏—è –∑–∞ –Ω–æ–≤–∏—è –≤—Ä—ä—Ö
+	// pos Â ÌÂÔÓÒÂ‰ÒÚ‚ÂÌÓ ÔÂ‰Ë Ô‡‚ËÎÌ‡Ú‡ ÔÓÁËˆËˇ Á‡ ÌÓ‚Ëˇ ‚˙ı
 	if (n > prev->data)          
 		prev->right = new Node(n);
 	else
@@ -79,4 +81,83 @@ bool BST::remove_rec(int n, Node* root)
 bool BST::remove(int n)
 {
 	return remove_rec(n,root);
+}
+int BST::getHeight(Node* root)
+{
+	if (root == nullptr)
+		return 0;
+	return std::max(getHeight(root->left), getHeight(root->right)) + 1;
+}
+void BST::print()
+{
+	struct BST_Print
+	{
+		Node* currentNode;
+		int spacesCount;
+		bool newLineAfter;
+		int levelOfNode;
+
+		void print()
+		{
+			std::cout << std::string(spacesCount, ' ');
+			if (currentNode != nullptr)
+				std::cout << currentNode->data;
+			else
+				std::cout << "  ";
+			if (newLineAfter)
+				std::cout << std::endl;
+		}
+	};
+	int treeHeight = getHeight(root);
+
+	const int INITIAL_SPACES = 32;
+
+	auto spacesCountModifier = [](int i)
+	{
+		return i /= 2;
+	};
+
+	std::queue<BST_Print> q;
+
+	q.push({ root, INITIAL_SPACES, true, 0 });
+
+
+	while (!q.empty())
+	{
+		BST_Print current = q.front();
+		current.print();
+		q.pop();
+
+		if (!current.currentNode)
+		{
+			if (current.levelOfNode <= treeHeight)
+			{
+				q.push({ nullptr, spacesCountModifier(current.spacesCount), false, current.levelOfNode + 1 });
+				q.push({ nullptr, spacesCountModifier(current.spacesCount), current.newLineAfter, current.levelOfNode + 1 });
+			}
+		}
+		else
+		{
+			q.push({ current.currentNode->left, spacesCountModifier(current.spacesCount), false, current.levelOfNode + 1 });
+			q.push({ current.currentNode->right, spacesCountModifier(current.spacesCount), current.newLineAfter, current.levelOfNode + 1 });
+		}
+	}
+}
+void BST::createTreeRec(std::vector<int> v, int start, int end, Node*& root)
+{
+	if (start > end)
+	{
+		root = nullptr;
+		return;
+	}
+	int mid = (start + end) / 2;
+	root = new Node(v[mid]);
+	createTreeRec(v, start, mid - 1, root->left);
+	createTreeRec(v, mid + 1, end, root->right);
+}
+BST::BST(std::vector<int> v)
+{
+	if (!std::is_sorted(v.begin(), v.end()))
+		throw "Array should be sorted!";
+	createTreeRec(v, 0, v.size()-1, root);
 }
