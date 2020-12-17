@@ -1,8 +1,7 @@
 #include "BST.h"
 #include <algorithm> 
 #include <string>
-//Àêî ãî èìà - prev ùå áúäå àäðåñúò íà ïðåäèøèíèÿ.
-//Àêî ãî íÿìà - searched  å àäðåñúò íà ïîñëåäíèÿ âðúõ, ïðåäè ïîçèöèÿòà, êîÿòî òðÿáâà äà çàåìå òîçè åëåìåíò.
+
 bool BST::contains_rec(int n, Node* currentNode, Node*& prev) 
 {
 	if (!currentNode)
@@ -33,7 +32,7 @@ bool BST::insert(int n)
 	bool found = contains_rec(n, root, prev);
 	if (found)
 		return false;
-	// pos å íåïîñðåäñòâåíî ïðåäè ïðàâèëíàòà ïîçèöèÿ çà íîâèÿ âðúõ
+
 	if (n > prev->data)          
 		prev->right = new Node(n);
 	else
@@ -50,13 +49,13 @@ void BST::findMin(Node* root, Node*& minNode)
 		iter = iter->left;
 	}
 }
-bool BST::remove_rec(int n, Node* root)
+bool BST::remove_rec(int n, Node*& currentNode)
 {
 	Node* prev = nullptr;
-	bool found = contains_rec(n, root, prev);
+	bool found = contains_rec(n, currentNode, prev);
 	if (!found)
 		return false;
-	Node*& toDelete = prev == nullptr ? root : n > prev->data ? prev->right : prev->left;
+	Node*& toDelete = prev == nullptr ? currentNode : n > prev->data ? prev->right : prev->left;
 	
 	if (!toDelete->left && !toDelete->right)
 	{
@@ -165,9 +164,61 @@ void BST::createTreeRec(std::vector<int> v, int start, int end, Node*& root)
 	createTreeRec(v, start, mid - 1, root->left);
 	createTreeRec(v, mid + 1, end, root->right);
 }
+
 BST::BST(std::vector<int> v)
 {
 	if (!std::is_sorted(v.begin(), v.end()))
 		throw "Array should be sorted!";
 	createTreeRec(v, 0, v.size()-1, root);
+}
+
+BST::BST(const BST& other) : root(nullptr)
+{
+	copyFrom(other);
+}
+
+BST& BST::operator=(const BST& other)
+{
+	if (this != &other)
+	{
+		free();
+		copyFrom(other);
+	}
+	return *this;
+}
+
+BST::~BST()
+{
+	free();
+}
+
+void BST::copyFrom_rec(const Node* otherNode, Node*& root)
+{
+	if (!otherNode)
+		return;
+	root = new Node(otherNode->data);
+
+	copyFrom_rec(otherNode->left, root->left);
+	copyFrom_rec(otherNode->right, root->right);
+}
+
+void BST::copyFrom(const BST& other)
+{
+	copyFrom_rec(other.root, root);
+}
+
+void BST::free_rec(Node* root)
+{
+	if (!root)
+		return;
+
+	free_rec(root->left);
+	free_rec(root->right);
+
+	delete root;
+}
+
+void BST::free()
+{
+	free_rec(root);
 }
