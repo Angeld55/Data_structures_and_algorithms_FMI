@@ -128,7 +128,8 @@ void BST::print()
 
 	std::queue<BST_Print> q;
 
-	if (treeHeight!=0)q.push({ root, INITIAL_SPACES, true, true, 0 });
+	if (treeHeight!=0)
+		q.push({ root, INITIAL_SPACES, true, true, 0 });
 
 
 	while (!q.empty())
@@ -136,7 +137,10 @@ void BST::print()
 		BST_Print current = q.front();
 		current.print();
 		q.pop();
-		if (current.levelOfNode == treeHeight - 1 && current.newLineAfter) break;
+		
+		if (current.levelOfNode == treeHeight - 1 && current.newLineAfter) 
+			break;
+		
 		if (!current.currentNode)
 		{
 			q.push({ nullptr, spacesCountModifier(current.spacesCount), false, current.isFirstElement, current.levelOfNode + 1 });
