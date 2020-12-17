@@ -10,7 +10,8 @@ int main()
 	bst.insert(1);
 	bst.insert(3);
 	
+	bst.print();
 	bst.remove(2);
-	cout << bst.contains(2);
+	bst.print();
 
 }
