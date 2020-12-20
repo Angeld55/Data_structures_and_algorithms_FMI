@@ -87,7 +87,7 @@ void PriorityQueue::insert(int el)
 PriorityQueue::PriorityQueue(const std::vector<int>& v)  // O(n)
 {
 	data = v;
-	for (int i = v.size() / 2; i >= 0; i--)
+	for (int i = v.size() / 2 - 1; i >= 0; i--)
 		heapify(i);
 }
 void PriorityQueue::print()
