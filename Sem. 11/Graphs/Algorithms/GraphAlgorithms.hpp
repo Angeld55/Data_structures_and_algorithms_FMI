@@ -19,7 +19,7 @@ void BFS(Graph& g, int start)
 		std::cout << current << std::endl; //or some other action
 
 		std::vector<std::pair<int, int>> adj;
-		g.getNeighbours(current, adj);
+		g.getSuccessors(current, adj);
 
 		for (int i = 0; i < adj.size(); i++)
 		{
@@ -50,7 +50,7 @@ void DFS(Graph& g, int start)
 		std::cout << current << std::endl; //or some other action
 
 		std::vector<std::pair<int,int>> adj;
-		g.getNeighbours(current, adj);
+		g.getSuccessors(current, adj);
 		for (int i = 0; i < adj.size(); i++)
 			s.push(adj[i].first);
 	}

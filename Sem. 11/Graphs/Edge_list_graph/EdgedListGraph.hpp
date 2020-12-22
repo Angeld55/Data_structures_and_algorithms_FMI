@@ -16,7 +16,7 @@ public:
 	void addEdge(int start, int end, int weight = 1);
 	void removeEdge(int start, int end);
 
-	void getNeighbours(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
+	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
 };
 EdgedListGraph::EdgedListGraph(int n, bool oriented) : Graph(n, oriented)
 {}
@@ -49,7 +49,7 @@ void EdgedListGraph::removeEdge(int start, int end) // O(m)
 			it = edges.erase(it);
 	}
 }
-void EdgedListGraph::getNeighbours(int vertex, std::vector<std::pair<int, int>>& vertexAdj) // O(n+m)
+void EdgedListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) // O(n+m)
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";

@@ -13,7 +13,7 @@ public:
 	void addEdge(int start, int end, int weight = 1);
 	void removeEdge(int start, int end);
 
-	void getNeighbours(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
+	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
 
 };
 AdjMatrixGraph::AdjMatrixGraph(int n, bool oriented) : Graph(n, oriented), adjMatrix(n)
@@ -51,7 +51,7 @@ void AdjMatrixGraph::removeEdge(int start, int end) // O(1)
 	if (!oriented)
 		adjMatrix[end][start] = 0;
 }
-void AdjMatrixGraph::getNeighbours(int vertex, std::vector<std::pair<int, int>>& adj) // O(n)
+void AdjMatrixGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& adj) // O(n)
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";

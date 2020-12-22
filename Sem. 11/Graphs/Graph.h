@@ -16,7 +16,7 @@ public:
 	virtual void addEdge(int start, int end, int weight = 1) = 0;
 	virtual void removeEdge(int start, int end) = 0;
 
-	virtual void getNeighbours(int vertex, std::vector<std::pair<int, int>>& vertexAdj) = 0;
+	virtual void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) = 0;
 	virtual int getVertexCount();
 
 	bool existsVertex(int vertex);
