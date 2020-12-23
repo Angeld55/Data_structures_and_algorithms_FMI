@@ -49,7 +49,7 @@ void EdgeListGraph::removeEdge(int start, int end) // O(m)
 			it = edges.erase(it);
 	}
 }
-void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) // O(n+m)
+void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) 
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";
