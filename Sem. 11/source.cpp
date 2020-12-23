@@ -3,7 +3,7 @@ using namespace std;
 
 #include  "Graphs\Adjacency_list_graph\AdjListGraph.hpp"
 #include  "Graphs\Adjacency_matrix_graph\AdjMatrixGraph.hpp"
-#include  "Graphs\Edge_list_graph\EdgedListGraph.hpp"
+#include  "Graphs\Edge_list_graph\EdgeListGraph.hpp"
 #include  "Graphs\Algorithms\GraphAlgorithms.hpp"
 
 //		 0
@@ -31,7 +31,7 @@ int main()
 	DFS(g1, 0);
 	std::cout << endl;
 
-	EdgedListGraph g2(5, false);
+	EdgeListGraph g2(5, false);
 
 	g2.addEdge(0, 1);
 	g2.addEdge(0, 3);

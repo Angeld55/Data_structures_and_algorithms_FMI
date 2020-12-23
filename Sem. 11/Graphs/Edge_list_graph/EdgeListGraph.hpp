@@ -1,6 +1,6 @@
 #include "..\Graph.h"
 #include <list>
-class EdgedListGraph : public Graph
+class EdgeListGraph : public Graph
 {
 	struct Edge
 	{
@@ -10,7 +10,7 @@ class EdgedListGraph : public Graph
 	};
 	std::list<Edge> edges;
 public:
-	EdgedListGraph(int n, bool oriented);
+	EdgeListGraph(int n, bool oriented);
 	int addVertex(); //return the index of the new vertex
 
 	void addEdge(int start, int end, int weight = 1);
@@ -18,16 +18,16 @@ public:
 
 	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
 };
-EdgedListGraph::EdgedListGraph(int n, bool oriented) : Graph(n, oriented)
+EdgeListGraph::EdgeListGraph(int n, bool oriented) : Graph(n, oriented)
 {}
 
-int EdgedListGraph::addVertex()
+int EdgeListGraph::addVertex()
 {
 	vertexCount++;
 	return vertexCount - 1;
 }
 
-void EdgedListGraph::addEdge(int start, int end, int weight)
+void EdgeListGraph::addEdge(int start, int end, int weight)
 {
 	if (!existsVertex(start) || !existsVertex(end))
 		throw "Invalid vertices!";
@@ -37,7 +37,7 @@ void EdgedListGraph::addEdge(int start, int end, int weight)
 		edges.push_back({ end, start, weight });
 }
 
-void EdgedListGraph::removeEdge(int start, int end) // O(m)
+void EdgeListGraph::removeEdge(int start, int end) // O(m)
 {
 	if (!existsVertex(start) || !existsVertex(end))
 		throw "Invalid vertices!";
@@ -49,7 +49,7 @@ void EdgedListGraph::removeEdge(int start, int end) // O(m)
 			it = edges.erase(it);
 	}
 }
-void EdgedListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) // O(n+m)
+void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) // O(n+m)
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";
