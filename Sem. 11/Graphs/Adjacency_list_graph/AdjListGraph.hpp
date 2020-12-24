@@ -17,7 +17,7 @@ public:
 	void addEdge(int start, int end, int weight = 1);
 	void removeEdge(int start, int end);
 
-	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
+	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
 };
 AdjListGraph::AdjListGraph(int n, bool oriented) : Graph(n, oriented), adj(n)
 {}
@@ -53,7 +53,7 @@ void AdjListGraph::removeEdge(int start, int end) // O(m)
 			it = adj[end].erase(it);
 	}
 }
-void AdjListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) //O(d) d - макс разколоненост на графа.
+void AdjListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const //O(d) d - макс разколоненост на графа.
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";

@@ -16,7 +16,7 @@ public:
 	void addEdge(int start, int end, int weight = 1);
 	void removeEdge(int start, int end);
 
-	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj);
+	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
 };
 EdgeListGraph::EdgeListGraph(int n, bool oriented) : Graph(n, oriented)
 {}
@@ -49,7 +49,7 @@ void EdgeListGraph::removeEdge(int start, int end) // O(m)
 			it = edges.erase(it);
 	}
 }
-void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) 
+void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";

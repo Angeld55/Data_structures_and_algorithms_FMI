@@ -3,8 +3,10 @@
 #include <stack>
 #include <functional>
 
-void BFS(Graph& g, int start)
+void BFS(const Graph& g, int start)
 {
+	if (!g.existsVertex(start))
+		return;
 	std::vector<bool> visited(g.getVertexCount()); //ffff
 
 	std::queue<int> q;
@@ -33,8 +35,10 @@ void BFS(Graph& g, int start)
 }
 
 
-void DFS(Graph& g, int start)
+void DFS(const Graph& g, int start)
 {
+	if (!g.existsVertex(start))
+		return;
 	std::vector<bool> visited(g.getVertexCount());
 
 	std::stack<int> s;

@@ -16,16 +16,16 @@ public:
 	virtual void addEdge(int start, int end, int weight = 1) = 0;
 	virtual void removeEdge(int start, int end) = 0;
 
-	virtual void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) = 0;
-	virtual int getVertexCount();
+	virtual void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const = 0;
+	virtual int getVertexCount() const;
 
-	bool existsVertex(int vertex);
+	bool existsVertex(int vertex) const;
 };
-bool Graph::existsVertex(int vertex)
+bool Graph::existsVertex(int vertex) const
 {
 	return vertex < vertexCount;
 }
-int Graph::getVertexCount()
+int Graph::getVertexCount() const
 {
 	return vertexCount;
 }
