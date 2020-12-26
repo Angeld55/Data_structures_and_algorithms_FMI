@@ -40,17 +40,21 @@ void AdjListGraph::removeEdge(int start, int end) // O(m)
 	if (!existsVertex(start) || !existsVertex(end))
 		throw "Invalid vertices!";
 
-	for (auto it = adj[start].begin(); it != adj[start].end(); it++)
+	for (auto it = adj[start].begin(); it != adj[start].end();)
 	{
 		if (it->end == end)
 			it = adj[start].erase(it);
+		else
+			it++;
 	}
 	if (oriented)
 		return;
-	for (auto it = adj[end].begin(); it != adj[end].end(); it++)
+	for (auto it = adj[end].begin(); it != adj[end].end();)
 	{
 		if (it->end == start)
 			it = adj[end].erase(it);
+		else
+			it++;
 	}
 }
 void AdjListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const //O(d) d - макс разколоненост на графа.

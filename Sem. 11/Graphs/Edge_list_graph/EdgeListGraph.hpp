@@ -43,10 +43,12 @@ void EdgeListGraph::removeEdge(int start, int end) // O(m)
 		throw "Invalid vertices!";
 
 	bool found = false;
-	for (auto it = edges.begin(); it != edges.end(); it++)
+	for (auto it = edges.begin(); it != edges.end();)
 	{
 		if ((it->start == start && it->end == end) || (!oriented && it->start == end && it->end == start))
 			it = edges.erase(it);
+		else
+			it++;
 	}
 }
 void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const
