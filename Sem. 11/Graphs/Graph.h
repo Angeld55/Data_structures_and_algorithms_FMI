@@ -21,11 +21,3 @@ public:
 
 	bool existsVertex(int vertex) const;
 };
-bool Graph::existsVertex(int vertex) const
-{
-	return vertex < vertexCount;
-}
-int Graph::getVertexCount() const
-{
-	return vertexCount;
-}
