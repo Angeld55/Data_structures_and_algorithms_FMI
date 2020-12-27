@@ -1,27 +1,8 @@
-#include "..\Graph.h"
+#include "AdjMatrixGraph.h"
 
+AdjMatrixGraph::AdjMatrixGraph(int n, bool oriented) : Graph(n, oriented), adjMatrix(n, std::vector<int>(n))
+{}
 
-//sparse matrix // разредени матрици
-class AdjMatrixGraph : public Graph
-{
-	std::vector<std::vector<int>> adjMatrix;
-public:
-	AdjMatrixGraph(int n, bool oriented);
-
-	int addVertex();
-
-	void addEdge(int start, int end, int weight = 1);
-	void removeEdge(int start, int end);
-
-	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
-
-};
-AdjMatrixGraph::AdjMatrixGraph(int n, bool oriented) : Graph(n, oriented), adjMatrix(n)
-{
-	std::vector<int> templateVector(n);
-	for (int i = 0; i < n; i++)
-		adjMatrix[i] = templateVector;
-}
 int AdjMatrixGraph::addVertex() // O(n)
 {
 	adjMatrix.push_back(std::vector<int>(adjMatrix.size() + 1));

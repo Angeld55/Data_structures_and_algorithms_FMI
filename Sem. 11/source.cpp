@@ -1,10 +1,10 @@
 #include <iostream>
 using namespace std;
 
-#include  "Graphs\Adjacency_list_graph\AdjListGraph.hpp"
-#include  "Graphs\Adjacency_matrix_graph\AdjMatrixGraph.hpp"
-#include  "Graphs\Edge_list_graph\EdgeListGraph.hpp"
-#include  "Graphs\Algorithms\GraphAlgorithms.hpp"
+#include  "Graphs\Adjacency_list_graph\AdjListGraph.h"
+#include  "Graphs\Adjacency_matrix_graph\AdjMatrixGraph.h"
+#include  "Graphs\Edge_list_graph\EdgeListGraph.h"
+#include  "Graphs\Algorithms\GraphAlgorithms.h"
 
 //		 0
 //	   1   2

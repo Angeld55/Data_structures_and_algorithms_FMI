@@ -1,4 +1,4 @@
-#include "..\Graph.h"
+#include "GraphAlgorithms.h"
 #include <queue>
 #include <stack>
 #include <functional>
@@ -7,11 +7,11 @@ void BFS(const Graph& g, int start)
 {
 	if (!g.existsVertex(start))
 		return;
-	std::vector<bool> visited(g.getVertexCount()); //ffff
+	std::vector<bool> visited(g.getVertexCount());
 
 	std::queue<int> q;
 	q.push(start);
-	visited[0] = true;
+	visited[start] = true;
 
 	while (!q.empty())
 	{
@@ -53,7 +53,7 @@ void DFS(const Graph& g, int start)
 		visited[current] = true;
 		std::cout << current << std::endl; //or some other action
 
-		std::vector<std::pair<int,int>> adj;
+		std::vector<std::pair<int, int>> adj;
 		g.getSuccessors(current, adj);
 		for (int i = 0; i < adj.size(); i++)
 			s.push(adj[i].first);
