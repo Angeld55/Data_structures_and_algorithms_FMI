@@ -78,23 +78,23 @@ bool AdjListGraph::adjacent(int start, int end) const
 }
 bool AdjListGraph::isConnected() const
 {
-	std::vector<bool> visited(vertexCount);
-	BFS(*this, 0, visited);
+	std::vector<int> order;
+	BFS(*this, 0, order);
 
-	for (int i = 0; i < vertexCount; i++)
-	{
-		if (visited[i] == 0)
-			return false;
-	}
-	return true;
+	return order.size() == vertexCount;
 }
 bool AdjListGraph::containsPath(int start, int end) const
 {
 	if (!existsVertex(start) || !existsVertex(end))
 		throw "Invalid vertex!";
 
-	std::vector<bool> visited(vertexCount);
-	BFS(*this, start, visited);
+	std::vector<int> order;
+	BFS(*this, start, order);
 
-	return visited[start] && visited[end];
+	for (int i = 0; i < order.size(); i++)
+	{
+		if (order[i] == end)
+			return true;
+	}
+	return false;
 }

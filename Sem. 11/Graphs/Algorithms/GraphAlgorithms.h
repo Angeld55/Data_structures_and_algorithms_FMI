@@ -6,7 +6,7 @@
 #include <stack>
 #include <functional>
 
-void BFS(const Graph& g, int start, std::vector<bool>& visited);
-void DFS(const Graph& g, int start, std::vector<bool>& visited);
+void BFS(const Graph& g, int start, std::vector<int>& order);
+void DFS(const Graph& g, int start, std::vector<int>& order);
 
 #endif
