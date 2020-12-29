@@ -3,11 +3,10 @@
 #include <stack>
 #include <functional>
 
-void BFS(const Graph& g, int start)
+void BFS(const Graph& g, int start, std::vector<bool>& visited)
 {
 	if (!g.existsVertex(start))
 		return;
-	std::vector<bool> visited(g.getVertexCount());
 
 	std::queue<int> q;
 	q.push(start);
@@ -18,7 +17,7 @@ void BFS(const Graph& g, int start)
 		int current = q.front();
 		q.pop();
 
-		std::cout << current << std::endl; //or some other action
+		// std::cout << current << std::endl; //or some other action
 
 		std::vector<std::pair<int, int>> adj;
 		g.getSuccessors(current, adj);
@@ -35,11 +34,10 @@ void BFS(const Graph& g, int start)
 }
 
 
-void DFS(const Graph& g, int start)
+void DFS(const Graph& g, int start, std::vector<bool>& visited)
 {
 	if (!g.existsVertex(start))
 		return;
-	std::vector<bool> visited(g.getVertexCount());
 
 	std::stack<int> s;
 	s.push(start);
@@ -51,7 +49,8 @@ void DFS(const Graph& g, int start)
 		if (visited[current])
 			continue;
 		visited[current] = true;
-		std::cout << current << std::endl; //or some other action
+		
+		//std::cout << current << std::endl; //or some other action
 
 		std::vector<std::pair<int, int>> adj;
 		g.getSuccessors(current, adj);

@@ -1,3 +1,5 @@
+#ifndef _ADJACENCY_MATRIX_GRAPH_ 
+#define _ADJACENCY_MATRIX_GRAPH_
 #include "..\Graph.h"
 
 class AdjMatrixGraph : public Graph
@@ -12,5 +14,11 @@ public:
 	void removeEdge(int start, int end);
 
 	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
+	void getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
+	bool adjacent(int start, int end) const;
 
+	bool isConnected() const;
+	bool containsPath(int start, int end) const;	
 };
+
+#endif

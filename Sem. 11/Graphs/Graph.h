@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _GRAPH_
+#define _GRAPH_
+
 #include <iostream>
 #include <vector>
 
@@ -14,10 +16,16 @@ public:
 	virtual int addVertex() = 0; //return the index of the new vertex
 
 	virtual void addEdge(int start, int end, int weight = 1) = 0;
-	virtual void removeEdge(int start, int end) = 0;
 
 	virtual void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const = 0;
+	virtual void getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const = 0;
+	virtual bool adjacent(int start, int end) const = 0; // returns if there is an edge from start to end but not vice versa
+	
+	virtual bool isConnected() const = 0;
+	virtual bool containsPath(int start, int end) const = 0;
+	
 	virtual int getVertexCount() const;
-
 	bool existsVertex(int vertex) const;
 };
+
+#endif

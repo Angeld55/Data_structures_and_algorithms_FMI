@@ -1,5 +1,5 @@
-
 #include "EdgeListGraph.h"
+#include "GraphAlgorithms.h"
 
 EdgeListGraph::EdgeListGraph(int n, bool oriented) : Graph(n, oriented)
 {}
@@ -9,7 +9,6 @@ int EdgeListGraph::addVertex()
 	vertexCount++;
 	return vertexCount - 1;
 }
-
 void EdgeListGraph::addEdge(int start, int end, int weight)
 {
 	if (!existsVertex(start) || !existsVertex(end))
@@ -40,8 +39,53 @@ void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& 
 		throw "Invalid vertex!";
 
 	for (auto it = edges.begin(); it != edges.end(); it++)
-	{
 		if (it->start == vertex)
 			vertexAdj.push_back(std::make_pair(it->end, it->weight));
+}
+void EdgeListGraph::getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const
+{
+	if (!existsVertex(vertex))
+		throw "Invalid vertex!";
+
+	for (auto it = edges.begin(); it != edges.end(); it++)
+		if (it->end == vertex)
+			vertexAdj.push_back(std::make_pair(it->start, it->weight));
+}
+bool EdgeListGraph::adjacent(int start, int end) const
+{
+	if (!existsVertex(start) || !existsVertex(end))
+		throw "Invalid vertex!";
+
+	bool isFound = false;
+	for (auto it = edges.begin(); it != edges.end(); it++)
+	{
+		if (it->start == start && it->end == end)
+		{
+			isFound = true;
+			break;
+		}
 	}
+	return isFound;
+}
+bool EdgeListGraph::isConnected() const
+{
+	std::vector<bool> visited(vertexCount);
+	BFS(*this, 0, visited);
+
+	for (int i = 0; i < vertexCount; i++)
+	{
+		if (visited[i] == 0)
+			return false;
+	}
+	return true;
+}
+bool EdgeListGraph::containsPath(int start, int end) const
+{
+	if (!existsVertex(start) || !existsVertex(end))
+		throw "Invalid vertex!";
+		
+	std::vector<bool> visited(vertexCount);
+	BFS(*this, start, visited);
+
+	return visited[start] && visited[end];
 }
