@@ -149,9 +149,9 @@ int main()
 	std::cout << h.adjacent(5, 1);
 
 	std::cout << std::endl << "Adjacent 2, 5: ";
-	std::cout << t.containsPath(2, 5);
-	std::cout << g.containsPath(2, 5);
-	std::cout << h.containsPath(2, 5);
+	std::cout << t.adjacent(2, 5);
+	std::cout << g.adjacent(2, 5);
+	std::cout << h.adjacent(2, 5);
 
 	std::cout << std::endl << "Contains path 1, 3: ";
 	std::cout << t.containsPath(1, 3);
