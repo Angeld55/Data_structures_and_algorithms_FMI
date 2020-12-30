@@ -21,9 +21,6 @@ public:
 	virtual void getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const = 0;
 	virtual bool adjacent(int start, int end) const = 0; // returns if there is an edge from start to end but not vice versa
 	
-	virtual bool isConnected() const = 0;
-	virtual bool containsPath(int start, int end) const = 0;
-	
 	virtual int getVertexCount() const;
 	bool existsVertex(int vertex) const;
 };

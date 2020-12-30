@@ -22,9 +22,6 @@ public:
 	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
 	void getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
 	bool adjacent(int start, int end) const;
-
-	bool isConnected() const;
-	bool containsPath(int start, int end) const;
 };
 
 #endif

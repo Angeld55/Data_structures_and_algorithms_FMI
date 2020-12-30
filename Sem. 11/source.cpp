@@ -1,6 +1,4 @@
 #include <iostream>
-using namespace std;
-
 #include  "Graphs\Adjacency_list_graph\AdjListGraph.h"
 #include  "Graphs\Adjacency_matrix_graph\AdjMatrixGraph.h"
 #include  "Graphs\Edge_list_graph\EdgeListGraph.h"
@@ -154,19 +152,19 @@ int main()
 	std::cout << h.adjacent(2, 5);
 
 	std::cout << std::endl << "Contains path 1, 3: ";
-	std::cout << t.containsPath(1, 3);
-	std::cout << g.containsPath(1, 3);
-	std::cout << h.containsPath(1, 3);
+	std::cout << containsPath(t, 1, 3);
+	std::cout << containsPath(g, 1, 3);
+	std::cout << containsPath(h, 1, 3);
 
 	std::cout << std::endl << "Contains path 1, 4: ";
-	std::cout << t.containsPath(1, 4);
-	std::cout << g.containsPath(1, 4);
-	std::cout << h.containsPath(1, 4);
+	std::cout << containsPath(t, 1, 4);
+	std::cout << containsPath(g, 1, 4);
+	std::cout << containsPath(h, 1, 4);
 
 	std::cout << std::endl << "Connected: ";
-	std::cout << t.isConnected();
-	std::cout << g.isConnected();
-	std::cout << h.isConnected();
+	std::cout << isConnected(t);
+	std::cout << isConnected(g);
+	std::cout << isConnected(h);
 	std::cout << std::endl;
 
 	std::vector<int> bfs;

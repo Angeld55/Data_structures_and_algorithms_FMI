@@ -76,25 +76,3 @@ bool AdjListGraph::adjacent(int start, int end) const
 	}
 	return false;
 }
-bool AdjListGraph::isConnected() const
-{
-	std::vector<int> order;
-	BFS(*this, 0, order);
-
-	return order.size() == vertexCount;
-}
-bool AdjListGraph::containsPath(int start, int end) const
-{
-	if (!existsVertex(start) || !existsVertex(end))
-		throw "Invalid vertex!";
-
-	std::vector<int> order;
-	BFS(*this, start, order);
-
-	for (int i = 0; i < order.size(); i++)
-	{
-		if (order[i] == end)
-			return true;
-	}
-	return false;
-}
