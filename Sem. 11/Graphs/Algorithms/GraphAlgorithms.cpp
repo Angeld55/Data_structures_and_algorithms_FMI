@@ -3,7 +3,7 @@
 #include <stack>
 #include <functional>
 
-void BFS(const Graph& g, int start)
+void BFS(const Graph& g, int start, std::vector<int>& order)
 {
 	if (!g.existsVertex(start))
 		return;
@@ -18,7 +18,8 @@ void BFS(const Graph& g, int start)
 		int current = q.front();
 		q.pop();
 
-		std::cout << current << std::endl; //or some other action
+		order.push_back(current);
+		//std::cout << current << std::endl; //or some other action
 
 		std::vector<std::pair<int, int>> adj;
 		g.getSuccessors(current, adj);
@@ -35,7 +36,7 @@ void BFS(const Graph& g, int start)
 }
 
 
-void DFS(const Graph& g, int start)
+void DFS(const Graph& g, int start, std::vector<int>& order)
 {
 	if (!g.existsVertex(start))
 		return;
@@ -51,7 +52,9 @@ void DFS(const Graph& g, int start)
 		if (visited[current])
 			continue;
 		visited[current] = true;
-		std::cout << current << std::endl; //or some other action
+
+		order.push_back(current);
+		//std::cout << current << std::endl; //or some other action
 
 		std::vector<std::pair<int, int>> adj;
 		g.getSuccessors(current, adj);
@@ -59,4 +62,28 @@ void DFS(const Graph& g, int start)
 			s.push(adj[i].first);
 	}
 
+}
+
+bool isConnected(const Graph& g)
+{
+	std::vector<int> order;
+	BFS(g, 0, order);
+
+	return order.size() == g.getVertexCount();
+}
+
+bool containsPath(const Graph& g, int start, int end)
+{
+	if (!g.existsVertex(start) || !g.existsVertex(end))
+		throw "Invalid vertex!";
+
+	std::vector<int> order;
+	BFS(g, start, order);
+
+	for (int i = 0; i < order.size(); i++)
+	{
+		if (order[i] == end)
+			return true;
+	}
+	return false;
 }
