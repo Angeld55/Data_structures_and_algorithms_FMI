@@ -3,7 +3,7 @@
 
 bool Graph::existsVertex(int vertex) const
 {
-	return vertex < vertexCount;
+	return vertex < vertexCount && vertex > 0;
 }
 int Graph::getVertexCount() const
 {
