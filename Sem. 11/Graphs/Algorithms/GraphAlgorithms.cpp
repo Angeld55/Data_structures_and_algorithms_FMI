@@ -33,8 +33,6 @@ void BFS(const Graph& g, int start)
 
 	}
 }
-
-
 void DFS(const Graph& g, int start)
 {
 	if (!g.existsVertex(start))
