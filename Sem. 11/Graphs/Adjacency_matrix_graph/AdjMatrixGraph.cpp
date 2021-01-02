@@ -11,6 +11,16 @@ int AdjMatrixGraph::addVertex() // O(n)
 	vertexCount++;
 	return adjMatrix.size() - 1;
 }
+void AdjMatrixGraph::removeVertex(int vertex_index)
+{
+	if (!existsVertex(vertex_index))
+		throw "Invalid vertex!";
+	int vector_index = vertex_index - 1;
+	adjMatrix.erase(adjMatrix.begin() + vector_index);
+	for (auto it = adjMatrix.begin(); it < adjMatrix.end(); it++)
+		it->erase(it->begin() + vector_index);
+	vertexCount--;
+}
 void AdjMatrixGraph::addEdge(int start, int end, int weight) // O(1)
 {
 	if (!existsVertex(start) || !existsVertex(end))
