@@ -9,7 +9,18 @@ int EdgeListGraph::addVertex()
 	vertexCount++;
 	return vertexCount - 1;
 }
-
+void EdgeListGraph::removeVertex(int vertex_index) 
+{
+	if (!existsVertex(vertex_index))
+		throw "Invalid vertex!";
+	//remove edges to/from vertex_index
+	for (auto it = edges.begin(); it != edges.end(); it++)
+	{
+		if (it->start == vertex_index || it->end == vertex_index || (!oriented && (it->start == vertex_index || it->end == vertex_index)))
+			it = edges.erase(it);
+	}
+	vertexCount--;
+}
 void EdgeListGraph::addEdge(int start, int end, int weight)
 {
 	if (!existsVertex(start) || !existsVertex(end))
