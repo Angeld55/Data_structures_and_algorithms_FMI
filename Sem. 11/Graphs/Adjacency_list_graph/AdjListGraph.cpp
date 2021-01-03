@@ -1,5 +1,5 @@
-#pragma once
 #include "AdjListGraph.h"
+#include "GraphAlgorithms.h"
 
 AdjListGraph::AdjListGraph(int n, bool oriented) : Graph(n, oriented), adj(n)
 {}
@@ -55,11 +55,40 @@ void AdjListGraph::removeEdge(int start, int end) // O(m)
 			it++;
 	}
 }
-void AdjListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const //O(d) d - макс разколоненост на графа.
+void AdjListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const //O(d) d - пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
 {
 	if (!existsVertex(vertex))
 		throw "Invalid vertex!";
 
 	for (auto it = adj[vertex].begin(); it != adj[vertex].end(); it++)
 		vertexAdj.push_back(std::make_pair(it->end, it->weight));
+}
+void AdjListGraph::getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const
+{
+	if (!existsVertex(vertex))
+		throw "Invalid vertex!";
+
+	for (int i = 0; i < adj.size(); i++)
+	{
+		// i == vertex is okay because we can have loops
+		for (auto it = adj[i].begin(); it != adj[i].end(); it++)
+		{
+			if (it->end == vertex)
+			{
+				vertexAdj.push_back(std::make_pair(i, adj[i].size()));
+			}
+		}
+	}
+}
+bool AdjListGraph::adjacent(int start, int end) const
+{
+	if (!existsVertex(start) || !existsVertex(end))
+		throw "Invalid vertex!";
+
+	for (auto it = adj[start].begin(); it != adj[start].end(); it++)
+	{
+		if (it->end == end)
+			return true;
+	}
+	return false;
 }
