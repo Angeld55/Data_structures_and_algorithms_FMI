@@ -17,7 +17,7 @@ void EdgeListGraph::removeVertex(int vertex_index)
 	for (auto it = edges.begin(); it != edges.end(); it++)
 	{
 		if (it->start == vertex_index || it->end == vertex_index || (!oriented && (it->start == vertex_index || it->end == vertex_index)))
-			it = edges.erase(it);
+			edges.erase(it);
 	}
 	vertexCount--;
 }
