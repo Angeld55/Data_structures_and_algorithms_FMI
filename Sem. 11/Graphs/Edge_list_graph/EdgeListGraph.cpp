@@ -1,5 +1,5 @@
 #include "EdgeListGraph.h"
-#include "GraphAlgorithms.h"
+#include "../Algorithms/GraphAlgorithms.h"
 
 EdgeListGraph::EdgeListGraph(int n, bool oriented) : Graph(n, oriented)
 {}
@@ -14,19 +14,18 @@ void EdgeListGraph::removeVertex(int vertex_index)
 	if (!existsVertex(vertex_index))
 		throw "Invalid vertex!";
 	//remove edges to/from vertex_index
-	for (auto it = edges.begin(); it != edges.end(); it++)
+	for (auto it = edges.begin(); it != edges.end();)
 	{
 		if (it->start == vertex_index || it->end == vertex_index)
-			edges.erase(it);
-		else if (it->start > vertex_index && it->end > vertex_index)
 		{
-			it->start--;
-			it->end--;
+			edges.erase(it);
+			continue;
 		}
-		else if (it->start > vertex_index)
+		if (it->start > vertex_index)
 			it->start--;
-		else if (it->end > vertex_index)
+		if (it->end > vertex_index)
 			it->end--;
+		it++;
 	}
 	vertexCount--;
 }

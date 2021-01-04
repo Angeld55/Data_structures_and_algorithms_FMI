@@ -1,4 +1,4 @@
-#include "GraphAlgorithms.h"
+#include "../Algorithms/GraphAlgorithms.h"
 #include "AdjMatrixGraph.h"
 
 AdjMatrixGraph::AdjMatrixGraph(int n, bool oriented) : Graph(n, oriented), adjMatrix(n, std::vector<int>(n))

@@ -22,8 +22,7 @@ void printVector(std::vector<T> v)
 		std::cout << v[i] << ' ';
 	std::cout << std::endl;
 }
-
-int main()
+void tests()
 {
 	AdjListGraph g1(6, false);
 
@@ -68,7 +67,7 @@ int main()
 	std::cout << "Successors vertex 5 AdjListGraph: ";
 	for (int i = 0; i < succ.size(); i++)
 		std::cout << succ[i].first << ' ';
-	
+
 	std::vector<std::pair<int, int>> pred;
 	t.getPredeccessors(vertex, pred);
 
@@ -177,4 +176,8 @@ int main()
 	std::cout << "DFS: ";
 	printVector(dfs);
 
+}
+int main()
+{
+	
 }
