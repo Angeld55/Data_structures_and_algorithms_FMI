@@ -158,7 +158,7 @@ int Prim(const Graph& g, Graph& MST)
 	// Each tuple looks like this: <start, end, weight>
 
 	q.push(std::make_tuple(0, 0, 0)); //we create a virtal edge -> vertex 0 (the start) with weight 0
-	int addedEdges = -1; //because with the first pop we don't insert an edge.
+	int addedEdges = 0; //because with the first pop we don't insert an edge.
 
 	while (addedEdges < g.getVertexCount() - 1)
 	{
@@ -168,9 +168,10 @@ int Prim(const Graph& g, Graph& MST)
 			continue;
 
 		mstWeight += std::get<2>(edge);
-		addedEdges++;
+		
 		if (std::get<0>(edge) != std::get<1>(edge)) //so we don't add the virtual edge
 		{
+			addedEdges++;
 			std::cout << "Edge added:" << std::get<0>(edge) << " " << std::get<1>(edge) << std::endl;
 			MST.addEdge(std::get<0>(edge), std::get<1>(edge), std::get<2>(edge));
 		}
