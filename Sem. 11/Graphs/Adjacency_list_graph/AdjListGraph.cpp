@@ -9,6 +9,27 @@ int AdjListGraph::addVertex() //O(1)
 	vertexCount++;
 	return adj.size() - 1;
 }
+void AdjListGraph::removeVertex(int vertex_index)
+{
+	if (!existsVertex(vertex_index))
+		throw "Invalid vertex!";
+	adj.erase(adj.begin() + (vertex_index - 1));
+	for (auto it = adj.begin(); it < adj.end(); it++)
+	{
+		for (auto list_it = it->begin(); list_it != it->end(); list_it++)
+		{
+			if (list_it->end > vertex_index) //update vertecies indexes in edges 
+			{
+				list_it->end--;
+			}
+			else if (list_it->end == vertex_index)
+			{
+				it->erase(list_it);
+			}
+		}
+	}
+	vertexCount--;
+}
 void AdjListGraph::addEdge(int start, int end, int weight) // O(1)
 {
 	if (!existsVertex(start) || !existsVertex(end))

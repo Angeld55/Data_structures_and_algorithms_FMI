@@ -14,6 +14,7 @@ public:
 	Graph(int n, bool oriented) : vertexCount(n), oriented(oriented){}
 	
 	virtual int addVertex() = 0; //return the index of the new vertex
+	virtual void removeVertex(int vertex_index) = 0;
 
 	virtual void addEdge(int start, int end, int weight = 1) = 0;
 

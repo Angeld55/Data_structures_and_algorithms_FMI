@@ -35,7 +35,6 @@ void BFS(const Graph& g, int start, std::vector<int>& order)
 	}
 }
 
-
 void DFS(const Graph& g, int start, std::vector<int>& order)
 {
 	if (!g.existsVertex(start))
