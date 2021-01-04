@@ -1,5 +1,5 @@
-
 #include "EdgeListGraph.h"
+#include "GraphAlgorithms.h"
 
 EdgeListGraph::EdgeListGraph(int n, bool oriented) : Graph(n, oriented)
 {}
@@ -59,8 +59,31 @@ void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& 
 		throw "Invalid vertex!";
 
 	for (auto it = edges.begin(); it != edges.end(); it++)
-	{
 		if (it->start == vertex)
 			vertexAdj.push_back(std::make_pair(it->end, it->weight));
+}
+void EdgeListGraph::getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const
+{
+	if (!existsVertex(vertex))
+		throw "Invalid vertex!";
+
+	for (auto it = edges.begin(); it != edges.end(); it++)
+		if (it->end == vertex)
+			vertexAdj.push_back(std::make_pair(it->start, it->weight));
+}
+bool EdgeListGraph::adjacent(int start, int end) const
+{
+	if (!existsVertex(start) || !existsVertex(end))
+		throw "Invalid vertex!";
+
+	bool isFound = false;
+	for (auto it = edges.begin(); it != edges.end(); it++)
+	{
+		if (it->start == start && it->end == end)
+		{
+			isFound = true;
+			break;
+		}
 	}
+	return isFound;
 }

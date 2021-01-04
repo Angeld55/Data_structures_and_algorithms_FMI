@@ -1,4 +1,3 @@
-#pragma once
 #include "Graph.h"
 
 bool Graph::existsVertex(int vertex) const
