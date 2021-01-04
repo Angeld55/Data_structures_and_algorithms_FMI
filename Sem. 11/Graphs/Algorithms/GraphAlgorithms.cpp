@@ -2,6 +2,7 @@
 #include <queue>
 #include <stack>
 #include <functional>
+#include <list>
 
 void BFS(const Graph& g, int start, std::vector<int>& order)
 {
@@ -86,3 +87,101 @@ bool containsPath(const Graph& g, int start, int end)
 	}
 	return false;
 }
+
+int Dijkstra(const Graph& g, int start, int end, std::vector<int>& path)
+{
+	std::vector<int> distances(g.getVertexCount(), INT_MAX);
+	std::vector<int> prev(g.getVertexCount(), -1);
+
+	struct temp
+	{
+		int vertex;
+		int distFromStart;
+
+		bool operator<(const temp& other) const
+		{
+			return distFromStart > other.distFromStart;
+		}
+	};
+	std::priority_queue<temp> q;
+
+	distances[start] = 0;
+	q.push({ start, 0 });
+
+	while (!q.empty())
+	{
+		temp currentVertex = q.top();
+		if (currentVertex.vertex == end)
+		{
+			int current = end;
+			while (current != start)
+			{
+				path.push_back(current);
+				current = prev[current];
+			}
+			path.push_back(current);
+			std::reverse(path.begin(), path.end());
+
+			return currentVertex.distFromStart;
+		}
+		q.pop();
+
+		std::vector<std::pair<int, int>> successors;
+		g.getSuccessors(currentVertex.vertex, successors);
+
+		for (int i = 0; i < successors.size(); i++)
+		{
+			int currentSuccessor = successors[i].first;
+			int currentWeight = successors[i].second;
+
+			if (distances[currentVertex.vertex] + currentWeight < distances[currentSuccessor])
+			{
+				// Lazy deletion
+				distances[currentSuccessor] = distances[currentVertex.vertex] + currentWeight;
+				q.push({ currentSuccessor, distances[currentVertex.vertex] + currentWeight });
+				prev[currentSuccessor] = currentVertex.vertex;
+			}
+		}
+
+	}
+	return INT_MAX;
+}
+
+int Prim(const Graph& g, Graph& MST)
+{
+	int mstWeight = 0;
+	std::vector<bool>  visited(g.getVertexCount(), false);
+
+	auto comp = [](const std::tuple<int, int, int>& lhs, const std::tuple<int, int, int>& rhs) { return std::get<2>(lhs) > std::get<2>(rhs); };
+	std::priority_queue<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int> >, decltype(comp)> q;
+	
+	// Each tuple looks like this: <start, end, weight>
+
+	q.push(std::make_tuple(0, 0, 0)); //we create a virtal edge -> vertex 0 (the start) with weight 0
+	int addedEdges = -1; //because whith the first pop we don't add an edge.
+
+	while (addedEdges < g.getVertexCount() - 1)
+	{
+		std::tuple<int,int, int> edge = q.top();
+		q.pop();
+		if (visited[std::get<1>(edge)])
+			continue;
+
+		mstWeight += std::get<2>(edge);
+		addedEdges++;
+		if (std::get<0>(edge) != std::get<1>(edge)) //so we don't add the virtual edge
+		{
+			std::cout << "Edge added:" << std::get<0>(edge) << " " << std::get<1>(edge) << std::endl;
+			MST.addEdge(std::get<0>(edge), std::get<1>(edge), std::get<2>(edge));
+		}
+		visited[std::get<1>(edge)] = true;
+
+		std::vector<std::pair<int, int>> successors;
+		g.getSuccessors(std::get<1>(edge), successors);
+
+		for (int i = 0; i < successors.size(); i++)
+			q.push(std::make_tuple(std::get<1>(edge), successors[i].first, successors[i].second));
+	}
+	return mstWeight;
+}
+
