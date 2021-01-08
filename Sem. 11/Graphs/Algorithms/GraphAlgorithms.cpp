@@ -196,7 +196,7 @@ int Kurskal(const Graph& g, Graph& MST)
 {
 	int mstWeight = 0;
 
-	// <начало, край, тегло>
+	// <start, end, weight>
 	std::vector<std::tuple<int, int, int>> edges;
 	
 	g.getEdges(edges);
@@ -228,7 +228,7 @@ int Kurskal(const Graph& g, Graph& MST)
 	return mstWeight;
 
 }
-// Проверка дали в граф има цикъл.
+
 bool DFSrec_containsCycle(const Graph& g, std::vector<bool>& visited, std::vector<bool>& stack, int currentVertex)
 {
 	visited[currentVertex] = true;
@@ -289,7 +289,7 @@ void DFSrec_TopoSort(const Graph& g, std::vector<bool>& visited, std::stack<int>
 	stack.push(currentVertex);
 
 }
-// Топологично сортиране
+
 void TopoSort(const Graph& g, std::vector<int>& result)
 {
 	if (containsCycle(g))
