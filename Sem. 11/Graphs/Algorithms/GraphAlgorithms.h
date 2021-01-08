@@ -1,7 +1,8 @@
 #ifndef _GRAPH_ALGORITHMS_
 #define _GRAPH_ALGORITHMS_
 
-#include "..\Graph.h"
+#include "../Graph.h"
+#include "../Edge_list_graph/EdgeListGraph.h"
 #include <queue>
 #include <stack>
 #include <functional>
@@ -13,4 +14,9 @@ bool containsPath(const Graph& g, int start, int end);
 int Dijkstra(const Graph& g, int start, int end, std::vector<int>& path);
 
 int Prim(const Graph& g, Graph& MST);
+int Kurskal(const Graph& g, Graph& MST);
+
+bool containsCycle(const Graph& g);
+
+void TopoSort(const Graph& g, std::vector<int>& result);
 #endif

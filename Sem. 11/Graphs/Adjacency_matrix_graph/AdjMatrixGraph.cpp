@@ -73,3 +73,15 @@ bool AdjMatrixGraph::adjacent(int start, int end) const
 
 	return adjMatrix[start][end];
 }
+
+void AdjMatrixGraph::getEdges(std::vector<std::tuple<int, int, int>>& edges) const
+{
+	for (size_t i = 0; i < vertexCount; i++)
+	{
+		for (size_t j = 0; j < vertexCount; j++)
+		{
+			if (adjMatrix[i][j] != 0)
+				edges.push_back(std::make_tuple(i, j, adjMatrix[i][j]));
+		}
+	}
+}

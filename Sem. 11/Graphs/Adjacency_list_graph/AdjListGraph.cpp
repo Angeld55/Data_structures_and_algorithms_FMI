@@ -97,3 +97,12 @@ bool AdjListGraph::adjacent(int start, int end) const
 	}
 	return false;
 }
+
+void AdjListGraph::getEdges(std::vector<std::tuple<int, int, int>>& edges) const
+{
+	for (int i = 0; i < adj.size(); i++)
+	{
+		for (auto it = adj[i].begin(); it != adj[i].end(); it++)
+			edges.push_back(std::make_tuple(i, it->end, it->weight));
+	}
+}

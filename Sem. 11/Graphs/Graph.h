@@ -24,6 +24,9 @@ public:
 	
 	virtual int getVertexCount() const;
 	bool existsVertex(int vertex) const;
+	bool isOriented() const;
+
+	virtual void getEdges(std::vector<std::tuple<int, int, int>>& edges) const = 0;
 };
 
 #endif

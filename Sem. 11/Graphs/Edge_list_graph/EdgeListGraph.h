@@ -22,6 +22,8 @@ public:
 	void getSuccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
 	void getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const;
 	bool adjacent(int start, int end) const;
+
+	void getEdges(std::vector<std::tuple<int, int, int>>& edges) const;
 };
 
 #endif

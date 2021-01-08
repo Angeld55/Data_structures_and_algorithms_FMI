@@ -2,7 +2,8 @@
 #include "../Algorithms/GraphAlgorithms.h"
 
 EdgeListGraph::EdgeListGraph(int n, bool oriented) : Graph(n, oriented)
-{}
+{
+}
 
 int EdgeListGraph::addVertex()
 {
@@ -58,8 +59,10 @@ void EdgeListGraph::getSuccessors(int vertex, std::vector<std::pair<int, int>>& 
 		throw "Invalid vertex!";
 
 	for (auto it = edges.begin(); it != edges.end(); it++)
+	{
 		if (it->start == vertex)
 			vertexAdj.push_back(std::make_pair(it->end, it->weight));
+	}
 }
 void EdgeListGraph::getPredeccessors(int vertex, std::vector<std::pair<int, int>>& vertexAdj) const
 {
@@ -67,8 +70,10 @@ void EdgeListGraph::getPredeccessors(int vertex, std::vector<std::pair<int, int>
 		throw "Invalid vertex!";
 
 	for (auto it = edges.begin(); it != edges.end(); it++)
+	{
 		if (it->end == vertex)
 			vertexAdj.push_back(std::make_pair(it->start, it->weight));
+	}
 }
 bool EdgeListGraph::adjacent(int start, int end) const
 {
@@ -85,4 +90,9 @@ bool EdgeListGraph::adjacent(int start, int end) const
 		}
 	}
 	return isFound;
+}
+void EdgeListGraph::getEdges(std::vector<std::tuple<int, int, int>>& edges) const
+{
+	for (auto i = this->edges.begin(); i != this->edges.end(); i++)
+		edges.push_back(std::make_tuple((*i).start,(*i).end, (*i).weight));
 }

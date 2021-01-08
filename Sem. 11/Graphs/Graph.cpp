@@ -8,3 +8,7 @@ int Graph::getVertexCount() const
 {
 	return vertexCount;
 }
+bool Graph::isOriented() const
+{
+	return oriented;
+}
