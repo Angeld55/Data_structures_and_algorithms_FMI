@@ -28,6 +28,6 @@ bool UnionFind::Union(int n, int k)
 		std::swap(root1, root2);
 
 	parent[root1] = root2;
-	sizes[root2]+=sizes[root1];
+	sizes[root2] += sizes[root1];
 	return true;
 }
