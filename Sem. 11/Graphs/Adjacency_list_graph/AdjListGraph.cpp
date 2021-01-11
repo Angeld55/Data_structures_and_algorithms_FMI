@@ -14,7 +14,7 @@ void AdjListGraph::removeVertex(int vertex_index)
 	if (!existsVertex(vertex_index))
 		throw "Invalid vertex!";
 	adj.erase(adj.begin() + (vertex_index - 1));
-	for (auto it = adj.begin(); it < adj.end(); it++)
+	for (auto it = adj.begin(); it != adj.end(); it++)
 	{
 		for (auto list_it = it->begin(); list_it != it->end();)
 		{
