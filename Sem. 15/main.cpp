@@ -9,7 +9,8 @@
 using namespace std;
 
 struct MyHash
-{
+{	
+	//example hash function for strings
 	std::size_t operator()(const std::string& str) const 
 	{
 		size_t keyLength = str.length();
