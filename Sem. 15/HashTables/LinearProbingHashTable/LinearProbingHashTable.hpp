@@ -1,7 +1,7 @@
 #pragma once
 #include "../HashTable.hpp"
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 class LinearProbingHashTable : public HashTable<KeyType, ValueType, HashFunc>
 {
 	const size_t jump = 1;
@@ -18,21 +18,21 @@ public:
 
 };
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
-LinearProbingHashTable<KeyType, ValueType, HashFunc>::LinearProbingHashTable() : deletedCells(capacity, false)
+template<class KeyType, class ValueType, class HashFunc>
+LinearProbingHashTable<KeyType, ValueType, HashFunc>::LinearProbingHashTable() : deletedCells(this->capacity, false)
 {
 
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 void LinearProbingHashTable<KeyType, ValueType, HashFunc>::put(KeyType key, ValueType value)
 {
-	size_t index = hasher(key) % capacity;
+	size_t index = this->hasher(key) % this->capacity;
 
-	while (data[index] != nullptr)
-		(index += jump) %= capacity;
-	Pair* temp = new Pair(key, value);
-	data[index] = temp;
+	while (this->data[index] != nullptr)
+		(index += jump) %= this->capacity;
+	typename HashTable<KeyType, ValueType, HashFunc>::Pair* temp = new typename HashTable<KeyType, ValueType, HashFunc>::Pair(key, value);
+	this->data[index] = temp;
 
 	//if (capacity * MAX_FILL_LEVEL <= elementsCount)
 	//{
@@ -40,37 +40,36 @@ void LinearProbingHashTable<KeyType, ValueType, HashFunc>::put(KeyType key, Valu
 	//}
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 const ValueType& LinearProbingHashTable<KeyType, ValueType, HashFunc>::get(KeyType key)
 {
-	size_t index = hasher(key) % capacity;
+	size_t index = this->hasher(key) % this->capacity;
 	size_t startIndex = index;
 	while (true)
 	{
-		Pair* currentCell = data[index];
+		typename HashTable<KeyType, ValueType, HashFunc>::Pair* currentCell = this->data[index];
 
 		if (currentCell != nullptr && currentCell->key == key)
 			return currentCell->value;
 		if (currentCell == nullptr && !deletedCells[index])
 			throw "No such element!";
 
-		(index += jump) %= capacity;
+		(index += jump) %= this->capacity;
 
 		if (index == startIndex)
 			throw "No such element!";
-
 	}
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 bool LinearProbingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key)
 {
-	size_t index = hasher(key) % capacity;
+	size_t index = this->hasher(key) % this->capacity;
 	size_t startIndex = index;
 
-	while (data[index] != nullptr || deletedCells[index])
+	while (this->data[index] != nullptr || deletedCells[index])
 	{
-		Pair* currentCell = data[index];
+		typename HashTable<KeyType, ValueType, HashFunc>::Pair* currentCell = this->data[index];
 		if (currentCell == nullptr)
 			continue;
 
@@ -82,7 +81,7 @@ bool LinearProbingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key)
 			return true;
 		}
 
-		(index += jump) %= capacity;
+		(index += jump) %= this->capacity;
 
 		if (index == startIndex)
 			throw "Invalid key";

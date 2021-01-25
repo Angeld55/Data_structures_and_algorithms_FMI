@@ -1,16 +1,16 @@
 #pragma once
 #include "../HashTable.hpp"
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc = std::hash<KeyType>>
 class SeparateChainingHashTable : public HashTable<KeyType, ValueType, HashFunc>
 {
 
 	void free();
 	void copyFrom(const SeparateChainingHashTable& other);
 
-	struct SepChaingHashPair : public Pair 
+	struct SepChaingHashPair : public HashTable<KeyType, ValueType, HashFunc>::Pair
 	{
-		SepChaingHashPair(const KeyType& key, const ValueType& value) : Pair(key, value){}
+		SepChaingHashPair(const KeyType& key, const ValueType& value) : HashTable<KeyType, ValueType, HashFunc>::Pair(key, value){}
 		SepChaingHashPair* next = nullptr;
 	};
 
@@ -26,15 +26,14 @@ public:
 
 };
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 SeparateChainingHashTable<KeyType, ValueType, HashFunc>::SeparateChainingHashTable(const SeparateChainingHashTable& other)
 {
 	copyFrom(other);
 }
 
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
-
+template<class KeyType, class ValueType, class HashFunc>
 const SeparateChainingHashTable<KeyType, ValueType, HashFunc>& SeparateChainingHashTable<KeyType, ValueType, HashFunc>::operator=(const SeparateChainingHashTable<KeyType, ValueType, HashFunc>& other)
 {
 	if (this != &other)
@@ -46,29 +45,29 @@ const SeparateChainingHashTable<KeyType, ValueType, HashFunc>& SeparateChainingH
 	return *this;
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 SeparateChainingHashTable<KeyType, ValueType, HashFunc>::~SeparateChainingHashTable()
 {
 	free();
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::put(KeyType key, ValueType value)
 {
-	size_t index = hasher(key) % capacity;
+	size_t index = this->hasher(key) % this->capacity;
 	SepChaingHashPair* newBox = new SepChaingHashPair(key, value);
 
-	SepChaingHashPair* temp = (SepChaingHashPair*)data[index];
-	data[index] = newBox;
+	SepChaingHashPair* temp = (SepChaingHashPair*)(this->data[index]);
+	this->data[index] = newBox;
 	newBox->next = temp;
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 const ValueType& SeparateChainingHashTable<KeyType, ValueType, HashFunc>::get(KeyType key)
 {
-	size_t index = hasher(key) % capacity;
+	size_t index = this->hasher(key) % this->capacity;
 
-	SepChaingHashPair* iter = (SepChaingHashPair*)data[index];
+	SepChaingHashPair* iter = (SepChaingHashPair*)(this->data[index]);
 
 	while (iter != nullptr)
 	{
@@ -80,12 +79,12 @@ const ValueType& SeparateChainingHashTable<KeyType, ValueType, HashFunc>::get(Ke
 
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 bool SeparateChainingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key)
 {
-	size_t index = hasher(key) % capacity;
+	size_t index = this->hasher(key) % this->capacity;
 
-	SepChaingHashPair* iter = (SepChaingHashPair*)data[index];
+	SepChaingHashPair* iter = (SepChaingHashPair*)(this->data[index]);
 	
 	if (iter == nullptr)
 		return false;
@@ -93,7 +92,7 @@ bool SeparateChainingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key
 	{
 		SepChaingHashPair* newBegin = iter->next;
 		delete iter;
-		data[index] = newBegin;
+		this->data[index] = newBegin;
 		return true;
 	}
 
@@ -114,12 +113,12 @@ bool SeparateChainingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key
 	}
 	return false;
 }
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::free()
 {
-	for (int i = 0; i < data.size(); i++)
+	for (int i = 0; i < this->data.size(); i++)
 	{
-		SepChaingHashPair* iter = (SepChaingHashPair*)data[i];
+		SepChaingHashPair* iter = (SepChaingHashPair*)this->data[i];
 
 		while (iter != nullptr)
 		{
@@ -127,11 +126,11 @@ void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::free()
 			delete iter;
 			iter = next;
 		}
-		data[i] = nullptr;
+		this->data[i] = nullptr;
 	}
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::copyFrom(const SeparateChainingHashTable& other)
 {
 	for (int i = 0; i < other.data.size(); i++)
@@ -140,8 +139,8 @@ void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::copyFrom(const Sep
 		if (otherIter == nullptr)
 			continue;
 		
-		data[i] = new SepChaingHashPair(*otherIter);
-		SepChaingHashPair* currentIter = (SepChaingHashPair*)data[i];
+		this->data[i] = new SepChaingHashPair(*otherIter);
+		SepChaingHashPair* currentIter = (SepChaingHashPair*)this->data[i];
 		otherIter = otherIter->next;
 	
 		while (otherIter != nullptr)

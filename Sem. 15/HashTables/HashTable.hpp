@@ -2,11 +2,12 @@
 #include <functional>
 #include <vector> 
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc =  std::hash<KeyType>>
 class HashTable
 {
 	virtual void free();
 	void copyFrom(const HashTable<KeyType, ValueType, HashFunc>& other);
+
 protected:
 	struct Pair
 	{
@@ -31,23 +32,23 @@ public:
 	virtual bool remove(KeyType key) = 0;
 };
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 HashTable<KeyType, ValueType, HashFunc>::HashTable() : data(32), capacity(32)
 {}
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 HashTable<KeyType, ValueType, HashFunc>::~HashTable()
 {
 	free();
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 HashTable<KeyType, ValueType, HashFunc>::HashTable(const HashTable& other)
 {
 	copyFrom(other);
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 void HashTable<KeyType, ValueType, HashFunc>::free()
 {
 	for (int i = 0; i < data.size(); i++)
@@ -57,7 +58,7 @@ void HashTable<KeyType, ValueType, HashFunc>::free()
 	}
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 const HashTable<KeyType, ValueType, HashFunc>& HashTable<KeyType, ValueType, HashFunc>::operator=(const HashTable<KeyType, ValueType, HashFunc>& other)
 {
 	if (this != &other)
@@ -68,7 +69,7 @@ const HashTable<KeyType, ValueType, HashFunc>& HashTable<KeyType, ValueType, Has
 	return *this;
 }
 
-template<typename KeyType, typename ValueType, typename HashFunc = std::hash<KeyType>>
+template<class KeyType, class ValueType, class HashFunc>
 void HashTable<KeyType, ValueType, HashFunc>::copyFrom(const HashTable<KeyType, ValueType, HashFunc>& other)
 {
 	capacity = other.capacity;
