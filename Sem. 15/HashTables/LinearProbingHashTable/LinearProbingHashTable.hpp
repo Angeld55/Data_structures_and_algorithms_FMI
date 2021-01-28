@@ -8,6 +8,28 @@ class LinearProbingHashTable : public HashTable<KeyType, ValueType, HashFunc>
 	const double MAX_FILL_LEVEL = 0.8;
 
 	std::vector<bool> deletedCells;
+	void resize()
+        {
+          int OldCap = this->capacity;
+          this->capacity *= 2;
+          std::vector<Pair*> OldTable = data;
+          this->data = new std::vector<Pair*>[this->capacity];
+          for (int i = 0; i < tableSize; i++)
+              data[i] = NULL;
+
+          for (int hash = 0; hash < OldCap; hash++)
+
+              if (OldTable[hash] != NULL)
+              {
+                  int i = hasher(OldTable[hash]);
+                  while (OldTable != NULL)
+                      i = (i == data.size()-1) ? 0 : i + 1;
+
+                  data[i] = OldTable[hash];
+              }
+
+          delete[] oldTable;
+        }
 
 public:
 	LinearProbingHashTable();
