@@ -1,90 +1,146 @@
-#pragma once
 #include "../HashTable.hpp"
 
-template<class KeyType, class ValueType, class HashFunc>
-class LinearProbingHashTable : public HashTable<KeyType, ValueType, HashFunc>
+template <typename keyType, typename valueType, typename hashFunc = hash<keyType>>
+class LinearProbingHashTable : public HashTable<keyType, valueType, hashFunc>
 {
-	const size_t jump = 1;
-	const double MAX_FILL_LEVEL = 0.8;
+private:
+	size_t jump;
+	double maxFillLevel;
+	int elementsCount;
 
-	std::vector<bool> deletedCells;
+	vector<bool> deletedCells;
+
+	void copyFrom(const LinearProbingHashTable<keyType, valueType, hashFunc>& other);
 
 public:
+	void put(const keyType& key, const valueType& value);
+	const valueType& get(const keyType& key);
+	void remove(const keyType& key);
+
 	LinearProbingHashTable();
-
-	void put(KeyType key, ValueType value);
-	const ValueType& get(KeyType key);
-	bool remove(KeyType key);
-
+	LinearProbingHashTable(const LinearProbingHashTable<keyType, valueType, hashFunc>& other);
+	const LinearProbingHashTable<keyType, valueType, hashFunc>& operator= (const LinearProbingHashTable<keyType, valueType, hashFunc>& other);
 };
 
-template<class KeyType, class ValueType, class HashFunc>
-LinearProbingHashTable<KeyType, ValueType, HashFunc>::LinearProbingHashTable() : deletedCells(this->capacity, false)
+template <typename keyType, typename valueType, typename hashFunc>
+void LinearProbingHashTable<keyType, valueType, hashFunc>::put(const keyType& key, const valueType& value)
 {
+	this->addElInTableAndSeq(key, value, jump, true);
+	elementsCount++;
 
-}
-
-template<class KeyType, class ValueType, class HashFunc>
-void LinearProbingHashTable<KeyType, ValueType, HashFunc>::put(KeyType key, ValueType value)
-{
-	size_t index = this->hasher(key) % this->capacity;
-
-	while (this->data[index] != nullptr)
-		(index += jump) %= this->capacity;
-	typename HashTable<KeyType, ValueType, HashFunc>::Pair* temp = new typename HashTable<KeyType, ValueType, HashFunc>::Pair(key, value);
-	this->data[index] = temp;
-
-	//if (capacity * MAX_FILL_LEVEL <= elementsCount)
-	//{
-	//	resize(); //each element should be re-hashed
-	//}
-}
-
-template<class KeyType, class ValueType, class HashFunc>
-const ValueType& LinearProbingHashTable<KeyType, ValueType, HashFunc>::get(KeyType key)
-{
-	size_t index = this->hasher(key) % this->capacity;
-	size_t startIndex = index;
-	while (true)
+	if (elementsCount >= maxFillLevel * this->hashTable.capacity())
 	{
-		typename HashTable<KeyType, ValueType, HashFunc>::Pair* currentCell = this->data[index];
-
-		if (currentCell != nullptr && currentCell->key == key)
-			return currentCell->value;
-		if (currentCell == nullptr && !deletedCells[index])
-			throw "No such element!";
-
-		(index += jump) %= this->capacity;
-
-		if (index == startIndex)
-			throw "No such element!";
+		this->resize();
+		deletedCells.resize(this->hashTable.capacity());
 	}
 }
-
-template<class KeyType, class ValueType, class HashFunc>
-bool LinearProbingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key)
+template <typename keyType, typename valueType, typename hashFunc>
+const valueType& LinearProbingHashTable<keyType, valueType, hashFunc>::get(const keyType& key)
 {
-	size_t index = this->hasher(key) % this->capacity;
-	size_t startIndex = index;
+	size_t index = this->hasher(key) % this->hashTable.capacity();
+	int startIndex = index;
 
-	while (this->data[index] != nullptr || deletedCells[index])
+	// An optimisation we do: replace the earliest tombstone encountered with the value we did a lookup for. The next time we lookup the key,
+	// it will be found much faster!
+	size_t firstTombstoneIndex = -1;
+	bool foundFirstTombstoneIndex = false;
+
+	do
 	{
-		typename HashTable<KeyType, ValueType, HashFunc>::Pair* currentCell = this->data[index];
-		if (currentCell == nullptr)
-			continue;
+		if (!this->hashTable[index] && !deletedCells[index])
+			throw "No such element";
 
-		if (currentCell->key == key)
+		if (!foundFirstTombstoneIndex && deletedCells[index])
 		{
-			delete currentCell;
-			currentCell = nullptr;
-			deletedCells[index] = true;
-			return true;
+			foundFirstTombstoneIndex = true;
+			firstTombstoneIndex = index;
 		}
 
-		(index += jump) %= this->capacity;
+		if ((!this->hashTable[index] && deletedCells[index]) || (this->hashTable[index]->key != key))
+		{
+			(index += jump) %= this->hashTable.capacity();
+			continue;
+		}
 
-		if (index == startIndex)
-			throw "Invalid key";
+		if (foundFirstTombstoneIndex)
+		{
+			deletedCells[firstTombstoneIndex] = false;
+			this->hashTable[firstTombstoneIndex] = this->hashTable[index];
+
+			this->hashTable[index] = nullptr;
+			return this->hashTable[firstTombstoneIndex]->value;
+		}
+
+		return this->hashTable[index]->value;
+
+	} while (index != startIndex);
+
+	throw "No such element";
+}
+template <typename keyType, typename valueType, typename hashFunc>
+void LinearProbingHashTable<keyType, valueType, hashFunc>::remove(const keyType& key)
+{
+	size_t index = this->hasher(key) % this->hashTable.capacity();
+	int startIndex = index;
+
+	do
+	{
+		if (!this->hashTable[index] && !deletedCells[index])
+			throw "No such element";
+
+		if ((!this->hashTable[index] && deletedCells[index]) || (this->hashTable[index]->key != key))
+		{
+			(index += jump) %= this->hashTable.capacity();
+			continue;
+		}
+
+		// removing searched value from the ordered sequence
+		this->handleRemoveInSeq(this->hashTable[index]);
+
+		// removing searched value from the hash table
+		delete this->hashTable[index];
+		this->hashTable[index] = nullptr;
+		elementsCount--;
+		deletedCells[index] = true;
+
+		return;
+
+	} while (index != startIndex);
+
+	throw "No such element";
+}
+
+template <typename keyType, typename valueType, typename hashFunc>
+void LinearProbingHashTable<keyType, valueType, hashFunc>::copyFrom(const LinearProbingHashTable<keyType, valueType, hashFunc>& other)
+{
+	this->jump = other.jump;
+	this->maxFillLevel = other.maxFillLevel;
+	this->deletedCells = other.deletedCells;
+
+	typename HashTable<keyType, valueType, hashFunc>::Pair* iter = other.first;
+	while (iter)
+	{
+		put(iter->key, iter->value);
+		iter = iter->nextInSeq;
 	}
-	throw "Invalid key";
+}
+
+template <typename keyType, typename valueType, typename hashFunc>
+LinearProbingHashTable<keyType, valueType, hashFunc>::LinearProbingHashTable() : jump(1), maxFillLevel(0.8), elementsCount(0), deletedCells(this->hashTable.capacity(), false)
+{}
+template <typename keyType, typename valueType, typename hashFunc>
+LinearProbingHashTable<keyType, valueType, hashFunc>::LinearProbingHashTable(const LinearProbingHashTable<keyType, valueType, hashFunc>& other)
+{
+	copyFrom(other);
+}
+template <typename keyType, typename valueType, typename hashFunc>
+const LinearProbingHashTable<keyType, valueType, hashFunc>& LinearProbingHashTable<keyType, valueType, hashFunc>::operator= (const LinearProbingHashTable<keyType, valueType, hashFunc>& other)
+{
+	if (this != &other)
+	{
+		this->free();
+		copyFrom(other);
+	}
+
+	return *this;
 }
