@@ -1,154 +1,146 @@
-#pragma once
 #include "../HashTable.hpp"
 
-template<class KeyType, class ValueType, class HashFunc = std::hash<KeyType>>
-class SeparateChainingHashTable : public HashTable<KeyType, ValueType, HashFunc>
+template <typename keyType, typename valueType, typename hashFunc = hash<keyType>>
+class SeparateChainingHashTable : public HashTable<keyType, valueType, hashFunc>
 {
-
-	void free();
-	void copyFrom(const SeparateChainingHashTable& other);
-
-	struct SepChaingHashPair : public HashTable<KeyType, ValueType, HashFunc>::Pair
+private:
+	struct SeparateChainingHashTablePair : public HashTable<keyType, valueType, hashFunc>::Pair
 	{
-		SepChaingHashPair(const KeyType& key, const ValueType& value) : HashTable<KeyType, ValueType, HashFunc>::Pair(key, value){}
-		SepChaingHashPair* next = nullptr;
+		SeparateChainingHashTablePair* next;
+
+		SeparateChainingHashTablePair(const keyType& key, const valueType& value) : HashTable<keyType, valueType, hashFunc>::Pair(key, value)
+		{
+			next = nullptr;
+		}
+		~SeparateChainingHashTablePair()
+		{
+			if (next)
+				delete next;
+		}
 	};
 
+	void copyFrom(const SeparateChainingHashTable<keyType, valueType, hashFunc>& other);
+
 public:
-	SeparateChainingHashTable() = default;
-	SeparateChainingHashTable(const SeparateChainingHashTable& other);
-	const SeparateChainingHashTable& operator=(const SeparateChainingHashTable& other);
-	~SeparateChainingHashTable();
+	void put(const keyType& key, const valueType& value);
+	const valueType& get(const keyType& key);
+	void remove(const keyType& key);
 
-	void put(KeyType key, ValueType value);
-	const ValueType& get(KeyType key);
-	bool remove(KeyType key);
-
+	SeparateChainingHashTable();
+	SeparateChainingHashTable(const SeparateChainingHashTable<keyType, valueType, hashFunc>& other);
+	const SeparateChainingHashTable<keyType, valueType, hashFunc>& operator= (const SeparateChainingHashTable<keyType, valueType, hashFunc>& other);
 };
 
-template<class KeyType, class ValueType, class HashFunc>
-SeparateChainingHashTable<KeyType, ValueType, HashFunc>::SeparateChainingHashTable(const SeparateChainingHashTable& other)
+template <typename keyType, typename valueType, typename hashFunc>
+void SeparateChainingHashTable<keyType, valueType, hashFunc>::put(const keyType& key, const valueType& value)
 {
-	copyFrom(other);
+	size_t index = this->hasher(key) % this->hashTable.capacity();
+
+	SeparateChainingHashTablePair* newBegin = new SeparateChainingHashTablePair(key, value);
+
+	// adding newBegin to the ordered sequence
+	this->handlePutInSeq(newBegin);
+
+	// adding newBegin to the hash table
+	SeparateChainingHashTablePair* temp = (SeparateChainingHashTablePair*)(this->hashTable[index]);
+	this->hashTable[index] = newBegin;
+	newBegin->next = temp;
 }
-
-
-template<class KeyType, class ValueType, class HashFunc>
-const SeparateChainingHashTable<KeyType, ValueType, HashFunc>& SeparateChainingHashTable<KeyType, ValueType, HashFunc>::operator=(const SeparateChainingHashTable<KeyType, ValueType, HashFunc>& other)
+template <typename keyType, typename valueType, typename hashFunc>
+const valueType& SeparateChainingHashTable<keyType, valueType, hashFunc>::get(const keyType& key)
 {
-	if (this != &other)
-	{
-		//HashTable<KeyType, ValueType, HashFunc>::operator=(other);
-		free();
-		copyFrom(other);
-	}
-	return *this;
-}
+	size_t index = this->hasher(key) % this->hashTable.capacity();
+	SeparateChainingHashTablePair* iter = (SeparateChainingHashTablePair*)(this->hashTable[index]);
 
-template<class KeyType, class ValueType, class HashFunc>
-SeparateChainingHashTable<KeyType, ValueType, HashFunc>::~SeparateChainingHashTable()
-{
-	free();
-}
-
-template<class KeyType, class ValueType, class HashFunc>
-void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::put(KeyType key, ValueType value)
-{
-	size_t index = this->hasher(key) % this->capacity;
-	SepChaingHashPair* newBox = new SepChaingHashPair(key, value);
-
-	SepChaingHashPair* temp = (SepChaingHashPair*)(this->data[index]);
-	this->data[index] = newBox;
-	newBox->next = temp;
-}
-
-template<class KeyType, class ValueType, class HashFunc>
-const ValueType& SeparateChainingHashTable<KeyType, ValueType, HashFunc>::get(KeyType key)
-{
-	size_t index = this->hasher(key) % this->capacity;
-
-	SepChaingHashPair* iter = (SepChaingHashPair*)(this->data[index]);
-
-	while (iter != nullptr)
+	while (iter)
 	{
 		if (iter->key == key)
 			return iter->value;
+
 		iter = iter->next;
 	}
+
 	throw "No such element!";
-
 }
-
-template<class KeyType, class ValueType, class HashFunc>
-bool SeparateChainingHashTable<KeyType, ValueType, HashFunc>::remove(KeyType key)
+template <typename keyType, typename valueType, typename hashFunc>
+void SeparateChainingHashTable<keyType, valueType, hashFunc>::remove(const keyType& key)
 {
-	size_t index = this->hasher(key) % this->capacity;
+	size_t index = this->hasher(key) % this->hashTable.capacity();
 
-	SepChaingHashPair* iter = (SepChaingHashPair*)(this->data[index]);
-	
-	if (iter == nullptr)
-		return false;
+	SeparateChainingHashTablePair* iter = (SeparateChainingHashTablePair*)(this->hashTable[index]);
+	SeparateChainingHashTablePair* prev = nullptr;
+
+	if (!iter)
+		throw "No such element!";
+
+	// removing iter from the hash table
 	if (iter->key == key)
 	{
-		SepChaingHashPair* newBegin = iter->next;
-		delete iter;
-		this->data[index] = newBegin;
-		return true;
+		SeparateChainingHashTablePair* newBegin = iter->next;
+		this->hashTable[index] = newBegin;
 	}
-
-
-	SepChaingHashPair* prev = iter;
-	iter = iter->next;
-
-	while (iter != nullptr)
+	else
 	{
-		if (iter->key == key)
-		{
-			prev->next = iter->next;
-			delete iter;
-			return true;
-		}
+		prev = iter;
 		iter = iter->next;
-		prev = prev->next;
-	}
-	return false;
-}
-template<class KeyType, class ValueType, class HashFunc>
-void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::free()
-{
-	for (int i = 0; i < this->data.size(); i++)
-	{
-		SepChaingHashPair* iter = (SepChaingHashPair*)this->data[i];
 
-		while (iter != nullptr)
+		bool found = false;
+
+		while (iter && !found)
 		{
-			SepChaingHashPair* next = iter->next;
-			delete iter;
-			iter = next;
+			if (iter->key == key)
+				found = true;
+			else
+			{
+				iter = iter->next;
+				prev = prev->next;
+			}
 		}
-		this->data[i] = nullptr;
+	}
+
+	if (iter == prev)
+		throw "No such element!";
+
+	// removing iter from the ordered sequence
+	this->handleRemoveInSeq(iter);
+
+	if (prev)
+		prev->next = iter->next;
+
+	iter->next = nullptr;
+	delete iter;
+}
+
+template <typename keyType, typename valueType, typename hashFunc>
+void SeparateChainingHashTable<keyType, valueType, hashFunc>::copyFrom(const SeparateChainingHashTable<keyType, valueType, hashFunc>& other)
+{
+	typename HashTable<keyType, valueType, hashFunc>::Pair* iter = other.first;
+
+	while (iter)
+	{
+		put(iter->key, iter->value);
+		iter = iter->nextInSeq;
 	}
 }
 
-template<class KeyType, class ValueType, class HashFunc>
-void SeparateChainingHashTable<KeyType, ValueType, HashFunc>::copyFrom(const SeparateChainingHashTable& other)
+template <typename keyType, typename valueType, typename hashFunc>
+SeparateChainingHashTable<keyType, valueType, hashFunc>::SeparateChainingHashTable()
 {
-	for (int i = 0; i < other.data.size(); i++)
+	this->first = this->last = nullptr;
+}
+template <typename keyType, typename valueType, typename hashFunc>
+SeparateChainingHashTable<keyType, valueType, hashFunc>::SeparateChainingHashTable(const SeparateChainingHashTable<keyType, valueType, hashFunc>& other)
+{
+	copyFrom(other);
+}
+template <typename keyType, typename valueType, typename hashFunc>
+const SeparateChainingHashTable<keyType, valueType, hashFunc>& SeparateChainingHashTable<keyType, valueType, hashFunc>::operator= (const SeparateChainingHashTable<keyType, valueType, hashFunc>& other)
+{
+	if (this != &other)
 	{
-		SepChaingHashPair* otherIter = (SepChaingHashPair*)other.data[i]; 
-		if (otherIter == nullptr)
-			continue;
-		
-		this->data[i] = new SepChaingHashPair(*otherIter);
-		SepChaingHashPair* currentIter = (SepChaingHashPair*)this->data[i];
-		otherIter = otherIter->next;
-	
-		while (otherIter != nullptr)
-		{
-			currentIter->next = new SepChaingHashPair(*otherIter);
-			otherIter = otherIter->next;
-			currentIter = currentIter->next;
-		} 
-		currentIter->next = nullptr;
+		this->free();
+		copyFrom(other);
 	}
+
+	return *this;
 }
