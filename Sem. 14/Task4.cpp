@@ -41,5 +41,29 @@ void getLongestPrettyPath(Node* root, vector<int>& path)
 }
 int main()
 {
-    
+ 	Node* root = new Node(5);
+
+	root->children.push_back(new Node(3));
+	root->children.push_back(new Node(9));
+	root->children.push_back(new Node(3));
+
+	root->children[0]->children.push_back(new Node(4));
+	root->children[0]->children.push_back(new Node(3));
+	root->children[0]->children.push_back(new Node(7));
+
+	root->children[0]->children[2]->children.push_back(new Node(9));
+
+	root->children[2]->children.push_back(new Node(5));
+	root->children[2]->children.push_back(new Node(4));
+
+	root->children[2]->children[0]->children.push_back(new Node(2));
+	root->children[2]->children[1]->children.push_back(new Node(9));   
+	
+	vector<int> path;
+	getLongestPrettyPath(root,path);
+	
+	for(int i = 0; i < path.size(); i++)
+	    cout << path[i] << " ";
+	
+	delete root;
 }
