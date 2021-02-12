@@ -9,6 +9,12 @@ struct Node
 
 	int value;
 	vector<Node*> children;
+	
+	~Node()
+	{
+	    for(int i = 0; i < children.size(); i++)
+	        delete children[i];
+	}
 };
 
 bool isTreeSeenTheSameFromBothSides(Node* root, vector<int>& view)
@@ -60,4 +66,6 @@ int main()
 	cout << result << endl << endl;
 	for (int i = 0; i < view.size(); i++)
 		cout << view[i] << endl;
+	
+	delete root;
 }
