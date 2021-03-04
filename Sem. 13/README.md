@@ -10,5 +10,5 @@
  - **Алгоритъм за търсене на цикъл в граф.**
  -  **Алгоритъм за топологично сортиране на граф.**
 
-Реализациите са в папката на [семинар 11](https://github.com/Angeld55/Data_structures_and_algorithms_FMI_2020-2021/tree/main/Sem.%2011/Graphs/Algorithms).
+Реализациите са в папката на [семинар 11](https://github.com/Angeld55/Data_structures_and_algorithms_FMI_2020-2021/tree/main/Sem.%2011).
 
