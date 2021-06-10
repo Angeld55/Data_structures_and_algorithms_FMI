@@ -159,7 +159,7 @@ int Prim(const Graph& g, Graph& MST)
 	std::vector<bool>  visited(g.getVertexCount(), false);
 
 	auto comp = [](const std::tuple<int, int, int>& lhs, const std::tuple<int, int, int>& rhs) { return std::get<2>(lhs) > std::get<2>(rhs); };
-	std::priority_queue<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int> >, decltype(comp)> q;
+	std::priority_queue<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int> >, decltype(comp)> q(comp);
 	
 	// Each tuple looks like this: <start, end, weight>
 
