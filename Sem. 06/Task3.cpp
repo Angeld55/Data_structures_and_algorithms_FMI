@@ -18,6 +18,7 @@ void print(Node* list)
 		iter = iter->next;
 	}
 }
+
 void freeList(Node* list)
 {
 	Node* iter = list;
@@ -28,6 +29,7 @@ void freeList(Node* list)
 		iter = next;
 	}	
 }
+
 Node* rearrange(Node* list)
 {
 	Node* firstEven;
@@ -73,6 +75,7 @@ Node* rearrange(Node* list)
 	
 	return lastEven != nullptr ? firstEven : firstOdd;
 }
+
 int main()
 {
 	Node* list = new Node(1, new Node(8, nullptr));
