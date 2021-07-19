@@ -8,7 +8,8 @@ struct Node
 	int value;
 	Node* next;
 };
-void Print(Node* list)
+
+void print(Node* list)
 {
 	Node* iter = list;
 	while (iter != nullptr)
@@ -17,6 +18,16 @@ void Print(Node* list)
 		iter = iter->next;
 	}
 }
+void freeList(Node* list)
+{
+	Node* iter = list;
+	while(iter)
+	{
+		Node* next = iter->next;
+		delete iter;
+		iter = next;
+	}	
+}
 Node* rearrange(Node* list)
 {
 	Node* firstEven;
@@ -24,6 +35,7 @@ Node* rearrange(Node* list)
 
 	Node* firstOdd;
 	Node* lastOdd;
+	
 	firstEven = lastEven = firstOdd = lastOdd = nullptr;
 
 	Node* iter = list;
@@ -51,7 +63,6 @@ Node* rearrange(Node* list)
 			}
 
 		}
-
 		iter = iter->next;
 	}
 	if (lastEven)
@@ -59,12 +70,13 @@ Node* rearrange(Node* list)
 		
 	if (lastOdd)
 		lastOdd->next = nullptr;
+	
 	return lastEven != nullptr ? firstEven : firstOdd;
 }
 int main()
 {
-	Node* list = new Node(1, new Node(8,nullptr));
-	Print(rearrange(list));
-	
+	Node* list = new Node(1, new Node(8, nullptr));
+	print(rearrange(list));
+	freeList(list);
 
 }
