@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
 #include "PriorityQueue.h"
-#include "BST.h"
+
 void HeapSort(std::vector<int>& v)
 {
-	PriorityQueue q(v); // Ñòðîè ïèðàìèäà îò ìàñèâ - O(n)
+	PriorityQueue q(v); // Ã‘Ã²Ã°Ã®Ã¨ Ã¯Ã¨Ã°Ã Ã¬Ã¨Ã¤Ã  Ã®Ã² Ã¬Ã Ã±Ã¨Ã¢ - O(n)
 
 	for (int i = v.size() - 1; i >= 0; i--)
 		v[i] = q.get(); //log(n)
