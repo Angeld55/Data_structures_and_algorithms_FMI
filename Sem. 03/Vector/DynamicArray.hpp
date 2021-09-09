@@ -8,44 +8,38 @@ class DynamicArray {
 
 private:
 	T* arr;
-	size_t curSize;
+	size_t size;
 	size_t capacity;
 
 public:
 	DynamicArray();
-	DynamicArray(int size);
+	DynamicArray(size_t size);
 	DynamicArray(const DynamicArray<T>& other);
 	DynamicArray<T>& operator=(const DynamicArray<T>& other);
 	~DynamicArray();
 
 private:
-	void CopyFrom(const DynamicArray<T>& other);
-	void Free();
-	void Resize(size_t newCap);
-	void swap(int i, int j);
-	int Partition(int low, int high);
-	void QuickSort(int low, int high);
+	void copyFrom(const DynamicArray<T>& other);
+	void free();
+	void resize(size_t newCap);
+
 public:
-	void PushBack(const T& newElem); //add a new element in the end
-	T PopBack(); //removes the last element
-	
-	void InsertAt(size_t index, const T& newElem); //add a new element on random position
-	void RemoveAt(size_t index); //removes an element on random position
-	
-	int IndexOf(const T& el);
-	int getSize() const;
+	void pushBack(const T& newElem); //add a new element in the end
+	T popBack(); //removes the last element
+	int indexOf(const T& el);
+	size_t getSize() const;
+	bool isEmpty() const;
 	
 	const T& operator[](size_t index) const;
 	T& operator[](size_t index);
-	
-	void Sort();
 };
 
 template<typename T>
-DynamicArray<T>::DynamicArray() : curSize(0), capacity(4) 
+DynamicArray<T>::DynamicArray() : size(0), capacity(4) 
 {
 	arr = new T[capacity];
 }
+
 
 unsigned closestPowerOfTwo(unsigned n)
 {
@@ -55,19 +49,20 @@ unsigned closestPowerOfTwo(unsigned n)
 	n |= n >> 4;
 	n |= n >> 8;
 	n |= n >> 16;
-	return n + 1;
+	return n + 1;	
 }
 
 template <typename T>
-DynamicArray<T>::DynamicArray(int size) : curSize(0)
+DynamicArray<T>::DynamicArray(size_t size) : size(0)
 {
 	capacity = closestPowerOfTwo(size);
 	arr = new T[capacity];
 }
 
 template<typename T>
-DynamicArray<T>::DynamicArray(const DynamicArray<T>& other) {
-	CopyFrom(other);
+DynamicArray<T>::DynamicArray(const DynamicArray<T>& other)
+{
+	copyFrom(other);
 }
 
 template<typename T>
@@ -76,8 +71,8 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other)
 
 	if (this != &other) 
 	{
-		Free();
-		CopyFrom(other);
+		free();
+		copyFrom(other);
 	}
 	return *this;
 }
@@ -85,35 +80,36 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other)
 template<typename T>
 DynamicArray<T>::~DynamicArray() 
 {
-	Free();
+	free();
 }
 
 template<typename T>
-void DynamicArray<T>::CopyFrom(const DynamicArray<T>& other) 
+void DynamicArray<T>::copyFrom(const DynamicArray<T>& other) 
 {
 	
 	arr = new T[other.capacity];
 
-	for (size_t i = 0; i < other.curSize; i++)
+	for (size_t i = 0; i < other.size; i++)
 		arr[i] = other.arr[i];
 
-	curSize = other.curSize;
+	size = other.size;
 	capacity = other.capacity;
 }
 
 template<typename T>
-void DynamicArray<T>::Free() 
+void DynamicArray<T>::free() 
 {
 	delete[] arr;
 }
 
 template<typename T>
-void DynamicArray<T>::Resize(size_t newCap) 
+void DynamicArray<T>::resize(size_t newCap) 
 {
 	
 	T* temp = arr;
 	arr = new T[newCap];
-	for (size_t i = 0; i < curSize; i++)
+
+	for (size_t i = 0; i < size; i++)
 		arr[i] = temp[i];
 
 	capacity = newCap;
@@ -121,99 +117,37 @@ void DynamicArray<T>::Resize(size_t newCap)
 }
 
 
-
-template <typename T>
-void DynamicArray<T>::swap(int i, int j)
+template<typename T>
+void DynamicArray<T>::pushBack(const T& newElem) 
 {
-	T temp = arr[i];
-	arr[i] = arr[j];
-	arr[j] = temp;
-}
+	if (size >= capacity)
+		resize(capacity * 2);
 
-template <typename T>
-int DynamicArray<T>::Partition(int low, int high)
-{
-	T pivot = arr[high];  
-	int i = (low - 1); 
-	for (int j = low; j <= high - 1; j++)
-	{
-		
-		if (arr[j] < pivot)
-		{
-			i++;  
-			swap(i,j);
-		}
-	}
-	swap(i+1, high);
-	return (i + 1);
-}
-
-template <typename T>
-void DynamicArray<T>::QuickSort(int low, int high)
-{
-	if (low >= high)
-		return;
-	int pi = Partition( low, high);
-	QuickSort( low, pi - 1);
-	QuickSort(pi + 1, high);
+	arr[size++] = newElem;
 }
 
 template<typename T>
-void DynamicArray<T>::PushBack(const T& newElem) 
+T DynamicArray<T>::popBack() 
 {
 
-	if (curSize >= capacity)
-		Resize(capacity * 2);
-
-	arr[curSize++] = newElem;
-}
-
-template<typename T>
-T DynamicArray<T>::PopBack() 
-{
-
-	T el = arr[curSize - 1];
-	if (curSize)
-		curSize--;
+	T el = arr[size - 1];
+	if (size)
+		size--;
 	else
 		throw std::length_error("Already empty!");
 
-	if (curSize * 2 <= capacity && capacity > 1)
-		Resize(capacity / 2);
+	if (size * 2 <= capacity && capacity > 1)
+		resize(capacity / 2);
+	
 	return el;
 }
 
-template<typename T>
-void DynamicArray<T>::InsertAt(size_t index, const T& newElem) 
-{
 
-	PushBack(newElem); //put the new element on last position
-
-	if (index >= curSize) //the element should be the last one
-		return;
-
-	for (size_t i = curSize - 1; i > index; i--)
-		std::swap(arr[i], arr[i - 1]);
-}
-
-template<typename T>
-void DynamicArray<T>::RemoveAt(size_t index) 
-{
-
-	if (index >= curSize || curSize == 1) { //removes the last element
-		PopBack();
-		return;
-	}
-
-	for (size_t i = index; i < curSize-1; i++)
-		std::swap(arr[i], arr[i + 1]);
-	PopBack();
-}
 
 template <typename T>
-int DynamicArray<T>::IndexOf(const T& el)
+int DynamicArray<T>::indexOf(const T& el)
 {
-	for (int i = 0; i < curSize; ++i)
+	for (int i = 0; i < size; ++i)
 	{
 		if (arr[i] == el)
 			return i;
@@ -222,32 +156,33 @@ int DynamicArray<T>::IndexOf(const T& el)
 }
 
 template<typename T>
-int DynamicArray<T>::getSize() const 
+size_t DynamicArray<T>::getSize() const 
 {
-	return curSize;
+	return size;
+}
+
+template<typename T>
+bool DynamicArray<T>::isEmpty() const
+{
+	return size == 0;
 }
 
 
 template<typename T>
 const T& DynamicArray<T>::operator[](size_t index) const 
 {
-
-	if (index > curSize)
+	if (index > size)
 		throw std::out_of_range("Out of range!");
 	return arr[index];
 }
 
 
 template<typename T>
-T& DynamicArray<T>::operator[](size_t index) {
-	if (index > curSize)
+T& DynamicArray<T>::operator[](size_t index) 
+{
+	if (index > size)
 		throw std::out_of_range("Out of range!");
 	return arr[index];
 }
 
-template <typename T>
-void DynamicArray<T>::Sort()
-{
-	QuickSort(0, curSize - 1);
-}
 #endif // !DYNAMICARRAY_HDR

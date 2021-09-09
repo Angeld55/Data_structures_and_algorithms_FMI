@@ -42,56 +42,52 @@ vector<Student> generateRandomStudents(int n)
 		generateRandomGrade(v[i].grade);
 	}
 
-	return v;
+	return std::move(v);
+}
+
+template <class T> void merge(T* arr1, size_t len1, T* arr2, size_t len2);
+
+template <class T>
+void mergeSort(T* arr, int len)
+{
+	if (len <= 1)
+		return;
+
+	size_t mid = len / 2;
+
+	mergeSort(arr, mid);
+	mergeSort(arr + mid, len - mid);
+
+	merge<T>(arr, mid, arr + mid, len - mid);
+
 }
 
 template <class T>
-void  Merge(T* arr1, int len1, T* arr2, int len2)
+void merge(T* arr1, size_t arr1len, T* arr2, size_t arr2len)
 {
+	T* result = new T[arr1len + arr2len];
 
-	T* result = new T[len1 + len2];
-	int cursor1 = 0;
-	int cursor2 = 0;
-	int resultCursor = 0;
-	while (cursor1<len1&&cursor2<len2)
+	size_t cursor1 = 0, cursor2 = 0, resultCursor = 0;
+
+	while (cursor1 < arr1len && cursor2 < arr2len)
 	{
 		if (arr1[cursor1] <= arr2[cursor2])
 			result[resultCursor++] = arr1[cursor1++];
 		else
 			result[resultCursor++] = arr2[cursor2++];
 	}
-	while (cursor1<len1)
+
+	while (cursor1 < arr1len)
 		result[resultCursor++] = arr1[cursor1++];
 
-
-	while (cursor2<len2)
+	while (cursor2 < arr2len)
 		result[resultCursor++] = arr2[cursor2++];
 
-
 	//Въпреки,че arr1 е с по-малка големина, можем да си ползволим това да излезем извън масива, понеже знаем, че arr1 с arr2 са слепени     
-	for (int i = 0; i<(len1 + len2); i++)
+	for (size_t i = 0; i < (arr1len + arr2len); i++)
 		arr1[i] = result[i];
 	delete[] result;
-
 }
-
-template <class T>
-void MergeSort(T* arr, int len)
-{
-
-	if (len <= 1)
-		return;
-
-	int mid = len / 2;
-
-	MergeSort(arr, mid);
-	MergeSort(arr + mid, len - mid);
-
-	Merge<T>(arr, mid, arr + mid, len - mid);
-
-
-}
-
 
 template <class T>
 void swap(T* arr, int i, int j)
@@ -103,59 +99,66 @@ void swap(T* arr, int i, int j)
 }
 
 template <class T>
-void BubbleSort(T* arr, int len)
+void bubbleSort(T* arr, int len)
 {
-	for (int j = 0; j<len; j++)
+	for (int j = 0; j < len; j++)
 	{
-		bool isSwapped = false;
-		for (int i = 0; i<len - 1 - j; i++)
+		size_t right = len - 1;
+		size_t lastSwappedIndex = 0;
+
+		for (int i = 0; i < right; i++)
 		{
-			if (arr[i]>arr[i + 1])
+			if (arr[i] > arr[i + 1])
 			{
 				swap(arr, i, i + 1);
-				isSwapped = true;
+				lastSwappedIndex = i;
 			}
 		}
-		if (!isSwapped) 
-			return;
+
+		right = lastSwappedIndex;
 	}
 }
 
 template <class T>
-void SelectionSort(T* arr, int size)
+void selectionSort(T* arr, size_t size)
 {
-	for (int i = 0; i<size - 1; i++)
+	for (size_t i = 0; i < size - 1; i++)
 	{
-		int minIndex = i;
-		for (int j = i + 1; j<size; j++)
+		size_t minIndex = i;
+
+		for (int j = i + 1; j < size; j++)
 		{
-			if (arr[j]<arr[minIndex])
+			if (arr[j] < arr[minIndex])
 				minIndex = j;
 		}
+
 		if (i != minIndex)
 			swap(arr, i, minIndex);
 	}
 }
-
-void CountSortForGrades(Student* arr, int len)
+void countSortForGrades(Student* arr, size_t len)
 {
-	int* countArr = new int[5]; //2,3,4,5,6
-	for (int i = 0; i < 5; i++)
+	const size_t GRADES_VALUES_COUNT = 5;
+
+	size_t* countArr = new size_t[GRADES_VALUES_COUNT]; //2,3,4,5,6
+
+	for (int i = 0; i < GRADES_VALUES_COUNT; i++)
 		countArr[i] = 0;
 
 	for (int i = 0; i < len; i++)
 		countArr[arr[i].grade - 2]++;
 
-	for (int i = 1; i < 5; i++)
+	for (int i = 1; i < GRADES_VALUES_COUNT; i++)
 		countArr[i] += countArr[i - 1];
 
 	Student* result = new Student[len];
 	for (int i = 0; i < len; i++)
 	{
 		Student currentStudent = arr[i];
-		int index = countArr[currentStudent.grade - 2]--;
+		size_t index = countArr[currentStudent.grade - 2]--;
 		result[index - 1] = currentStudent;
 	}
+
 	for (int i = 0; i < len; i++)
 		arr[i] = result[i];
 	delete[] result;
@@ -165,34 +168,34 @@ void CountSortForGrades(Student* arr, int len)
 int main()
 {
 	vector<Student> v1, v2, v3, v4;
-	v1 = v2 = v3 = v4 = generateRandomStudents(101000);
+	v1 = v2 = v3 = v4 = generateRandomStudents(10000);
 
 	std::cout << "Generated random students! Sorting..." << endl;
 	clock_t begin, end;
 	double elapsed;
 
 	begin = clock();
-	BubbleSort(&v1[0], v1.size());
+	bubbleSort(&v1[0], v1.size());
 	end = clock();
 	elapsed = double(end - begin);
 	std::cout << "Bubble sort: Time: " << elapsed << ", swaps: " << currentSortSwaps << endl;
 	currentSortSwaps = 0;
 
 	begin = clock();
-	SelectionSort(&v2[0], v2.size());
+	selectionSort(&v2[0], v2.size());
 	end = clock();
 	elapsed = double(end - begin);
 	std::cout << "Selection sort: Time: " << elapsed << ", swaps: " << currentSortSwaps << endl;
 	currentSortSwaps = 0;
 
 	begin = clock();
-	MergeSort(&v3[0], v3.size());
+	mergeSort(&v3[0], v3.size());
 	end = clock();
 	elapsed = double(end - begin);
 	std::cout << "Merge sort: Time: " << elapsed << endl;
 
 	begin = clock();
-	CountSortForGrades(&v4[0], v4.size());
+	countSortForGrades(&v4[0], v4.size());
 	end = clock();
 	elapsed = double(end - begin);
 	std::cout << "Count sort: Time: " << elapsed << endl;

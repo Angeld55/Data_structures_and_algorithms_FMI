@@ -6,14 +6,14 @@ int main()
 {
 	LinkedList<int> l;
 
-	l.AddFirst(3);
-	l.AddLast(5);
-	l.AddFirst(1);
-	l.AddLast(44);
-	l.Print();
-	l.RemoveFirst();
-	l.RemoveLast();
-	l.Print();
+	l.addFirst(3);
+	l.addLast(5);
+	l.addFirst(1);
+	l.addLast(44);
+	l.print();
+	l.removeFirst();
+	l.removeLast();
+	l.print();
 
 
 }

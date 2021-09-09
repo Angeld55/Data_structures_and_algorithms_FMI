@@ -2,7 +2,7 @@
 using namespace std;
 
 template <typename T>
-int Partition(T* arr, int len)
+int partition(T* arr, int len)
 {
 
 	T pivot = arr[len / 2];
@@ -24,26 +24,28 @@ int Partition(T* arr, int len)
 	}
 }
 
-
-
 template <typename T>
-void QuickSort(T* arr, int len)
+void quickSort(T* arr, size_t len)
 {
 	if (len <= 1)
 		return;
 
-	int pivotIndex = Partition(arr, len);
-	QuickSort(arr, pivotIndex);
-	QuickSort(arr + pivotIndex + 1, len - pivotIndex-1);
+	size_t pivotIndex = partition(arr, len);
+	quickSort(arr, pivotIndex);
+	quickSort(arr + pivotIndex + 1, len - pivotIndex - 1);
 }
+// Best case: T(n) = 2*T(n/2) + 1 easy solved with Master theorem
+// Worst case :T(n) = T(n-1) + 1
 
-
-const int SIZE = 15;
+const size_t SIZE = 15;
 int main()
 {
 	int arr1[] = { 15,14,13,12,11,30,90,8,7,6,5,4,3,2,1};
-	QuickSort(arr1, SIZE);
+	quickSort(arr1, SIZE);
 
 	for (int i = 0; i < SIZE; i++)
-		cout << arr1[i] << " ";
+		cout << arr1[i] << ' ';
+
+
+
 }

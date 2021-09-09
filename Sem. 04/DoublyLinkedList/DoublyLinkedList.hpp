@@ -1,10 +1,10 @@
 #pragma once
-#include "List.h"
-
+#include <iostream>
 template <typename T> 
-class DoublyLinkedList : public List<T>
+class DoublyLinkedList 
 {
 	size_t count = 0;
+
 	struct Node
 	{
 		Node(T data) : data(data) {}
@@ -15,12 +15,8 @@ class DoublyLinkedList : public List<T>
 
 	Node* head = nullptr;
 	Node* tail = nullptr;
-	bool isEmpty() const;
-
-	void getAtIndex(size_t index, Node*& ptr);
-
-	void CopyFrom(const DoublyLinkedList& other);
-	void Free();
+	void copyFrom(const DoublyLinkedList& other);
+	void free();
 
 public:
 	DoublyLinkedList();
@@ -30,16 +26,14 @@ public:
 
 	void pushBack(const T& el); //O(1)
 	void pushFront(const T& el); //O(1)
-	void insertAt(const T& el, int index); // O(n) - better use iterators!
-
-	T getAt(int index); // O(n)
 
 	T popBack(); // O(1)
 	T popFront(); // O(1)
-	T removeAt(int index); // O(n) - better use iterators!
 
 	void print() const;
 	size_t getSize() const;
+
+	bool isEmpty() const;
 };
 
 template <typename T>
@@ -82,52 +76,12 @@ void DoublyLinkedList<T>::pushFront(const T& el)
 	}
 	count++;
 }
-template <typename T>
-void DoublyLinkedList<T>::insertAt(const T& el, int index)
-{
-	if (index > count)
-		throw "invalid index";
-	if (index == 0)
-		pushFront(el);
-	else if (index == count)
-		pushBack(el);
-	else
-	{
-		Node* ptr;
-		getAtIndex(index, ptr);
-		Node* added = new Node(el);
-		added->next = ptr;
-		added->prev = ptr->prev;
-		ptr->prev->next = added;
-		ptr->prev = added;
-		count++;
-	}
-}
-
-template <typename T>
-void DoublyLinkedList<T>::getAtIndex(size_t index, Node*& ptr)
-{
-	Node* iter = head;
-	for (size_t i = 0; i < index; i++)
-		iter = iter->next;
-	ptr = iter;
-}
-
-template <typename T>
-T DoublyLinkedList<T>::getAt(int index)
-{
-	if (index < 0 || index >= count)
-		throw "Invalid index";
-	Node* result;
-	getAtIndex(index, result);
-	return result->data;
-}
 
 template<typename T>
 T DoublyLinkedList<T>::popBack()
 {
 	if (isEmpty())
-		throw "Empty!";
+		throw std::runtime_error("The list is empty!");
 	else if (head == tail)
 	{
 		T data = head->data;
@@ -154,7 +108,7 @@ template<typename T>
 T DoublyLinkedList<T>::popFront()
 {
 	if (isEmpty())
-		throw "Empty!";
+		throw std::runtime_error("The list is empty!");
 	else if (head == tail)
 	{
 		T data = head->data;
@@ -181,28 +135,6 @@ T DoublyLinkedList<T>::popFront()
 }
 
 template<typename T>
-T DoublyLinkedList<T>::removeAt(int index)
-{
-	if (isEmpty())
-		throw "Empty!";
-	if (index == 0)
-		return popFront();
-	if(index == count-1)
-		return popBack();
-	Node* toRemove;
-	getAtIndex(index, toRemove);
-
-	T data = toRemove->data;
-	toRemove->prev->next = toRemove->next;
-	toRemove->next->prev = toRemove->prev;
-	delete toRemove;
-	
-	count--;
-	return data;
-
-}
-
-template<typename T>
 void DoublyLinkedList<T>::print() const
 {
 	Node* iter = head;
@@ -225,7 +157,7 @@ size_t DoublyLinkedList<T>::getSize() const
 template <typename T>
 DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other)
 {
-	CopyFrom(other);
+	copyFrom(other);
 }
 
 template <typename T>
@@ -233,8 +165,8 @@ DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList<T>& o
 {
 	if (this != &other)
 	{
-		Free();
-		CopyFrom(other);
+		free();
+		copyFrom(other);
 	}
 	return *this;
 }
@@ -242,11 +174,11 @@ DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList<T>& o
 template <typename T>
 DoublyLinkedList<T>::~DoublyLinkedList()
 {
-	Free();
+	free();
 }
 
 template <typename T>
-void DoublyLinkedList<T>::CopyFrom(const DoublyLinkedList<T>& other)
+void DoublyLinkedList<T>::copyFrom(const DoublyLinkedList<T>& other)
 {
 	Node* otherIter = other.head;
 	while (otherIter != nullptr)
@@ -257,7 +189,7 @@ void DoublyLinkedList<T>::CopyFrom(const DoublyLinkedList<T>& other)
 }
 
 template<typename T>
-void DoublyLinkedList<T>::Free()
+void DoublyLinkedList<T>::free()
 {
 	Node* iter = head;
 	while (iter != nullptr)

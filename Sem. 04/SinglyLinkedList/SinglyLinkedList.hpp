@@ -13,31 +13,30 @@ class LinkedList
 		T data;
 		Node* next;
 	};
+
 	Node* head;
 	Node* tail;
 
-	void Free();
-	void CopyFrom(const LinkedList& other);
+	void free();
+	void copyFrom(const LinkedList& other);
+
 public:
 	LinkedList();
 	LinkedList(const LinkedList& other);
 	LinkedList operator=(const LinkedList& other);
 	~LinkedList();
 
-	void AddLast(T); // O(1)
-	void AddFirst(T);  //O(1)
+	void addLast(const T&); // O(1)
+	void addFirst(const T&);  //O(1)
 
-	T RemoveLast(); //O(n)
-	T RemoveFirst(); //O(1)
+	T removeLast(); //O(n)
+	T removeFirst(); //O(1)
 
-	void Print();
-
-	T GetAtIndex(int index);
-
+	void print() const;
 };
 
 template <typename T>
-void LinkedList<T>::Free()
+void LinkedList<T>::free()
 {
 	Node* iter = head;
 	while (iter!=nullptr)
@@ -49,12 +48,12 @@ void LinkedList<T>::Free()
 }
 
 template <typename T>
-void LinkedList<T>::CopyFrom(const LinkedList& other)
+void LinkedList<T>::copyFrom(const LinkedList& other)
 {
 	Node* iter = other.head;
 	while (iter != nullptr)
 	{
-		AddLast(iter->data);
+		addLast(iter->data);
 		iter = iter->next;
 	}
 	
@@ -70,7 +69,7 @@ LinkedList<T>::LinkedList()
 template <typename T>
 LinkedList<T>::LinkedList(const LinkedList& other)
 {
-	CopyFrom(other);
+	copyFrom(other);
 }
 
 template <typename T>
@@ -78,17 +77,18 @@ LinkedList<T> LinkedList<T>::operator=(const LinkedList& other)
 {
 	if (this!=&other)
 	{
-		Free();
-		CopyFrom(other);
+		free();
+		copyFrom(other);
 	}
 	return *this;
 }
 
 template <typename T>
-void LinkedList<T>::AddLast(T el)
+void LinkedList<T>::addLast(const T& el)
 {
 	Node* newNode = new Node(el);
-	if (head == nullptr&&tail == nullptr)//if its empty
+
+	if (head == nullptr && tail == nullptr)//if its empty
 	{
 		head = newNode;
 		tail = newNode;
@@ -99,11 +99,13 @@ void LinkedList<T>::AddLast(T el)
 		tail = newNode;
 	}
 }
+
 template <typename T>
-void LinkedList<T>::AddFirst(T el) 
+void LinkedList<T>::addFirst(const T& el) 
 {
 	Node* newNode = new Node(el);
-	if (head == nullptr&&tail == nullptr)//if its empty
+
+	if (head == nullptr && tail == nullptr)//if its empty
 	{
 		head = newNode;
 		tail = newNode;
@@ -114,42 +116,53 @@ void LinkedList<T>::AddFirst(T el)
 		head = newNode;
 	}
 }
+
 template <typename T>
-T LinkedList<T>::RemoveLast() //O(n)
+T LinkedList<T>::removeLast() //O(n)
 {
-	if (head == nullptr&&tail == nullptr)
-		throw "The list is empty";
+	std::cout << "Warning: O(n) operation. Consider using another structure!" << std::endl;
+
+	if (head == nullptr && tail == nullptr)
+		throw std::runtime_error("The list is empty!");
+
 	else if (head == tail)
 	{
 		T el = head->data;
 		delete head;
+
 		head = nullptr;
 		tail = nullptr;
+
 		return el;
 	}
 	else
 	{
 		Node* prev = head;
 		Node* current = head->next;
+
 		while (current != tail)
 		{
 			prev = prev->next;
 			current = current->next;
 		}
+
 		T el = tail->data;
+
 		delete tail;
+
 		tail = prev;
 		prev->next = nullptr;
-		return el;
 
+		return el;
 	}
 
 }
+
 template <typename T>
-T LinkedList<T>::RemoveFirst()
+T LinkedList<T>::removeFirst()
 {
-	if (head == nullptr&&tail == nullptr)
-		throw "The list is empty";
+	if (head == nullptr && tail == nullptr)
+		throw  std::runtime_error("The list is empty!");
 	else if (head == tail)
 	{
 		T el = head->data;
@@ -170,7 +183,7 @@ T LinkedList<T>::RemoveFirst()
 }
 
 template <typename T>
-void LinkedList<T>::Print()
+void LinkedList<T>::print() const
 {
 	Node* iter = head;
 	while (iter != nullptr)
@@ -183,21 +196,11 @@ void LinkedList<T>::Print()
 	std::cout << std::endl;
 
 }
-template <typename T>
-T LinkedList<T>::GetAtIndex(int index)
-{
-	Node* res = head;
-	for (int i = 0; res != nullptr&&i< index; i++)
-		res = res->next;
 
-	if (res == nullptr)
-		throw "No such index";
-	return res->data;
-}
 template <typename T>
 LinkedList<T>::~LinkedList()
 {
-	Free();
+	free();
 }
 
 
