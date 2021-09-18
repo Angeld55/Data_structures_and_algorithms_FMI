@@ -152,7 +152,7 @@ void BST::print()
 		}
 	}
 }
-void BST::createTreeRec(std::vector<int> v, int start, int end, Node*& root)
+void BST::createTreeRec(const std::vector<int>& v, int start, int end, Node*& root)
 {
 	if (start > end)
 	{
