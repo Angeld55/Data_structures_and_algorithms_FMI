@@ -28,7 +28,7 @@ class BST
 	void createTreeRec(std::vector<int> v, int start, int end, Node*& root);
 public:
 	BST() = default;
-	BST(std::vector<int> v);
+	BST(const std::vector<int>& v);
 	
 	BST(const BST& other);
 	BST& operator= (const BST& other);
