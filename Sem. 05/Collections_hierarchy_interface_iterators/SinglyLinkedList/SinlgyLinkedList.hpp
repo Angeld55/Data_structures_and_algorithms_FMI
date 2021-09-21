@@ -226,7 +226,7 @@ size_t SinglyLinkedList<T>::getSize() const
 template<typename T>
 const T& SinglyLinkedList<T>::operator[](size_t index) const
 {
-
+	std::cout << "Warining! Using and linear operation! Consider another method or another structure" << std::endl;
 	if (index > count)
 		throw std::out_of_range("Out of range!");
 	Node* ptr = head;
