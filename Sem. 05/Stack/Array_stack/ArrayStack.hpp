@@ -58,7 +58,7 @@ ArrayStack<T>& ArrayStack<T>::operator=(const ArrayStack<T>& other)
 template<typename T>
 ArrayStack<T>::~ArrayStack() 
 {
-	Free();
+	free();
 }
 
 template<typename T>
@@ -69,7 +69,7 @@ void ArrayStack<T>::copyFrom(const ArrayStack<T>& other)
 	for (size_t i = 0; i < other.currentSize; i++)
 		data[i] = other.data[i];
 
-	curSize = other.currentSize;
+	currentSize = other.currentSize;
 	capacity = other.capacity;
 }
 
@@ -99,7 +99,7 @@ template<typename T>
 void ArrayStack<T>::push(const T& newElem) 
 {
 
-	if (curSize >= capacity)
+	if (currentSize >= capacity)
 		resize(capacity * 2);
 
 	data[currentSize++] = newElem;
@@ -113,8 +113,8 @@ T ArrayStack<T>::pop()
 
 	T el = data[--currentSize];
 
-	if (curSize * 2 <= capacity && capacity > 1)
-		Resize(capacity / 2);
+	if (currentSize * 2 <= capacity && capacity > 1)
+		resize(capacity / 2);
 	return el;
 }
 
