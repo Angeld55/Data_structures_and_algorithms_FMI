@@ -3,12 +3,17 @@
 //Same implementation as DynamicArray. We only use PushBack and PopBack from it.
 
 template<typename T>
-class ArrayStack {
+class ArrayStack 
+{
 
 private:
 	T* arr;
-	size_t curSize;
+	size_t currentSize;
 	size_t capacity;
+
+	void copyFrom(const ArrayStack<T>& other);
+	void free();
+	void resize(size_t newCap);
 
 public:
 	ArrayStack();
@@ -16,67 +21,72 @@ public:
 	ArrayStack<T>& operator=(const ArrayStack<T>& other);
 	~ArrayStack();
 
-private:
-	void CopyFrom(const ArrayStack<T>& other);
-	void Free();
-	void Resize(size_t newCap);
 
-public:
-	void Push(const T& newElem); //add a new element in the end
-	T Pop(); //removes the last element
-	
-	size_t GetSize() const;
+	void push(const T& newElem); 
+	T pop(); 
+	const T& peek() const;
+
+	size_t size() const;
+	size_t isEmpty() const;
 };
 
 template<typename T>
-ArrayStack<T>::ArrayStack() : curSize(0), capacity(4) {
+ArrayStack<T>::ArrayStack() : currentSize(0), capacity(4)
+{
 	arr = new T[capacity];
 }
 
 
 template<typename T>
-ArrayStack<T>::ArrayStack(const ArrayStack<T>& other) {
-	CopyFrom(other);
+ArrayStack<T>::ArrayStack(const ArrayStack<T>& other) 
+{
+	copyFrom(other);
 }
 
 template<typename T>
-ArrayStack<T>& ArrayStack<T>::operator=(const ArrayStack<T>& other) {
+ArrayStack<T>& ArrayStack<T>::operator=(const ArrayStack<T>& other) 
+{
 
-	if (this != &other) {
-		Free();
-		CopyFrom(other);
+	if (this != &other) 
+	{
+		free();
+		copyFrom(other);
 	}
 	return *this;
 }
 
 template<typename T>
-ArrayStack<T>::~ArrayStack() {
+ArrayStack<T>::~ArrayStack() 
+{
 	Free();
 }
 
 template<typename T>
-void ArrayStack<T>::CopyFrom(const ArrayStack<T>& other) {
-
+void ArrayStack<T>::copyFrom(const ArrayStack<T>& other) 
+{
 	arr = new T[other.capacity];
 
-	for (size_t i = 0; i < other.curSize; i++)
+	for (size_t i = 0; i < other.currentSize; i++)
 		arr[i] = other.arr[i];
 
-	curSize = other.curSize;
+	curSize = other.currentSize;
 	capacity = other.capacity;
 }
 
 template<typename T>
-void ArrayStack<T>::Free() {
+void ArrayStack<T>::free() 
+{
 	delete[] arr;
 }
 
 template<typename T>
-void ArrayStack<T>::Resize(size_t newCap) {
+void ArrayStack<T>::resize(size_t newCap) 
+{
 
 	T* temp = arr;
 	arr = new T[newCap];
-	for (size_t i = 0; i < curSize; i++)
+
+	for (size_t i = 0; i < currentSize; i++)
 		arr[i] = temp[i];
 
 	capacity = newCap;
@@ -84,39 +94,46 @@ void ArrayStack<T>::Resize(size_t newCap) {
 }
 
 
-
 template<typename T>
-void ArrayStack<T>::Push(const T& newElem) {
+void ArrayStack<T>::push(const T& newElem) 
+{
 
 	if (curSize >= capacity)
-		Resize(capacity * 2);
+		resize(capacity * 2);
 
-	arr[curSize++] = newElem;
+	arr[currentSize++] = newElem;
 }
 
 template<typename T>
-T ArrayStack<T>::Pop() {
+T ArrayStack<T>::pop() 
+{
+	if (isEmpty())
+		throw std::runtime_error("Stack is empty!");
 
-	T el = arr[curSize - 1];
-	if (curSize)
-		curSize--;
-	else
-		throw std::length_error("Already empty!");
+	T el = arr[--currentSize];
 
 	if (curSize * 2 <= capacity && capacity > 1)
 		Resize(capacity / 2);
 	return el;
 }
 
-template <typename T>
-size_t ArrayStack<T>::GetSize() const
+template<typename T>
+const T& ArrayStack<T>::peek() const
 {
-	return  curSize;
+	if (isEmpty())
+		throw std::runtime_error("Stack is empty!");
+
+	return arr[currentSize - 1];
 }
 
-int main()
+template<typename T>
+size_t ArrayStack<T>::size() const
 {
-	ArrayStack<int> s;
-	s.Push(4);
-	s.GetSize();
+	return currentSize;
+}
+
+template<typename T>
+size_t ArrayStack<T>::isEmpty() const
+{
+	return size() == 0;
 }
