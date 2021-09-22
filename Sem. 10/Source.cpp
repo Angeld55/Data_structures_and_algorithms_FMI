@@ -1,26 +1,31 @@
 #include <iostream>
 #include <vector>
-#include "PriorityQueue.h"
-
-void HeapSort(std::vector<int>& v)
-{
-	PriorityQueue q(v); // Ñòðîè ïèðàìèäà îò ìàñèâ - O(n)
-
-	for (int i = v.size() - 1; i >= 0; i--)
-		v[i] = q.get(); //log(n)
-}
+#include "Algorithms.hpp"
 
 int main()
 {
-	PriorityQueue v({ 1, 2, 3, 4, 4, 5, 7, 8 });
-	v.print();
+	PriorityQueue pq({ 1, 2, 3, 4, 4, 5, 7, 8 });
+	pq.print();
+	std::cout << "----------------------------------------------\n";
+
+	pq.insert(100000);
+	pq.insert(-4);
+	pq.insert(55);
+	std::cout << "After inserting 100000, -4, 55:\n";
+	pq.print();
+	std::cout << "----------------------------------------------\n";
+
+	std::cout << "Remove the biggest element:\n";
+	pq.get();
+	pq.print();
 
 
-	v.insert(100000);
-	v.insert(-4);
-	v.get();
-	v.insert(55);
-
-	v.print();
+	std::cout << "\nHeap Sort:\n";
+	std::vector<int> v = { 15, 4, 8, 12, 54 ,2, 10 };
+	HeapSort(v);
+	for (int i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i] << ' ';
+	}
 
 }
