@@ -7,22 +7,22 @@ class ArrayStack
 {
 
 private:
-	T* arr;
+	T* data;
 	size_t currentSize;
 	size_t capacity;
 
-	void copyFrom(const ArrayStack<T>& other);
+	void copyFrom(const ArrayStack<T>&);
 	void free();
-	void resize(size_t newCap);
+	void resize(size_t);
 
 public:
 	ArrayStack();
-	ArrayStack(const ArrayStack<T>& other);
-	ArrayStack<T>& operator=(const ArrayStack<T>& other);
+	ArrayStack(const ArrayStack<T>&);
+	ArrayStack<T>& operator=(const ArrayStack<T>&);
 	~ArrayStack();
 
 
-	void push(const T& newElem); 
+	void push(const T&); 
 	T pop(); 
 	const T& peek() const;
 
@@ -33,7 +33,7 @@ public:
 template<typename T>
 ArrayStack<T>::ArrayStack() : currentSize(0), capacity(4)
 {
-	arr = new T[capacity];
+	data = new T[capacity];
 }
 
 
@@ -64,10 +64,10 @@ ArrayStack<T>::~ArrayStack()
 template<typename T>
 void ArrayStack<T>::copyFrom(const ArrayStack<T>& other) 
 {
-	arr = new T[other.capacity];
+	data = new T[other.capacity];
 
 	for (size_t i = 0; i < other.currentSize; i++)
-		arr[i] = other.arr[i];
+		data[i] = other.data[i];
 
 	curSize = other.currentSize;
 	capacity = other.capacity;
@@ -76,22 +76,23 @@ void ArrayStack<T>::copyFrom(const ArrayStack<T>& other)
 template<typename T>
 void ArrayStack<T>::free() 
 {
-	delete[] arr;
+	delete[] data;
 }
 
 template<typename T>
 void ArrayStack<T>::resize(size_t newCap) 
 {
 
-	T* temp = arr;
-	arr = new T[newCap];
+	T* temp = data;
+	data = new T[newCap];
 
 	for (size_t i = 0; i < currentSize; i++)
-		arr[i] = temp[i];
+		data[i] = temp[i];
 
 	capacity = newCap;
 	delete[] temp;
 }
+
 
 
 template<typename T>
@@ -101,7 +102,7 @@ void ArrayStack<T>::push(const T& newElem)
 	if (curSize >= capacity)
 		resize(capacity * 2);
 
-	arr[currentSize++] = newElem;
+	data[currentSize++] = newElem;
 }
 
 template<typename T>
@@ -110,7 +111,7 @@ T ArrayStack<T>::pop()
 	if (isEmpty())
 		throw std::runtime_error("Stack is empty!");
 
-	T el = arr[--currentSize];
+	T el = data[--currentSize];
 
 	if (curSize * 2 <= capacity && capacity > 1)
 		Resize(capacity / 2);
@@ -123,7 +124,7 @@ const T& ArrayStack<T>::peek() const
 	if (isEmpty())
 		throw std::runtime_error("Stack is empty!");
 
-	return arr[currentSize - 1];
+	return data[currentSize - 1];
 }
 
 template<typename T>
