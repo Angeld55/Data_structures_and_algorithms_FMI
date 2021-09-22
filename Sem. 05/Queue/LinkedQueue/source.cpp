@@ -25,9 +25,10 @@ int main()
 	q.enqueue(4);
 	q.enqueue(5);
 
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
+	LinkedQueue<int> q2(q);
+	std::cout << q2.dequeue() << std::endl;
+	std::cout << q2.dequeue() << std::endl;
+	std::cout << q2.dequeue() << std::endl;
+	std::cout << q2.dequeue() << std::endl;
+	std::cout << q2.dequeue() << std::endl;
 }
