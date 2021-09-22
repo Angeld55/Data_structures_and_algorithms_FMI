@@ -165,7 +165,7 @@ void BST::createTreeRec(const std::vector<int>& v, int start, int end, Node*& ro
 	createTreeRec(v, mid + 1, end, root->right);
 }
 
-BST::BST(std::vector<int> v)
+BST::BST(const std::vector<int>& v)
 {
 	if (!std::is_sorted(v.begin(), v.end()))
 		throw "Array should be sorted!";

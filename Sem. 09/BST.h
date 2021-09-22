@@ -25,7 +25,7 @@ class BST
 	bool remove_rec(int n, Node*& currentNode);
 	int getHeight(Node* root);
 
-	void createTreeRec(std::vector<int> v, int start, int end, Node*& root);
+	void createTreeRec(const std::vector<int>& v, int start, int end, Node*& root);
 public:
 	BST() = default;
 	BST(const std::vector<int>& v);
