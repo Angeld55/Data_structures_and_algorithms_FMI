@@ -1,31 +1,33 @@
 #include <iostream>
-#include <vector>
-#include "Algorithms.hpp"
+#include "BST.h"
 
 int main()
 {
-	PriorityQueue pq({ 1, 2, 3, 4, 4, 5, 7, 8 });
-	pq.print();
-	std::cout << "----------------------------------------------\n";
+	BST bst;
 
-	pq.insert(100000);
-	pq.insert(-4);
-	pq.insert(55);
-	std::cout << "After inserting 100000, -4, 55:\n";
-	pq.print();
-	std::cout << "----------------------------------------------\n";
+	bst.insert(2);
+	bst.insert(1);
+	bst.insert(4);
+	bst.insert(3);
+	bst.insert(5);
 
-	std::cout << "Remove the biggest element:\n";
-	pq.get();
-	pq.print();
+	bst.print();
+	std::cout << "------------------------------\n";
+	//std::cout << std::endl;
 
+	bst.remove(2);
+	std::cout << "After removing 2:\n\n";
+	bst.print();
+	std::cout << "------------------------------\n";
 
-	std::cout << "\nHeap Sort:\n";
-	std::vector<int> v = { 15, 4, 8, 12, 54 ,2, 10 };
-	HeapSort(v);
-	for (int i = 0; i < v.size(); i++)
-	{
-		std::cout << v[i] << ' ';
-	}
+	bst.remove(4);
+	std::cout << "After removing 4:\n\n";
+	bst.print();
+	std::cout << std::endl;
+
+	BST bst2 = bst;
+	std::cout << "------------------------------\n";
+	std::cout << "After copy:\n";
+	bst.print();
 
 }
