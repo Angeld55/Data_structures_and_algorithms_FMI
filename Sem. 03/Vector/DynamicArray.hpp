@@ -40,21 +40,23 @@ DynamicArray<T>::DynamicArray() : size(0), capacity(4)
 	arr = new T[capacity];
 }
 
-
-unsigned closestPowerOfTwo(unsigned n)
+template <typename T>
+DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
 {
-	n--;
+    auto closestPowerOfTwo = [](size_t n)
+    {
+       	n--;
+	    
 	n |= n >> 1;
 	n |= n >> 2;
 	n |= n >> 4;
 	n |= n >> 8;
 	n |= n >> 16;
+	n |= n >> 32;
+	    
 	return n + 1;	
-}
+    };
 
-template <typename T>
-DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
-{
 	capacity = closestPowerOfTwo(capacity);
 	arr = new T[capacity];
 }
