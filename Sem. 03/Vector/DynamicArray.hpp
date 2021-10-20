@@ -4,7 +4,8 @@
 #include <iostream>
 
 template<typename T>
-class DynamicArray {
+class DynamicArray 
+{
 
 private:
 	T* arr;
@@ -26,7 +27,6 @@ private:
 public:
 	void pushBack(const T& newElem); //add a new element in the end
 	T popBack(); //removes the last element
-	int indexOf(const T& el);
 	size_t getSize() const;
 	bool isEmpty() const;
 	
@@ -129,30 +129,18 @@ void DynamicArray<T>::pushBack(const T& newElem)
 template<typename T>
 T DynamicArray<T>::popBack() 
 {
-
-	T el = arr[size - 1];
 	if (size)
 		size--;
 	else
 		throw std::length_error("Already empty!");
 
+	
+	T el = arr[size - 1];
+	
 	if (size * 2 <= capacity && capacity > 1)
 		resize(capacity / 2);
 	
 	return el;
-}
-
-
-
-template <typename T>
-int DynamicArray<T>::indexOf(const T& el)
-{
-	for (int i = 0; i < size; ++i)
-	{
-		if (arr[i] == el)
-			return i;
-	}
-	return -1;
 }
 
 template<typename T>
