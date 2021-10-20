@@ -13,7 +13,7 @@ private:
 
 public:
 	DynamicArray();
-	DynamicArray(size_t size);
+	DynamicArray(size_t capacity);
 	DynamicArray(const DynamicArray<T>& other);
 	DynamicArray<T>& operator=(const DynamicArray<T>& other);
 	~DynamicArray();
@@ -53,9 +53,9 @@ unsigned closestPowerOfTwo(unsigned n)
 }
 
 template <typename T>
-DynamicArray<T>::DynamicArray(size_t size) : size(0)
+DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
 {
-	capacity = closestPowerOfTwo(size);
+	capacity = closestPowerOfTwo(capacity);
 	arr = new T[capacity];
 }
 
