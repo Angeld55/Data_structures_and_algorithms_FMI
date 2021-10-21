@@ -57,7 +57,7 @@ DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
 	return n + 1;	
     };
 
-	capacity = closestPowerOfTwo(capacity);
+	this->capacity = closestPowerOfTwo(capacity);
 	arr = new T[capacity];
 }
 
