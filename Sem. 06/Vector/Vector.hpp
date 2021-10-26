@@ -28,7 +28,6 @@ private:
 public:
 	void pushBack(const T& newElem); //add a new element in the end
 	T popBack(); //removes the last element
-	int indexOf(const T& el);
 	size_t getSize() const;
 	bool isEmpty() const;
 	
@@ -152,22 +151,24 @@ Vector<T>::Vector() : size(0), capacity(4)
 	arr = new T[capacity];
 }
 
-
-unsigned closestPowerOfTwo(unsigned n)
+template <typename T>
+DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
 {
-	n--;
+    auto closestPowerOfTwo = [](size_t n)
+    {
+       	n--;
+	    
 	n |= n >> 1;
 	n |= n >> 2;
 	n |= n >> 4;
 	n |= n >> 8;
 	n |= n >> 16;
+	n |= n >> 32;
+	    
 	return n + 1;	
-}
+    };
 
-template <typename T>
-Vector<T>::Vector(size_t size) : size(0)
-{
-	capacity = closestPowerOfTwo(size);
+	this->capacity = closestPowerOfTwo(capacity);
 	arr = new T[capacity];
 }
 
@@ -241,30 +242,15 @@ void Vector<T>::pushBack(const T& newElem)
 template<typename T>
 T Vector<T>::popBack() 
 {
-
-	T el = arr[size - 1];
-	if (size)
-		size--;
-	else
+	if(isEmpty())
 		throw std::length_error("Already empty!");
+	
+	T el = arr[--size];
 
 	if (size * 2 <= capacity && capacity > 1)
 		resize(capacity / 2);
 	
 	return el;
-}
-
-
-
-template <typename T>
-int Vector<T>::indexOf(const T& el)
-{
-	for (int i = 0; i < size; ++i)
-	{
-		if (arr[i] == el)
-			return i;
-	}
-	return -1;
 }
 
 template<typename T>
