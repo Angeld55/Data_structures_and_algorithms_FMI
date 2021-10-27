@@ -6,7 +6,7 @@ class LinkedList
 {
 	struct Node
 	{
-		Node(T data)
+		Node(const T& data)
 		{
 			this->data = data;
 			next = nullptr;
