@@ -30,8 +30,8 @@ public:
 	void addLast(const T&); // O(1)
 	void addFirst(const T&);  //O(1)
 
-	T removeLast(); //O(n)
-	T removeFirst(); //O(1)
+	const T& removeLast(); //O(n)
+	const T& removeFirst(); //O(1)
 
 	void print() const;
 };
