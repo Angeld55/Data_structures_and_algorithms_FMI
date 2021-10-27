@@ -32,7 +32,10 @@ public:
 
 	T removeLast(); //O(n)
 	T removeFirst(); //O(1)
-
+	
+	const T& front(); //O(1)
+	const T& back(); //O(1)
+ 
 	void print() const;
 };
 
@@ -181,6 +184,23 @@ T LinkedList<T>::removeFirst()
 		return el;
 	}
 
+}
+
+template <typename T>
+const T& LinkedList<T>::front()
+{
+	if (!head)
+		throw length_error("Empty list!");
+
+	return head->data;
+}
+template <typename T>
+const T& LinkedList<T>::back()
+{
+	if (!tail)
+		throw length_error("Empty list!");
+
+	return tail->data;
 }
 
 template <typename T>
