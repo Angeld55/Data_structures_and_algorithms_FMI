@@ -4,24 +4,21 @@ using namespace std;
 template <typename T>
 int partition(T* arr, int len)
 {
-
 	T pivot = arr[len / 2];
 	int i = 0, j = len-1 ;
+	int index = i;
 
-	while (true)
+	while (index <= j)
 	{
-
-		while (arr[j] > pivot)
-			j--;
-
-		while (arr[i] < pivot)
-			i++;
-
-		if (i < j)
-			std::swap(arr[i], arr[j]);
-		else
-			return j;
+		if (arr[index] < pivot)
+			std::swap(arr[i++], arr[index++]);
+		else if (arr[index] > pivot)
+			std::swap(arr[index], arr[j--]);
+		else 
+			index++;
 	}
+
+	return j;
 }
 
 template <typename T>
@@ -40,7 +37,7 @@ void quickSort(T* arr, size_t len)
 const size_t SIZE = 15;
 int main()
 {
-	int arr1[] = { 15,14,13,12,11,30,90,8,7,6,5,4,3,2,1};
+	int arr1[] = {15,14,13,12,11,30,90,8,7,6,5,4,3,2,1};
 	quickSort(arr1, SIZE);
 
 	for (int i = 0; i < SIZE; i++)
