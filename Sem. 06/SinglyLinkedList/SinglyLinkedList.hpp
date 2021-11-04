@@ -3,38 +3,46 @@
 template <typename T>
 class SinglyLinkedList
 {
+private:
 	struct Node
 	{
+		T data;
+		Node* next;
+
 		Node(const T& data)
 		{
 			this->data = data;
 			next = nullptr;
 		}
-		T data;
-		Node* next;
 	};
 
 	Node* head;
 	Node* tail;
 
-	void free();
-	void copyFrom(const SinglyLinkedList& other);
-
 public:
 	SinglyLinkedList();
-	SinglyLinkedList(const SinglyLinkedList& other);
-	SinglyLinkedList operator=(const SinglyLinkedList& other);
+	SinglyLinkedList(const SinglyLinkedList<T>& other);
+	SinglyLinkedList<T>& operator=(const SinglyLinkedList<T>& other);
 	~SinglyLinkedList();
 
-	void pushBack(const T&); 
-	void pushFront(const T&); 
+private:
+	void copyFrom(const SinglyLinkedList<T>& other);
+	void free();
 
-	T popLast();
-	T popFront();
+public:
+	void pushFront(const T& el);
+	void pushBack(const T& el);
+
+	void popFront();
+
+	const T& front() const;
+	const T& back() const;
+
+	template <typename U>
+	friend SinglyLinkedList<U> concat(SinglyLinkedList<U>& lhs, SinglyLinkedList<U>& rhs);
 
 	void print() const;
-
-
+	
 	class SLinkedIterator
 	{
 		Node* currentElementPtr;
@@ -101,154 +109,98 @@ public:
 
 	SLinkedIterator insertAfter(const T& element, const SLinkedIterator& it);
 	SLinkedIterator removeAfter(const SLinkedIterator& it);
-
 };
 
 template <typename T>
-void SinglyLinkedList<T>::free()
+void SinglyLinkedList<T>::pushFront(const T& el)
 {
-	Node* iter = head;
-	while (iter!=nullptr)
+	Node* newNode = new Node(el);
+
+	if (!head)
 	{
-		Node* prev = iter;
-		iter = iter->next;
-		delete prev;
+		head = tail = newNode;
+		return;
 	}
-}
 
-template <typename T>
-void SinglyLinkedList<T>::copyFrom(const SinglyLinkedList& other)
-{
-	Node* iter = other.head;
-	while (iter != nullptr)
-	{
-		pushBack(iter->data);
-		iter = iter->next;
-	}
-	
+	newNode->next = head;
+	head = newNode;
 }
-
-template <typename T>
-SinglyLinkedList<T>::SinglyLinkedList()
-{
-	head = nullptr;
-	tail = nullptr;
-}
-
-template <typename T>
-SinglyLinkedList<T>::SinglyLinkedList(const SinglyLinkedList& other)
-{
-	copyFrom(other);
-}
-
-template <typename T>
-SinglyLinkedList<T> SinglyLinkedList<T>::operator=(const SinglyLinkedList& other)
-{
-	if (this!=&other)
-	{
-		free();
-		copyFrom(other);
-	}
-	return *this;
-}
-
 template <typename T>
 void SinglyLinkedList<T>::pushBack(const T& el)
 {
 	Node* newNode = new Node(el);
 
-	if (head == nullptr && tail == nullptr)//if its empty
+	if (!tail)
 	{
-		head = newNode;
-		tail = newNode;
+		head = tail = newNode;
+		return;
 	}
-	else
-	{
-		tail->next = newNode;
-		tail = newNode;
-	}
+
+	tail->next = newNode;
+	tail = newNode;
 }
 
 template <typename T>
-void SinglyLinkedList<T>::pushFront(const T& el) 
+void SinglyLinkedList<T>::popFront()
 {
-	Node* newNode = new Node(el);
+	if (!head)
+		throw length_error("Empty list!");
 
-	if (head == nullptr && tail == nullptr)//if its empty
+	if (head == tail)
 	{
-		head = newNode;
-		tail = newNode;
+		delete head;
+		head = tail = nullptr;
+		return;
 	}
-	else
-	{
-		newNode->next = head;
-		head = newNode;
-	}
+
+	Node* toDelete = head;
+	head = head->next;
+	delete toDelete;
 }
 
 template <typename T>
-T SinglyLinkedList<T>::popLast() //O(n)
+const T& SinglyLinkedList<T>::front() const
 {
-	std::cout << "Warning: O(n) operation. Consider using another structure!" << std::endl;
+	if (!head)
+		throw length_error("Empty list!");
 
-	if (head == nullptr && tail == nullptr)
-		throw std::runtime_error("The list is empty!");
-
-	else if (head == tail)
-	{
-		T el = head->data;
-		delete head;
-
-		head = nullptr;
-		tail = nullptr;
-
-		return el;
-	}
-	else
-	{
-		Node* prev = head;
-		Node* current = head->next;
-
-		while (current != tail)
-		{
-			prev = prev->next;
-			current = current->next;
-		}
-
-		T el = tail->data;
-
-		delete tail;
-
-		tail = prev;
-		prev->next = nullptr;
-
-		return el;
-	}
-
+	return head->data;
 }
 
 template <typename T>
-T SinglyLinkedList<T>::popFront()
+const T& SinglyLinkedList<T>::back() const 
 {
-	if (head == nullptr && tail == nullptr)
-		throw  std::runtime_error("The list is empty!");
-	else if (head == tail)
+	if (!tail)
+		throw length_error("Empty list!");
+
+	return tail->data;
+}
+
+template <typename T>
+SinglyLinkedList<T> concat(SinglyLinkedList<T>& lhs, SinglyLinkedList<T>& rhs)
+{
+	SinglyLinkedList<T> result;
+
+	if (!lhs.head)
 	{
-		T el = head->data;
-		delete head;
-		head = nullptr;
-		tail = nullptr;
-		return el;
+		result.head = rhs.head;
+		result.tail = rhs.tail;
+	}
+	else if (!rhs.head)
+	{
+		result.head = lhs.head;
+		result.tail = lhs.tail;
 	}
 	else
 	{
-		T el = head->data;
-		Node* temp = head->next;
-		delete head;
-		head = temp;
-		return el;
+		lhs.tail->next = rhs.head;
+		result.head = lhs.head;
+		result.tail = rhs.tail;
 	}
 
+	rhs.head = rhs.tail = lhs.head = lhs.tail = nullptr;
+
+	return result;
 }
 
 template <typename T>
@@ -277,24 +229,69 @@ typename SinglyLinkedList<T>::SLinkedIterator SinglyLinkedList<T>::removeAfter(c
 }
 
 template <typename T>
-void SinglyLinkedList<T>::print() const
-{
-	Node* iter = head;
-	while (iter != nullptr)
-	{
-		std::cout << iter->data;
-		if (iter->next != nullptr)
-			std::cout << "->";
-		iter = iter->next;
-	}
-	std::cout << std::endl;
+SinglyLinkedList<T>::SinglyLinkedList() : head(nullptr), tail(nullptr)
+{}
 
+template <typename T>
+SinglyLinkedList<T>::SinglyLinkedList(const SinglyLinkedList<T>& other) : head(nullptr), tail(nullptr)
+{
+	copyFrom(other);
 }
 
+template <typename T>
+SinglyLinkedList<T>& SinglyLinkedList<T>::operator=(const SinglyLinkedList<T>& other)
+{
+	if (this != &other)
+	{
+		free();
+		copyFrom(other);
+	}
+
+	return *this;
+}
 template <typename T>
 SinglyLinkedList<T>::~SinglyLinkedList()
 {
 	free();
 }
 
+template <typename T>
+void SinglyLinkedList<T>::copyFrom(const SinglyLinkedList<T>& other)
+{
+	Node* iter = other.head;
 
+	while (iter)
+	{
+		pushBack(iter->data);
+		iter = iter->next;
+	}
+}
+
+template <typename T>
+void SinglyLinkedList<T>::free()
+{
+	Node* iter = head;
+
+	while (iter)
+	{
+		Node* toDelete = iter;
+		iter = iter->next;
+		delete toDelete;
+	}
+}
+
+template <typename T>
+void SinglyLinkedList<T>::print() const
+{
+	Node* iter = head;
+
+	while (iter)
+	{
+		std::cout << iter->data << ' ';
+		if (iter->next)
+			std::cout << "->" << ' ';
+		iter = iter->next;
+	}
+
+	std::cout << endl;
+}

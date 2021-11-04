@@ -26,7 +26,8 @@ private:
 
 public:
 	void pushBack(const T& newElem); //add a new element in the end
-	T popBack(); //removes the last element
+	void popBack(); //removes the last element
+	
 	size_t getSize() const;
 	bool isEmpty() const;
 	
@@ -129,20 +130,15 @@ void DynamicArray<T>::pushBack(const T& newElem)
 }
 
 template<typename T>
-T DynamicArray<T>::popBack() 
+void DynamicArray<T>::popBack() 
 {
 	if (size)
 		size--;
 	else
 		throw std::length_error("Already empty!");
 
-	
-	T el = arr[size - 1];
-	
-	if (size * 2 <= capacity && capacity > 1)
+	if (size * 4 <= capacity && capacity > 1)
 		resize(capacity / 2);
-	
-	return el;
 }
 
 template<typename T>

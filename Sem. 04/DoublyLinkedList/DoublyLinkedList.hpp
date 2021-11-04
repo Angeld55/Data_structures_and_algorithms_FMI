@@ -29,8 +29,11 @@ public:
 	void pushBack(const T& el); //O(1)
 	void pushFront(const T& el); //O(1)
 
-	T popBack(); // O(1)
-	T popFront(); // O(1)
+	void popBack(); // O(1)
+	void popFront(); // O(1)
+
+	const T& front() const;
+	const T& back() const;
 
 	void print() const;
 	size_t getSize() const;
@@ -80,20 +83,18 @@ void DoublyLinkedList<T>::pushFront(const T& el)
 }
 
 template<typename T>
-T DoublyLinkedList<T>::popBack()
+void DoublyLinkedList<T>::popBack()
 {
 	if (isEmpty())
 		throw std::runtime_error("The list is empty!");
-	else if (head == tail)
+	
+	if (head == tail)
 	{
-		T data = head->data;
 		delete head;
 		head = tail = nullptr;
-		return data;
 	}
 	else
 	{
-		T data = tail->data;
 		tail->prev->next = nullptr;
 
 		Node* toDelete = tail;
@@ -102,38 +103,51 @@ T DoublyLinkedList<T>::popBack()
 		delete toDelete;
 
 		count--;
-		return data;
 	}
 }
 
 template<typename T>
-T DoublyLinkedList<T>::popFront()
+void DoublyLinkedList<T>::popFront()
 {
 	if (isEmpty())
 		throw std::runtime_error("The list is empty!");
-	else if (head == tail)
-	{
-		T data = head->data;
-		delete head;
 
+	
+	if (head == tail)
+	{
+		delete head;
 		head = tail = nullptr;
-		
 		count--;
-		return data;
 	}
 	else
 	{
-		T data = head->data;
 		head->next->prev = nullptr;
 
 		Node* toDelete = head;
 		head = head->next;
 		
 		delete toDelete;
-		
+
 		count--;
-		return data;
 	}
+}
+
+template<typename T>
+const T& DoublyLinkedList<T>::front() const
+{
+	if (isEmpty())
+		throw std::runtime_error("The list is empty!");
+
+	return head->data;
+}
+
+template<typename T>
+const T& DoublyLinkedList<T>::back() const
+{
+	if (isEmpty())
+		throw std::runtime_error("The list is empty!");
+
+	return tail->data;
 }
 
 template<typename T>
@@ -157,7 +171,7 @@ size_t DoublyLinkedList<T>::getSize() const
 
 
 template <typename T>
-DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other)
+DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other) : head(nullptr), tail(nullptr)
 {
 	copyFrom(other);
 }

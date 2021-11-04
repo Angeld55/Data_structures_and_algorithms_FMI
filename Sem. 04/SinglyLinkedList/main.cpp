@@ -5,22 +5,22 @@ int main()
 	SinglyLinkedList<int> l;
 	SinglyLinkedList<int> l2;
 
-	l.push_back(1);
-	l.push_back(2);
-	l.push_back(3);
-	l.push_back(4);
-	l.push_back(5);
+	l.pushBack(1);
+	l.pushBack(2);
+	l.pushBack(3);
+	l.pushBack(4);
+	l.pushBack(5);
 
-	l.push_front(0);
-	l.push_front(-1);
-	l.push_front(-2);
+	l.pushFront(0);
+	l.pushFront(-1);
+	l.pushFront(-2);
 
 	l.print();
 	cout << endl;
 
-	l.pop_front();
-	l.pop_front();
-	l.pop_front();
+	l.popFront();
+	l.popFront();
+	l.popFront();
 
 	l.print();
 	cout << endl;
@@ -28,9 +28,9 @@ int main()
 	cout << l.front() << endl;
 	cout << l.back() << endl;
 
-	l2.push_back(6);
-	l2.push_back(7);
-	l2.push_back(8);
+	l2.pushBack(6);
+	l2.pushBack(7);
+	l2.pushBack(8);
 
 	SinglyLinkedList<int> res = concat(l, l2);
 	res.print();

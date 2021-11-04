@@ -31,22 +31,22 @@ private:
 	void free();
 
 public:
-	void push_front(const T& el);
-	void push_back(const T& el);
+	void pushFront(const T& el);
+	void pushBack(const T& el);
 
-	void pop_front();
+	void popFront();
 
-	const T& front();
-	const T& back();
+	const T& front() const;
+	const T& back() const;
 
 	template <typename U>
 	friend SinglyLinkedList<U> concat(SinglyLinkedList<U>& lhs, SinglyLinkedList<U>& rhs);
 
-	void print() const; // O(n) complexity!
+	void print() const;
 };
 
 template <typename T>
-void SinglyLinkedList<T>::push_front(const T& el)
+void SinglyLinkedList<T>::pushFront(const T& el)
 {
 	Node* newNode = new Node(el);
 
@@ -60,7 +60,7 @@ void SinglyLinkedList<T>::push_front(const T& el)
 	head = newNode;
 }
 template <typename T>
-void SinglyLinkedList<T>::push_back(const T& el)
+void SinglyLinkedList<T>::pushBack(const T& el)
 {
 	Node* newNode = new Node(el);
 
@@ -75,7 +75,7 @@ void SinglyLinkedList<T>::push_back(const T& el)
 }
 
 template <typename T>
-void SinglyLinkedList<T>::pop_front()
+void SinglyLinkedList<T>::popFront()
 {
 	if (!head)
 		throw length_error("Empty list!");
@@ -93,15 +93,16 @@ void SinglyLinkedList<T>::pop_front()
 }
 
 template <typename T>
-const T& SinglyLinkedList<T>::front()
+const T& SinglyLinkedList<T>::front() const
 {
 	if (!head)
 		throw length_error("Empty list!");
 
 	return head->data;
 }
+
 template <typename T>
-const T& SinglyLinkedList<T>::back()
+const T& SinglyLinkedList<T>::back() const 
 {
 	if (!tail)
 		throw length_error("Empty list!");
@@ -137,12 +138,11 @@ SinglyLinkedList<T> concat(SinglyLinkedList<T>& lhs, SinglyLinkedList<T>& rhs)
 }
 
 template <typename T>
-SinglyLinkedList<T>::SinglyLinkedList()
-{
-	head = tail = nullptr;
-}
+SinglyLinkedList<T>::SinglyLinkedList() : head(nullptr), tail(nullptr)
+{}
+
 template <typename T>
-SinglyLinkedList<T>::SinglyLinkedList(const SinglyLinkedList<T>& other)
+SinglyLinkedList<T>::SinglyLinkedList(const SinglyLinkedList<T>& other) : head(nullptr), tail(nullptr)
 {
 	copyFrom(other);
 }
@@ -170,10 +170,11 @@ void SinglyLinkedList<T>::copyFrom(const SinglyLinkedList<T>& other)
 
 	while (iter)
 	{
-		push_back(iter->data);
+		pushBack(iter->data);
 		iter = iter->next;
 	}
 }
+
 template <typename T>
 void SinglyLinkedList<T>::free()
 {

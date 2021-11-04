@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 
+//Implementation without iterators (for now)
 template <typename T> 
 class DoublyLinkedList 
 {
@@ -8,7 +9,7 @@ class DoublyLinkedList
 
 	struct Node
 	{
-		Node(const T& data) : data(data) {}
+		Node(T data) : data(data) {}
 		T data;
 		Node* next = nullptr;
 		Node* prev = nullptr;
@@ -28,18 +29,21 @@ public:
 	void pushBack(const T& el); //O(1)
 	void pushFront(const T& el); //O(1)
 
-	T popBack(); // O(1)
-	T popFront(); // O(1)
+	void popBack(); // O(1)
+	void popFront(); // O(1)
 
-	class DLinkedIterator;
-	DLinkedIterator insertAfter(const T& element, const DLinkedIterator& it);
-	DLinkedIterator remove(const DLinkedIterator& it);
+	const T& front() const;
+	const T& back() const;
 
 	void print() const;
 	size_t getSize() const;
 
 	bool isEmpty() const;
 
+	class DLinkedIterator;
+	DLinkedIterator insertAfter(const T& element, const DLinkedIterator& it);
+	DLinkedIterator remove(const DLinkedIterator& it);
+	
 	class DLinkedIterator
 	{
 		Node* currentElementPtr;
@@ -142,7 +146,6 @@ public:
 	{
 		return DLinkedIterator(nullptr);
 	}
-
 };
 
 template <typename T>
@@ -187,20 +190,18 @@ void DoublyLinkedList<T>::pushFront(const T& el)
 }
 
 template<typename T>
-T DoublyLinkedList<T>::popBack()
+void DoublyLinkedList<T>::popBack()
 {
 	if (isEmpty())
 		throw std::runtime_error("The list is empty!");
-	else if (head == tail)
+	
+	if (head == tail)
 	{
-		T data = head->data;
 		delete head;
 		head = tail = nullptr;
-		return data;
 	}
 	else
 	{
-		T data = tail->data;
 		tail->prev->next = nullptr;
 
 		Node* toDelete = tail;
@@ -209,38 +210,51 @@ T DoublyLinkedList<T>::popBack()
 		delete toDelete;
 
 		count--;
-		return data;
 	}
 }
 
 template<typename T>
-T DoublyLinkedList<T>::popFront()
+void DoublyLinkedList<T>::popFront()
 {
 	if (isEmpty())
 		throw std::runtime_error("The list is empty!");
-	else if (head == tail)
-	{
-		T data = head->data;
-		delete head;
 
+	
+	if (head == tail)
+	{
+		delete head;
 		head = tail = nullptr;
-		
 		count--;
-		return data;
 	}
 	else
 	{
-		T data = head->data;
 		head->next->prev = nullptr;
 
 		Node* toDelete = head;
 		head = head->next;
 		
 		delete toDelete;
-		
+
 		count--;
-		return data;
 	}
+}
+
+template<typename T>
+const T& DoublyLinkedList<T>::front() const
+{
+	if (isEmpty())
+		throw std::runtime_error("The list is empty!");
+
+	return head->data;
+}
+
+template<typename T>
+const T& DoublyLinkedList<T>::back() const
+{
+	if (isEmpty())
+		throw std::runtime_error("The list is empty!");
+
+	return tail->data;
 }
 
 template<typename T>
@@ -262,9 +276,46 @@ size_t DoublyLinkedList<T>::getSize() const
 	return count;
 }
 
+template <typename T>
+typename DoublyLinkedList<T>::DLinkedIterator DoublyLinkedList<T>::insertAfter(const T& element, const typename DoublyLinkedList<T>::DLinkedIterator& it)
+{
+	Node* newNode = new Node(element);
+	Node* itNode = it.currentElementPtr;
+
+	newNode->next = itNode->next;
+	itNode->next = newNode;
+
+	return typename DoublyLinkedList<T>::DLinkedIterator(newNode);
+}
+
 
 template <typename T>
-DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other)
+typename DoublyLinkedList<T>::DLinkedIterator DoublyLinkedList<T>::remove(const typename DoublyLinkedList<T>::DLinkedIterator& it)
+{
+	Node* toDelete = it.currentElementPtr;
+
+	if (toDelete->next == nullptr)
+	{
+		popBack();
+		return end();
+	}
+	else if (toDelete->prev == nullptr)
+	{
+		popFront();
+		return begin();
+	}
+	else
+	{
+		toDelete->prev->next = toDelete->next;
+		Node* nextIt = toDelete->next->prev = toDelete->prev;
+		delete[] toDelete;
+
+		return typename DoublyLinkedList<T>::DLinkedIterator(nextIt);
+	}
+}
+
+template <typename T>
+DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other) : head(nullptr), tail(nullptr)
 {
 	copyFrom(other);
 }
@@ -306,43 +357,5 @@ void DoublyLinkedList<T>::free()
 		Node* toDelete = iter;
 		iter = iter->next;
 		delete toDelete;
-	}
-}
-
-template <typename T>
-typename DoublyLinkedList<T>::DLinkedIterator DoublyLinkedList<T>::insertAfter(const T& element, const typename DoublyLinkedList<T>::DLinkedIterator& it)
-{
-	Node* newNode = new Node(element);
-	Node* itNode = it.currentElementPtr;
-
-	newNode->next = itNode->next;
-	itNode->next = newNode;
-
-	return typename DoublyLinkedList<T>::DLinkedIterator(newNode);
-}
-
-
-template <typename T>
-typename DoublyLinkedList<T>::DLinkedIterator DoublyLinkedList<T>::remove(const typename DoublyLinkedList<T>::DLinkedIterator& it)
-{
-	Node* toDelete = it.currentElementPtr;
-
-	if (toDelete->next == nullptr)
-	{
-		popBack();
-		return end();
-	}
-	else if (toDelete->prev == nullptr)
-	{
-		popFront();
-		return begin();
-	}
-	else
-	{
-		toDelete->prev->next = toDelete->next;
-		Node* nextIt = toDelete->next->prev = toDelete->prev;
-		delete[] toDelete;
-
-		return typename DoublyLinkedList<T>::DLinkedIterator(nextIt);
 	}
 }

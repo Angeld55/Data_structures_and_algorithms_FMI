@@ -16,4 +16,6 @@ int main()
 	l.popFront();
 
 	l.print();
+
+	std::cout << l.back() << std::endl;
 }

@@ -4,7 +4,6 @@
 #include <iostream>
 
 template<typename T>
-
 class Vector 
 {
 
@@ -15,7 +14,7 @@ private:
 
 public:
 	Vector();
-	Vector(size_t size);
+	Vector(size_t capacity);
 	Vector(const Vector<T>& other);
 	Vector<T>& operator=(const Vector<T>& other);
 	~Vector();
@@ -27,13 +26,14 @@ private:
 
 public:
 	void pushBack(const T& newElem); //add a new element in the end
-	T popBack(); //removes the last element
+	void popBack(); //removes the last element
+	
 	size_t getSize() const;
 	bool isEmpty() const;
 	
 	const T& operator[](size_t index) const;
 	T& operator[](size_t index);
-
+	
 	class VectorIterator
 	{
 		T* currentElementPtr;
@@ -143,6 +143,7 @@ public:
 	{
 		return VectorIterator(arr + size);
 	}
+	
 };
 
 template<typename T>
@@ -152,7 +153,7 @@ Vector<T>::Vector() : size(0), capacity(4)
 }
 
 template <typename T>
-DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
+Vector<T>::Vector(size_t capacity) : size(0)
 {
     auto closestPowerOfTwo = [](size_t n)
     {
@@ -240,17 +241,15 @@ void Vector<T>::pushBack(const T& newElem)
 }
 
 template<typename T>
-T Vector<T>::popBack() 
+void Vector<T>::popBack() 
 {
-	if(isEmpty())
+	if (size)
+		size--;
+	else
 		throw std::length_error("Already empty!");
-	
-	T el = arr[--size];
 
-	if (size * 2 <= capacity && capacity > 1)
+	if (size * 4 <= capacity && capacity > 1)
 		resize(capacity / 2);
-	
-	return el;
 }
 
 template<typename T>
