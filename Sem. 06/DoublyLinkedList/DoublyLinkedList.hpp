@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 
-//Implementation without iterators (for now)
 template <typename T> 
 class DoublyLinkedList 
 {
