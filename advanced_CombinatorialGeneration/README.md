@@ -70,38 +70,33 @@ void generateAllSubests(const int* arr, int len, int* bitString, int pos)
 
 ![enter image description here](https://i.ibb.co/SPp1Rp8/Untitled-Diagram-drawio-2.png)
 ```c++  
-bool next(int* bitString, int n)  
-{  
-	int i = n - 1;  
-	  
-	while (i >= 0 && bitString[i] == 1)  //(*)
-		bitString[i--] = 0;  
-	  
-	if (i < 0)  
-		return false;  
-	bitString[i] = 1;  
-	return true;  
-}  
+bool nextObj(std::vector<int>& bitString)
+{
+	int i = bitString.size() - 1;
+
+	while (i >= 0 && bitString[i] == 1)
+		bitString[i--] = 0;
+
+	if (i < 0)
+		return false;
+
+	bitString[i] = 1;
+
+	return true;
+}
 ```  
 
 Давайки директен итеративен алгоритъм за генерирането им:  
 ```c++  
-void generateAllSubests(const int* arr, int len)  
-  
-{  
-	int* bitString = new int[len];  
-	 
-	for (int i = 0; i < len; i++)  
-	bitString[i] = 0;  
-	 
-	for (int i = 0; i < 1 << len; i++)  
-	{  
-	//print(arr, len , bitString);  
-		next(bitString, len);  
-	}  
-	 
-	delete[] bitString;  
-}  
+void generateAllSubsetsIter(const std::vector<int>& v)
+{
+	std::vector<int> bitString(v.size()); // 0 0 0 0 0 ... 0
+
+	do
+	{
+		printSubset(bitString, v);
+	} while (nextObj(bitString));
+}
 ```  
 За да определим сложността преброяваме всички пъти, които сме на ред (*) в алгоритъма. 
 
@@ -263,7 +258,5 @@ bool nextObj(std::vector<size_t>& v, size_t n) //k is v.size()
 ![enter image description here](https://i.ibb.co/6r4LDzg/image.png)
 
 Да разгледаме средно на обект:
-
 ![enter image description here](https://i.ibb.co/YPhRShj/sadas.png)
-
 Тогава алгоритъмът е **CAT** за k <= n/2. Ако k >= n/2, то е по-добре да генерираме обратните/комплементарните комбинации.
