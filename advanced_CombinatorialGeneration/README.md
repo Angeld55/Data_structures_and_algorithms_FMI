@@ -42,16 +42,16 @@ b_1 b_2 ··· b_n където bi е единица, само ако i-я ел�
 За всеки елемент имаме 2 варианта - да го включим в множеството или да не го включим. Тази идея дава директен рекурсивен алгоритъм:
 
 ```c++  
-void generateAllSubests(const int* arr, int len, int* bitString, int pos)
+void generateAllSubsets(const int* arr, int len, int* bitString, int pos)
 {
 	if (pos == len)
 		print(arr, len, bitString);
 	else
 	{
 		bitString[pos] = 0;
-		generateAllSubests(arr, len, bitString, pos + 1);
+		generateAllSubsets(arr, len, bitString, pos + 1);
 		bitString[pos] = 1;
-		generateAllSubests(arr, len, bitString, pos + 1);
+		generateAllSubsets(arr, len, bitString, pos + 1);
 	}
 
 }
