@@ -75,7 +75,7 @@ bool nextObj(std::vector<int>& bitString)
 {
 	int i = bitString.size() - 1;
 
-	while (i >= 0 && bitString[i] == 1)
+	while (i >= 0 && bitString[i] == 1) //(*)
 		bitString[i--] = 0;
 
 	if (i < 0)
