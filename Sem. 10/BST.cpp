@@ -15,7 +15,8 @@ bool BST::contains_rec(int n, Node* currentNode, Node*& prev)
 		return contains_rec(n, currentNode->right, prev);
 	return contains_rec(n, currentNode->left, prev);
 }
-bool BST::contains(int n)
+
+bool BST::contains(int n) const
 {
 	Node* temp;
 	return contains_rec(n, root,temp);
@@ -49,6 +50,7 @@ void BST::findMin(Node* root, Node*& minNode)
 		iter = iter->left;
 	}
 }
+
 bool BST::remove_rec(int n, Node*& currentNode)
 {
 	Node* prev = nullptr;
@@ -77,17 +79,20 @@ bool BST::remove_rec(int n, Node*& currentNode)
 	}
 	return true;
 }
+
 bool BST::remove(int n)
 {
 	return remove_rec(n,root);
 }
-int BST::getHeight(Node* root)
+
+size_t BST::getHeight(Node* root) const
 {
 	if (root == nullptr)
 		return 0;
 	return std::max(getHeight(root->left), getHeight(root->right)) + 1;
 }
-void BST::print()
+
+void BST::print() const
 {
 	struct BST_Print
 	{
@@ -152,6 +157,7 @@ void BST::print()
 		}
 	}
 }
+
 void BST::createTreeRec(const std::vector<int>& v, int start, int end, Node*& root)
 {
 	if (start > end)
