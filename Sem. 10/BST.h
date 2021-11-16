@@ -23,7 +23,7 @@ class BST
 	bool contains_rec(int n, Node* currentNode, Node*& searched);
 	void findMin(Node* root, Node*& minNode);
 	bool remove_rec(int n, Node*& currentNode);
-	int getHeight(Node* root);
+	int getHeight(Node* root) const;
 
 	void createTreeRec(const std::vector<int>& v, int start, int end, Node*& root);
 public:
@@ -35,7 +35,7 @@ public:
 	~BST();	
 
 	bool insert(int n);
-	bool contains(int n);
+	bool contains(int n) const;
 	bool remove(int n);
-	void print();
+	void print() const;
 };
