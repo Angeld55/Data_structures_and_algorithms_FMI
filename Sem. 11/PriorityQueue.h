@@ -10,7 +10,7 @@ class PriorityQueue
 	void heapify(int ind);
 	std::vector<int> data;
 
-	void print_rec(int elIndex, int spaces);
+	void print_rec(int elIndex, int spaces) const;
 public:
 	PriorityQueue() = default;
 	PriorityQueue(const std::vector<int>& v);
