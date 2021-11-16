@@ -46,6 +46,8 @@ void LinkedQueue<T>::free()
 		iter = iter->next;
 		delete prev;
 	}
+	
+	head = tail = nullptr;
 }
 
 template <typename T>
