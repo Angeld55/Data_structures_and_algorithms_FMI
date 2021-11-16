@@ -4,15 +4,18 @@ int PriorityQueue::leftChild(int i)
 {
 	return 2 * i + 1;
 }
+
 int PriorityQueue::rightChild(int i)
 {
 	return 2 * i + 2;
 }
+
 int PriorityQueue::parent(int i)
 {
 	return (i - 1) / 2;
 }
-int PriorityQueue::get()
+
+int PriorityQueue::get() const
 {
 	if(data.size() == 0)
 		throw "Empty queue!";
@@ -90,11 +93,13 @@ PriorityQueue::PriorityQueue(const std::vector<int>& v)  // O(n)
 	for (int i = v.size() / 2 - 1; i >= 0; i--)
 		heapify(i);
 }
-void PriorityQueue::print()
+
+void PriorityQueue::print() const
 {
 	print_rec(0, 0);
 }
-void PriorityQueue::print_rec(int elIndex, int space)
+
+void PriorityQueue::print_rec(int elIndex, int space) const
 {
 	const int SPACES_COUNT = 10;
 	if (elIndex >= data.size())
