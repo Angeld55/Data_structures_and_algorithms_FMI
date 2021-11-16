@@ -15,7 +15,7 @@ public:
 	PriorityQueue() = default;
 	PriorityQueue(const std::vector<int>& v);
 
-	int get(); //Връща най-големият елемент.
+	int get() const; //Връща най-големият елемент.
 	void insert(int el);
-	void print();
+	void print() const;
 };
