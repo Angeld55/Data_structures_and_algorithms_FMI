@@ -186,6 +186,8 @@ void SinglyLinkedList<T>::free()
 		iter = iter->next;
 		delete toDelete;
 	}
+	
+	head = tail = nullptr;
 }
 
 template <typename T>
