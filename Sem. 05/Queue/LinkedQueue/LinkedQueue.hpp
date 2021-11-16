@@ -1,7 +1,5 @@
 #include <iostream>
 
-//We use the implementation of linked list (we only have the AddLast(T) and RemoveFirst()) 
-
 template <typename T>
 class LinkedQueue
 {
