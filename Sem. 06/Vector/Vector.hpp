@@ -85,24 +85,11 @@ public:
 			return copy;
 		}
 
-
-
 		VectorIterator& operator+=(int s)
 		{
-			if (s >= 0)
-			{
-				while (s--)
-					++(*this);
-			}
-			else
-			{
-				while (s++)
-					--(*this);
-			}
-
+			currentElementPtr += s;
 			return *this;
 		}
-
 		VectorIterator& operator-=(int s)
 		{
 			return *this += (-s);
@@ -124,7 +111,7 @@ public:
 
 		int operator-(const VectorIterator& rhs) const
 		{
-			return currentElementPtr - rhs.currentElementPtr;
+			return *currentElementPtr - *rhs.currentElementPtr;
 		}
 
 		bool operator==(const VectorIterator& rhs) const { return currentElementPtr == rhs.currentElementPtr; }
