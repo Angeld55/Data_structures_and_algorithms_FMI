@@ -3,7 +3,7 @@ namespace CustomAlgorithms
 {
 
 	template <typename Iter, typename ElementType>
-	bool containsElement(Iter it1, Iter it2, const ElementType searched)
+	bool containsElement(Iter it1, Iter it2, const ElementType& searched)
 	{
 		while (it1 != it2)
 		{
