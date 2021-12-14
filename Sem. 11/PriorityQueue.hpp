@@ -1,33 +1,77 @@
-#include "PriorityQueue.h"
+#pragma once
+#include <iostream>
+#include <vector>
 
-int PriorityQueue::leftChild(int i)
+template <typename T>
+class PriorityQueue
+{
+	size_t leftChild(size_t i) const;
+	size_t rightChild(size_t i) const;
+	int parent(int i) const;
+
+	void heapify(size_t ind);
+	std::vector<T> data;
+
+	void print_rec(size_t elIndex, size_t spaces) const;
+public:
+	PriorityQueue() = default;
+	PriorityQueue(const std::vector<T>& v);
+
+	bool isEmpty() const;
+	const T& peek() const;
+	void pop(); //Връща най-големият елемент.
+	void insert(const T& el);
+	void print() const;
+};
+
+template <typename T>
+size_t PriorityQueue<T>::leftChild(size_t i) const
 {
 	return 2 * i + 1;
 }
 
-int PriorityQueue::rightChild(int i)
+template <typename T>
+size_t PriorityQueue<T>::rightChild(size_t i) const
 {
 	return 2 * i + 2;
 }
 
-int PriorityQueue::parent(int i)
+template <typename T>
+int PriorityQueue<T>::parent(int i) const
 {
 	return (i - 1) / 2;
 }
 
-int PriorityQueue::get() const
+template <typename T>
+bool PriorityQueue<T>::isEmpty() const
 {
-	if(data.size() == 0)
-		throw "Empty queue!";
-	int toReturn = data[0]; //Най-големият елемент е коренът.
+	return data.empty();
+}
+
+template <typename T>
+void PriorityQueue<T>::pop()
+{
+	if (isEmpty())
+		throw std::runtime_error("Empty queue!");
+
 	data[0] = data[data.size() - 1]; // Новият корен става последен елемент.
 	data.pop_back();
-	if(data.size() != 0)
+
+	if (data.size() != 0)
 		heapify(0); // Коренът започва да се "спуска" надолу, за да се запази пирамидалното свойство.
-	return toReturn;
 }
+
+template <typename T>
+const T& PriorityQueue<T>::peek() const
+{
+	if (isEmpty())
+		throw std::runtime_error("Empty queue!");
+	return data[0];
+}
+
 //Функция, която "спуска елемент". Елементът ако има ляво поддърво, което е пирамида и дясно поддърво, което е пирамида, образува нова пирамида, обединявайки двете + корена.
-void PriorityQueue::heapify(int ind)
+template <typename T>
+void PriorityQueue<T>::heapify(size_t ind)
 {
 	int currentElementIndex = ind;
 	while (true)
@@ -70,12 +114,13 @@ void PriorityQueue::heapify(int ind)
 
 }
 
-void PriorityQueue::insert(int el)
+template <typename T>
+void PriorityQueue<T>::insert(const T& el)
 {
 	data.push_back(el);
 	int ind = data.size() - 1;
 	int parentIndex = parent(ind);
-	
+
 	//Елементът е поставен на дъното на пирамидата и той се опитва да "изплува" нагоре, докато родителят е по-малък от него.
 	while (ind >= 0 && data[ind] > data[parentIndex])
 	{
@@ -87,19 +132,22 @@ void PriorityQueue::insert(int el)
 
 }
 
-PriorityQueue::PriorityQueue(const std::vector<int>& v)  // O(n)
+template <typename T>
+PriorityQueue<T>::PriorityQueue(const std::vector<T>& v)  // O(n)
 {
 	data = v;
 	for (int i = v.size() / 2 - 1; i >= 0; i--)
 		heapify(i);
 }
 
-void PriorityQueue::print() const
+template <typename T>
+void PriorityQueue<T>::print() const
 {
 	print_rec(0, 0);
 }
 
-void PriorityQueue::print_rec(int elIndex, int space) const
+template <typename T>
+void PriorityQueue<T>::print_rec(size_t elIndex, size_t space) const
 {
 	const int SPACES_COUNT = 10;
 	if (elIndex >= data.size())

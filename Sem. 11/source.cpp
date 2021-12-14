@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
 #include "Algorithms.hpp"
+#include "PriorityQueue.hpp"
+
 
 int main()
 {
-	PriorityQueue pq({ 1, 2, 3, 4, 4, 5, 7, 8 });
+	PriorityQueue<int> pq({ 1, 2, 3, 4, 4, 5, 7, 8 });
 	pq.print();
 	std::cout << "----------------------------------------------\n";
 
@@ -16,7 +18,7 @@ int main()
 	std::cout << "----------------------------------------------\n";
 
 	std::cout << "Remove the biggest element:\n";
-	pq.get();
+	pq.pop();
 	pq.print();
 
 

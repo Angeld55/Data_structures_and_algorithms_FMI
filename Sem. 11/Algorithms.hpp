@@ -1,9 +1,14 @@
-#include "PriorityQueue.h"
+#pragma once
+#include "PriorityQueue.hpp"
 
 void HeapSort(std::vector<int>& v)
 {
-	PriorityQueue q(v); // Building heap - O(n)
+	PriorityQueue<int> q(v); // Building heap - O(n)
 
 	for (int i = v.size() - 1; i >= 0; i--)
-		v[i] = q.get(); //log(n)
+	{
+		v[i] = q.peek(); //log(n)
+		q.pop();
+	}
+
 }
