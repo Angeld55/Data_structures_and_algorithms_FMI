@@ -6,5 +6,5 @@
 
  - **Алгоритъм на Прим** - намиране на **минимално покриващо дърво** на неориентиран тегловен граф.
 
-Реализациите са в папката на [семинар 11](https://github.com/Angeld55/Data_structures_and_algorithms_FMI_2020-2021/tree/main/Sem.%2011/Graphs/Algorithms).
+Реализациите са в папката на [семинар 12](https://github.com/Angeld55/Data_structures_and_algorithms_FMI/tree/main/Sem.%2012/Graphs/Algorithms).
 
