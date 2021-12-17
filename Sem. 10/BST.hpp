@@ -72,7 +72,7 @@ public:
 	BST& operator= (const BST& other);
 	~BST();	
 
-	bool isEmpty();
+	bool isEmpty() const;
 	bool insert(const T& n);
 	bool contains(const T& n) const;
 	bool remove(const T& n);
@@ -80,7 +80,7 @@ public:
 };
 
 template <typename T>
-bool BST<T>::isEmpty()
+bool BST<T>::isEmpty() const
 {
 	return root == nullptr;
 }
