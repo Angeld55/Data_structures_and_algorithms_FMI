@@ -36,21 +36,7 @@ class KthQueriesDispatcher
 		}
 	}
 
-	int getSumRec(size_t currentVertex, size_t currentLeftBound, size_t currentRightBound, size_t searchedLeftBound, size_t searchedRightBound)
-	{
-		if (searchedLeftBound > searchedRightBound)
-			return 0;
-
-		if (currentLeftBound == searchedLeftBound && currentRightBound == searchedRightBound)
-			return segmentTree[currentVertex];
-
-		size_t mid = currentLeftBound + (currentRightBound - currentLeftBound) / 2;
-		return getSumRec(leftChild(currentVertex), currentLeftBound, mid, searchedLeftBound, std::min(searchedRightBound, mid)) +
-			getSumRec(rightChild(currentVertex), mid + 1, currentRightBound, std::max(searchedLeftBound, mid + 1), searchedRightBound);
-
-	}
-
-	int getKth_rec(size_t currentVertex, size_t currentLeftBound, size_t currentRightBound, size_t k)
+	int getKth_rec(size_t currentVertex, size_t currentLeftBound, size_t currentRightBound, size_t k) const
 	{
 		if (k > segmentTree[currentVertex])
 			return -1;
@@ -88,12 +74,7 @@ public:
 		build(0, 0, arr.size() - 1);
 	}
 
-	int getCountOfElements(size_t leftBound, size_t rightBound)
-	{
-		return getSumRec(0, 0, arr.size() - 1, leftBound, rightBound);
-	}
-
-	int getKth(size_t k)
+	int getKth(size_t k) const
 	{
 		return getKth_rec(0, 0, arr.size() - 1, k);
 	}
