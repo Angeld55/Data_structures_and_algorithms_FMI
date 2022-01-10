@@ -52,7 +52,7 @@ public:
 
 	bool isEmpty() const;
 	const T& peek() const;
-	void pop(); //Връща най-големият елемент.
+	void pop(); //Връща най-големия елемент.
 	void insert(const T& el);
 	void print() const;
 };
