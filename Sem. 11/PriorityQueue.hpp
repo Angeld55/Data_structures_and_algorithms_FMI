@@ -18,7 +18,7 @@ class PriorityQueue
 		{
 			// !(data < other.data) && !(data < other.data && other.data < data)
 
-			if (!(data < other.data) && ((data < other.data)  || (other.data < data) ))
+			if (!(data < other.data) && !(data < other.data && other.data < data))
 				return true;
 
 			else if (other.data == data)
