@@ -4,7 +4,7 @@
 ### Задача 1.
 Реализирайте кеш "най-отдавна използван", който премахва най-отдавна използвания елемент. Кешът трябва да пази свойки <ключ, стойност>, позволява взимането и премахването на двойка и трябва да бъде инициализиран с максимален капацитет. Когато се запълни, кешът трябва да премахне елементът, който най-отдавна е използван.
 
-Използвайте leastRecentlyUsed.cpp за тестване.
+Използвайте LeastRecentlyUsed_skeleton.cpp за тестване.
 
 Design and build a "least recently used" cache, which evicts the least
  recently used item. The cache should map from keys to values (allowing you
