@@ -23,7 +23,7 @@ void print(Node* list)
 	}
 }
 
-void Free(Node* list)
+void free(Node* list)
 {
 	Node* iter = list;
 
@@ -57,5 +57,5 @@ int main()
 
 	map(n, addOne);
 	print(n);
-	Free(n);
+	free(n);
 }
