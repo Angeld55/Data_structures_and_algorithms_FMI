@@ -24,7 +24,7 @@ void print(Node* list)
 	}
 }
 
-void Free(Node* list)
+void free(Node* list)
 {
 	Node* iter = list;
 
@@ -82,5 +82,5 @@ int main()
 
 	Node* newNode = filter(n, isEven);
 	print(newNode);
-	Free(newNode);
+	free(newNode);
 }
