@@ -3,7 +3,6 @@
 #include <stack>
 #include <queue>
 #include <string>
-using namespace std;
 
 
 class PDA
@@ -16,30 +15,30 @@ class PDA
 		char symbol;
 		char stackTopSymbol;
 		int destState;
-		string stringToReplaceTopStackSymbol;
+		std::string stringToReplaceTopStackSymbol;
 	};
 
 	struct Computation
 	{
-		Computation() :computationSteps(0) {}
-		Computation(int state, string word, int computationSteps) :
+		Computation() : computationSteps(0) {}
+		Computation(int state, const std::string& word, int computationSteps) :
 			state(state), word(word), computationSteps(computationSteps)
 		{}
 		int state;
-		stack<char> st;
-		string word;
+		std::stack<char> st;
+		std::string word;
 		int computationSteps; 
 	};
 
-	vector<Rule> rules;
-	vector<bool> finalStates;
-	void printComputation(const Computation& c);
-	void ApplyRuleIfPossible(Computation& current, Rule& r, queue<Computation>& q);
+	std::vector<Rule> rules;
+	std::vector<bool> finalStates;
+	void printComputation(const Computation& c) const;
+	void applyRuleIfPossible(Computation& current, const Rule& ruleToApply, std::queue<Computation>& q) const;
 
 public:
 	PDA(size_t states); 
 	void makeFinal(size_t ind);
-	bool accepts(std::string word);
-	void addTransition(int initialState, char symbol, char stackTopSymbol, int destState, string stringToReplaceTopStackSymbol);
+	bool accepts(const std::string& word) const;
+	void addTransition(int initialState, char symbol, char stackTopSymbol, int destState, const std::string& stringToReplaceTopStackSymbol);
 
 };

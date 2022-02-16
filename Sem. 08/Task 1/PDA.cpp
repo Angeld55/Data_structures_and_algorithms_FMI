@@ -8,11 +8,11 @@ void PDA::makeFinal(size_t ind)
 		return;
 	finalStates[ind] = true;
 }
-void PDA::addTransition(int initialState, char symbol, char stackTopSymbol, int destState, string stringToReplaceTopStackSymbol)
+void PDA::addTransition(int initialState, char symbol, char stackTopSymbol, int destState, const std::string& stringToReplaceTopStackSymbol)
 {
 	rules.push_back({ initialState, symbol, stackTopSymbol, destState, stringToReplaceTopStackSymbol });
 }
-void PDA::ApplyRuleIfPossible(Computation& current, Rule& ruleToApply, queue<Computation>& q)
+void PDA::applyRuleIfPossible(Computation& current, const Rule& ruleToApply, std::queue<Computation>& q) const
 {
 	if ((current.state == ruleToApply.initialState) 
 		&&((ruleToApply.symbol == '$') || (current.word[0] == ruleToApply.symbol))
@@ -39,22 +39,24 @@ void PDA::ApplyRuleIfPossible(Computation& current, Rule& ruleToApply, queue<Com
 		q.push(newComputation);
 	}
 }
-void PDA::printComputation(const Computation& c)
+
+void PDA::printComputation(const Computation& c) const
 {
-	cout << "State: " << c.state << ", Stack: ";
-	stack<char> stCopy = c.st;
+	std::cout << "State: " << c.state << ", Stack: ";
+	std::stack<char> stCopy = c.st;
 	while (!stCopy.empty())
 	{
-		cout << stCopy.top();
+		std::cout << stCopy.top();
 		stCopy.pop();
 	}
-	cout << ", Word: " << c.word << ", STEPS:" << c.computationSteps << endl;
+	std::cout << ", Word: " << c.word << ", STEPS:" << c.computationSteps << std::endl;
 }
-bool PDA::accepts(std::string word)
+
+bool PDA::accepts(const std::string& word) const
 {
 	Computation currentComputation(0, word, 0);
 	
-	queue<Computation> q;
+	std::queue<Computation> q;
 	currentComputation.st.push('#');
 	q.push(currentComputation);
 
@@ -73,7 +75,7 @@ bool PDA::accepts(std::string word)
 			continue;
 		}
 		for (int i = 0; i < rules.size(); i++)
-			ApplyRuleIfPossible(current, rules[i], q);
+			applyRuleIfPossible(current, rules[i], q);
 		q.pop();
 	}
 	return false;

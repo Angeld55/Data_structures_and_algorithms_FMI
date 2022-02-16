@@ -22,7 +22,7 @@ int main()
 
 	automation2.addTransition(1, '$', '#', 2, "$");
 
-	std::cout << automation2.accepts("abbbba") <<endl; //true
-	std::cout << automation2.accepts("abab") <<endl; //false
+	std::cout << automation2.accepts("abbbba") << std::endl; //true
+	std::cout << automation2.accepts("abab") << std::endl; //false
 
 }
