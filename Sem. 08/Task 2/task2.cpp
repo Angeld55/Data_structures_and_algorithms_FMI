@@ -8,7 +8,7 @@ struct Node
 	Node(int value, Node* next) : value(value), next(next){}
 };
 // 99 3 -3  6 -10 4 8 6 2 -8
-Node* FilterSumZero(Node* begin)
+Node* filterSumZero(Node* begin)
 {
 	Node* iter = begin;
 	stack<Node*> st;
@@ -62,7 +62,20 @@ Node* FilterSumZero(Node* begin)
 	return begin;
 
 }
-void Print(Node* list)
+
+void free(Node* list)
+{
+	Node* iter = list;
+
+	while (iter != nullptr)
+	{
+		Node* toRemove = iter;
+		iter = iter->next;
+		delete toRemove;
+	}
+}
+
+void print(Node* list)
 {
 	while (list != nullptr)
 	{
@@ -73,5 +86,6 @@ void Print(Node* list)
 int main()
 {
 	Node* list = new Node(99, new Node(3, new Node(-3, new Node(6, new Node(-10, new Node(4, new Node(8, new Node(6, new Node(2, new Node(-8, nullptr))))))))));
-	Print(FilterSumZero(list));
+	print(filterSumZero(list));
+	free(list);
 }
