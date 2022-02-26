@@ -62,7 +62,7 @@ bool checkBalance(const std::string& str)
 	return st.empty() || (st.size() == 1 && !foundMistake);
 }
 
-std::string reverseAndFlip(std::string expr)
+std::string reverseAndFlip(const std::string& expr)
 {
 	std::string res(expr.size(), ' ');
 
