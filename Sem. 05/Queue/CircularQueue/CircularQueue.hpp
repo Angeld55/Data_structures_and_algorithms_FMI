@@ -16,7 +16,7 @@ private:
 	size_t putIter;
 	size_t getIter;
 
-	void Resize();
+	void resize();
 	void copyFrom(const Queue<T>& other);
 	void free();
 
@@ -27,13 +27,13 @@ public:
 	~Queue();
 
 	bool isEmpty() const;
-	void enqueue(T el);
-	T dequeue();
+	void enqueue(const T& el);
+	void dequeue();
 	const T& peek() const;
 };
 
 template <typename T>
-void Queue<T>::Resize() 
+void Queue<T>::resize() 
 {
 	T* temp = new T[capacity * 2];
 
@@ -113,10 +113,10 @@ bool Queue<T>::isEmpty() const
 }
 
 template <typename T>
-void Queue<T>::enqueue(T el) 
+void Queue<T>::enqueue(const T& el) 
 {
 	if (count == capacity)
-		Resize();
+		resize();
 
 	data[putIter] = el;
 
@@ -125,16 +125,12 @@ void Queue<T>::enqueue(T el)
 }
 
 template <typename T>
-T Queue<T>::dequeue() 
+void Queue<T>::dequeue() 
 {
 	if (count == 0)
 		throw std::runtime_error("Queue is empty!");
-
-	T elToReturn = data[getIter];
 	count--;
-
 	(++getIter) %= capacity;
-	return  elToReturn;
 }
 
 template <typename T>
