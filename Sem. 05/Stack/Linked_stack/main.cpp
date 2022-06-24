@@ -7,9 +7,12 @@ int main()
 	list.push(15);
 	list.push(20);
 	std::cout << list.peek() << std::endl;
-	std::cout << list.pop() << std::endl;
+	list.pop();
 	std::cout << list.isEmpty() << std::endl;
 	std::cout << list.peek() << std::endl;
+	list.pop();
+
+	list.push(100);
 
 	LinkedStack<int> newList = list;
 	std::cout << newList.peek() << std::endl;

@@ -35,11 +35,17 @@ public:
 template <typename T>
 void Queue<T>::resize() 
 {
-	T* temp = new T[capacity * 2];
+	size_t newCapacity = capacity * 2;
+	size_t currentCapacity = capacity;
 
-	for (int i = 0; i < capacity; ++i)
-		temp[i] = dequeue();
-	
+	T* temp = new T[newCapacity];
+
+	for (int i = 0; i < currentCapacity; ++i)
+	{
+		temp[i] = peek();
+		dequeue();
+	}
+
 	getIter = 0;
 	putIter = capacity;
 

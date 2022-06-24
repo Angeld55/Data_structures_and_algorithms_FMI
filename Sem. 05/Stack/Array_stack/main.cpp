@@ -10,7 +10,7 @@ int main()
 	arrStack.push(7);
 	std::cout << arrStack.size() << std::endl;
 	std::cout << arrStack.peek() << std::endl;
-	std::cout << arrStack.pop() << std::endl;
+	arrStack.pop();
 	std::cout << arrStack.peek() << std::endl;
 
 	ArrayStack<int> newArrStack = arrStack;

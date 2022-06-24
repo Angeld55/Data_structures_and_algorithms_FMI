@@ -11,11 +11,16 @@ int main()
 	q.enqueue(4);
 	q.enqueue(5);
 
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
-	std::cout << q.dequeue() << std::endl;
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
 
 	std::cout << q.isEmpty() << std::endl;
 
@@ -26,9 +31,14 @@ int main()
 	q.enqueue(5);
 
 	Queue<int> q2(q);
-	std::cout << q2.dequeue() << std::endl;
-	std::cout << q2.dequeue() << std::endl;
-	std::cout << q2.dequeue() << std::endl;
-	std::cout << q2.dequeue() << std::endl;
-	std::cout << q2.dequeue() << std::endl;
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
+	std::cout << q.peek() << std::endl;
+	q.dequeue();
 }

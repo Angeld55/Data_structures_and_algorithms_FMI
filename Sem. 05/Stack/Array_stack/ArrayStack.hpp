@@ -23,7 +23,7 @@ public:
 
 
 	void push(const T&); 
-	T pop(); 
+	void pop(); 
 	const T& peek() const;
 
 	size_t size() const;
@@ -106,7 +106,7 @@ void ArrayStack<T>::push(const T& newElem)
 }
 
 template<typename T>
-T ArrayStack<T>::pop() 
+void ArrayStack<T>::pop() 
 {
 	if (isEmpty())
 		throw std::runtime_error("Stack is empty!");
@@ -115,7 +115,6 @@ T ArrayStack<T>::pop()
 
 	if (currentSize * 2 <= capacity && capacity > 1)
 		resize(capacity / 2);
-	return el;
 }
 
 template<typename T>

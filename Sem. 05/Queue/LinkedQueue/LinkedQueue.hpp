@@ -27,7 +27,7 @@ public:
 	~LinkedQueue();
 
 	void enqueue(const T&); // O(1)
-	T dequeue(); //O(1)
+	void dequeue(); //O(1)
 	const T& peek() const; //O(1)
 
 	bool isEmpty() const;
@@ -103,7 +103,7 @@ void LinkedQueue<T>::enqueue(const T& el)
 
 
 template <typename T>
-T LinkedQueue<T>::dequeue()
+void LinkedQueue<T>::dequeue()
 {
 	if (isEmpty())
 		throw std::runtime_error("The list is empty!");
@@ -114,8 +114,6 @@ T LinkedQueue<T>::dequeue()
 
 		head = nullptr;
 		tail = nullptr;
-
-		return el;
 	}
 	else
 	{
@@ -123,9 +121,7 @@ T LinkedQueue<T>::dequeue()
 		Node* temp = head->next;
 		
 		delete head;
-		
 		head = temp;
-		return el;
 	}
 
 }

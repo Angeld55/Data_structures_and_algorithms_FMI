@@ -168,9 +168,9 @@ void countSortForGrades(Student* arr, size_t len)
 int main()
 {
 	vector<Student> v1, v2, v3, v4;
-	v1 = v2 = v3 = v4 = generateRandomStudents(10000);
+	v1 = v2 = v3 = v4 = generateRandomStudents(20000);
 
-	std::cout << "Generated random students! Sorting..." << endl;
+	std::cout << "Generated " << v1.size() <<  " random students! Sorting..." << endl;
 	clock_t begin, end;
 	double elapsed;
 

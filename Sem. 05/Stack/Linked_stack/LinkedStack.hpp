@@ -5,7 +5,7 @@ class LinkedStack
 {
 	struct Node
 	{
-		Node(T data)
+		Node(const T& data)
 		{
 			this->data = data;
 			next = nullptr;
@@ -26,7 +26,7 @@ public:
 
 
 	void push(const T&);  //O(1)
-	T pop(); //O(1)
+	void pop(); //O(1)
 	const T& peek() const; // O(1)
 
 	bool isEmpty() const;
@@ -105,16 +105,15 @@ void LinkedStack<T>::push(const T& el)
 }
 
 template <typename T>
-T LinkedStack<T>::pop()
+void LinkedStack<T>::pop()
 {
 	if (isEmpty())
-		throw std::runtime_error("The LinkedStack is empty");
+		throw std::logic_error("The LinkedStack is empty");
 	else if (head->next == nullptr) //only one element left
 	{
 		T el = head->data;
 		delete head;
 		head = nullptr;
-		return el;
 	}
 	else
 	{
@@ -122,7 +121,6 @@ T LinkedStack<T>::pop()
 		Node* temp = head->next;
 		delete head;
 		head = temp;
-		return el;
 	}
 
 }
@@ -131,7 +129,7 @@ template <typename T>
 const T& LinkedStack<T>::peek() const
 {	
 	if(isEmpty())
-		throw std::runtime_error("The LinkedStack is empty");
+		throw std::logic_error("The LinkedStack is empty");
 	return head->data;
 }
 

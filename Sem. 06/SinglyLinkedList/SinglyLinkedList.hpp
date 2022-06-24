@@ -144,7 +144,7 @@ template <typename T>
 void SinglyLinkedList<T>::popFront()
 {
 	if (!head)
-		throw length_error("Empty list!");
+		throw std::logic_error("Empty list!");
 
 	if (head == tail)
 	{
@@ -162,7 +162,7 @@ template <typename T>
 const T& SinglyLinkedList<T>::front() const
 {
 	if (!head)
-		throw length_error("Empty list!");
+		throw std::logic_error("Empty list!");
 
 	return head->data;
 }
@@ -171,7 +171,7 @@ template <typename T>
 const T& SinglyLinkedList<T>::back() const 
 {
 	if (!tail)
-		throw length_error("Empty list!");
+		throw std::logic_error("Empty list!");
 
 	return tail->data;
 }
@@ -294,5 +294,5 @@ void SinglyLinkedList<T>::print() const
 		iter = iter->next;
 	}
 
-	std::cout << endl;
+	std::cout << std::endl;
 }
