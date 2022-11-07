@@ -10,9 +10,9 @@ street -> taxi -> ink -> dog -> smile -> eat -> tall -> pass
 ```c++
 dog
 
-smile -> eat -> tall
+smile-eat-tall
 
-pass -> street -> taxi -> ink
+pass-street-taxi-ink
 ```
 
 ***Задача 2:*** Даден е двусвързан списък с четен брой елементи. Всеки елемент представлява едносвързан списък от числа в интервала [0,9]. 
