@@ -13,8 +13,6 @@ struct NodeFull
 
 struct Node
 {
-
-	
 	Node(int value) :value(value), left(nullptr), right(nullptr)
 	{}
 	int value;
