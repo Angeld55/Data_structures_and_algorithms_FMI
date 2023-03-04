@@ -1,48 +1,60 @@
 #include <iostream>
 using namespace std;
 
-template <typename T>
-int partition(T* arr, int len)
+template <class T>
+size_t partition(T* pArr, size_t len)
 {
-	T pivot = arr[len / 2];
-	int i = 0, j = len-1 ;
-	int index = i;
+    if(pArr[0] > pArr[len - 1])
+        std::swap(pArr[0],  pArr[len - 1]);
 
-	while (index <= j)
+	T& partitioningElement = pArr[len-1];
+    
+    size_t left = 0;
+    size_t right = len - 1;
+
+	while(true)
 	{
-		if (arr[index] < pivot)
-			std::swap(arr[i++], arr[index++]);
-		else if (arr[index] > pivot)
-			std::swap(arr[index], arr[j--]);
-		else 
-			index++;
+		while(pArr[++left] < partitioningElement)
+			;
+
+		while(pArr[--right] > partitioningElement)
+		{
+			if(left == right)
+				break;
+		}
+
+		if(left >= right)
+			break;
+
+		std::swap(pArr[left], pArr[right]);
 	}
 
-	return j;
+	std::swap(pArr[left], partitioningElement);
+
+	return left;
 }
 
+
+
 template <typename T>
-void quickSort(T* arr, size_t len)
+void QuickSort(T* arr, size_t len)
 {
 	if (len <= 1)
 		return;
-
+	
 	size_t pivotIndex = partition(arr, len);
-	quickSort(arr, pivotIndex);
-	quickSort(arr + pivotIndex + 1, len - pivotIndex - 1);
-}
-// Best case: T(n) = 2*T(n/2) + 1 easy solved with Master theorem
-// Worst case :T(n) = T(n-1) + 1
 
-const size_t SIZE = 15;
+	QuickSort(arr, pivotIndex);
+	QuickSort(arr + pivotIndex + 1, len - pivotIndex-1);
+}
+
+
+const int SIZE = 15;
 int main()
 {
-	int arr1[] = {15,14,13,12,11,30,90,8,7,6,5,4,3,2,1};
-	quickSort(arr1, SIZE);
+	int arr1[] = { 15,14,13,12,11,30,90,8,7,6,5,4,3,2,1};
+	QuickSort(arr1, SIZE);
 
 	for (int i = 0; i < SIZE; i++)
-		cout << arr1[i] << ' ';
-
-
-
+		cout << arr1[i] << " ";
 }
