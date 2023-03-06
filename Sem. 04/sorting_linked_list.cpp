@@ -111,4 +111,5 @@ int main()
     list = mergeSort(list);
     print(list);
     freeList(list);
+    list = nullptr;
 }
