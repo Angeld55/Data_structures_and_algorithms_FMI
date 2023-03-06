@@ -1,10 +1,10 @@
 #include <iostream>
-#include "BST.hpp"
+#include "Bst.hpp"
 #include "printer/BST_printer.hpp"
 
 int main()
 {
-	BST<int> bst;
+	Bst<int> bst;
 
 	printBst<int>(bst);
 
@@ -59,7 +59,7 @@ int main()
 	printBst<int>(bst);
 	std::cout << std::endl;
 
-	BST<int> bst2 = bst;
+	Bst<int> bst2 = bst;
 	std::cout << "------------------------------\n";
 	std::cout << "After copy:\n";
 	printBst<int>(bst);

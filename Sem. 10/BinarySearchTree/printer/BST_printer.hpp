@@ -1,14 +1,14 @@
 #pragma once
 
 template <typename T>
-class BST;
+class Bst;
 
 template <typename T>
-void printBst(const BST<T>& bst)
+void printBst(const Bst<T>& bst)
 {
 	struct BST_Print
 	{
-		typename BST<T>::Node* currentNode;
+		typename Bst<T>::Node* currentNode;
 		int spacesCount;
 		bool newLineAfter;
 		bool isFirstElement;
@@ -23,7 +23,7 @@ void printBst(const BST<T>& bst)
 			}
 
 			if (currentNode != nullptr)
-				std::cout << *(currentNode->dataPtr);
+				std::cout << (currentNode->data);
 			else
 				std::cout << "  ";
 			if (newLineAfter)
@@ -31,7 +31,7 @@ void printBst(const BST<T>& bst)
 		}
 	};
 
-	int treeHeight = bst.getHeight(bst.root);
+	int treeHeight = bst.getSize(); //not accurate!
 	int maxDigits = 2;
 	int spaceForAleaf = (maxDigits << 1) + 2;// 2*digitcount for the digits of the leaf and the node above, and +2 for spacing
 	int leafCount = 1 << (treeHeight - 1);
