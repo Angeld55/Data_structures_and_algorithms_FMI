@@ -92,30 +92,23 @@ Node* mergeSort(Node* list)
         return list;
         
     Node* mid = getMid(list);
-    
+
+        
     Node* left = list;
     Node* right = mid->next;
     mid->next = nullptr;
     
-    print(left);
-    print(right);
+    left = mergeSort(left);
+    right = mergeSort(right);
     
-    mergeSort(left);
-    mergeSort(right);
-    
-    print(left);
-    print(right);
     return mergeLists(left, right);
 }
 
 
 int main()
 {
-	  Node* list = new Node(20, new Node(14, new Node(7)));
-    
+    Node* list = new Node(20, new Node(14, new Node(7)));
     list = mergeSort(list);
-
-	  print(list);
+    print(list);
     freeList(list);
-	
 }
