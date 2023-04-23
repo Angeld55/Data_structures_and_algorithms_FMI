@@ -42,6 +42,9 @@ DynamicArray<T>::DynamicArray() : size(0), capacity(4)
 }
 
 template <typename T>
+DynamicArray<T>::DynamicArray(size_t capacity) : DynamicArray(8) {}
+
+template <typename T>
 DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
 {
     auto closestPowerOfTwo = [](size_t n)
@@ -59,7 +62,7 @@ DynamicArray<T>::DynamicArray(size_t capacity) : size(0)
     };
 
 	this->capacity = closestPowerOfTwo(capacity);
-	arr = new T[capacity];
+	arr = new T[this->capacity];
 }
 
 template<typename T>
