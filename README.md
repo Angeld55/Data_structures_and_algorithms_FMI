@@ -1,4 +1,4 @@
-This repo is depricated! - Most of the examples are outdated and with mistakes. A refresh is coming
+## This repo is depricated! - Most of the examples are outdated and with mistakes. A refresh is coming
 
 ### Код от семинарите по СДП - ФМИ, спец. Компютърни науки
 
