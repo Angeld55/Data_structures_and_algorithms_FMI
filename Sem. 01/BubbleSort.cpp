@@ -1,26 +1,25 @@
 #include <iostream>
 
 template <class T>
-void swap(T* arr,int i ,int j)
+void swap(T& i, T& j)
 {
-    T temp = arr[i];
-    arr[i]=arr[j];
-    arr[j]=temp;
+    T temp = i;
+    i = j;
+    j = temp;
 }
 
 template <class T>
 void bubbleSort(T* arr,int len)
 {
+    size_t right = len - 1;
     for(int j = 0; j < len; j++)
     {
-        size_t right = len - 1;
         size_t lastSwappedIndex = 0;
-
         for(int i = 0; i < right; i++)
         {
             if(arr[i]>arr[i+1])
             {
-                swap(arr,i,i+1);
+                swap(arr[i], arr[i + 1]);
                 lastSwappedIndex = i;
             }
         }
