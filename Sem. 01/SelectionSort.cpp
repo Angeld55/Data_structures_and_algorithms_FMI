@@ -4,9 +4,10 @@ template <class T>
 void swap(T& i, T& j)
 {
     T temp = i;
-    j = i;
-    i = temp;
+    i = j;
+    j = temp;
 }
+
 template <class T>
 void selectionSort(T* arr,size_t size)
 {
@@ -17,7 +18,7 @@ void selectionSort(T* arr,size_t size)
         for(int j = i + 1; j < size; j++)
         {
             if(arr[j] < arr[minIndex])
-                minIndex=j;
+                minIndex = j;
         }
 
         if(i != minIndex)
