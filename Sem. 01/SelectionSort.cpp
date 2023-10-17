@@ -1,13 +1,12 @@
 #include <iostream>
 
 template <class T>
-void swap(T* arr,size_t i ,size_t j)
+void swap(T& i, T& j)
 {
-    T temp = arr[i];
-    arr[i]=arr[j];
-    arr[j]=temp;
+    T temp = i;
+    j = i;
+    i = temp;
 }
-
 template <class T>
 void selectionSort(T* arr,size_t size)
 {
@@ -22,7 +21,7 @@ void selectionSort(T* arr,size_t size)
         }
 
         if(i != minIndex)
-          swap(arr,i,minIndex);
+          swap(arr[i], arr[minIndex]);
     }
 }
 
