@@ -4,8 +4,8 @@ template <class T>
 void swap(T& i, T& j)
 {
     T temp = i;
-    j = i;
-    i = temp;
+    i = j;
+    j = temp;
 }
 
 template <class T>
