@@ -1,7 +1,7 @@
 #include <iostream>
 
 template <class T>
-void swap(int& i, int& j)
+void swap(T& i, T& j)
 {
     T temp = i;
     j = i;
