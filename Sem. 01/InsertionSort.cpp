@@ -1,22 +1,22 @@
 #include <iostream>
 
 template <class T>
-void swap(T* arr,int i ,int j)
+void swap(int& i, int& j)
 {
-    T temp = arr[i];
-    arr[i]=arr[j];
-    arr[j]=temp;
+    T temp = i;
+    j = i;
+    i = temp;
 }
 
 template <class T>
 void naiveInsertionSort(T* arr,size_t len) 
 {
-    for(size_t i = 1; i<len; i++)
+    for(size_t i = 1; i < len; i++)
     {
         T elIndex = i;
         while(elIndex > 0 && arr[elIndex] < arr[elIndex - 1])
         {
-            swap(arr,elIndex,elIndex-1);
+            swap(arr, elIndex, elIndex - 1);
             elIndex--;
         }
     }
@@ -31,10 +31,10 @@ void insertionSort(T* arr, size_t len)
         int index = i - 1;
         while(index >= 0 && arr[index] > element)
         {
-            arr[index + 1]=arr[index];
+            arr[index + 1] = arr[index];
             index--;
         }
-        arr[index + 1]=element;
+        arr[index + 1] = element;
     }
 }
 
