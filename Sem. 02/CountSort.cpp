@@ -35,7 +35,7 @@ void countSortForGrades(Student* arr, size_t len)
 	for (int i = 0; i < len; i++)
 		arr[i] = result[i];
 	delete[] result;
-
+	delete[] countArr;
 }
 
 //Homework task: make stable
