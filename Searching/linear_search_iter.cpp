@@ -11,6 +11,19 @@ int linearSearch(const T* arr, unsigned len, const T& searched)
 	return -1;
 }
 
+//with iterators
+template <typename Iterator, typename T>
+Iterator linearSearch(Iterator begin, Iterator end, const T& value) {
+    for (Iterator it = begin; it != end; ++it) 
+    {
+        if (*it == value) 
+	{
+            return it;  
+        }
+    }
+    return end;
+}
+
 int main()
 {
 	int arr[] = { 1, 2, 3, 4, 5, 6, 7 };
