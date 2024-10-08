@@ -11,7 +11,7 @@ bool linearSearch(const T* arr, unsigned len, const T& searched)
 }
 
 template <typename Iterator, typename T>
-Iterator recursive_linear_search(Iterator begin, Iterator end, const T& value)
+Iterator linearSearch(Iterator begin, Iterator end, const T& value)
 {
     if (begin == end)
         return end;
@@ -19,7 +19,7 @@ Iterator recursive_linear_search(Iterator begin, Iterator end, const T& value)
     if (*begin == value) 
         return begin;
     
-    return recursive_linear_search(++begin, end, value);
+    return linearSearch(++begin, end, value);
 }
 
 int main()
