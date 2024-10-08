@@ -40,6 +40,7 @@ Iterator binarySearch(Iterator begin, Iterator end, const T& value)
             right = middle;
     }
     return end;  
+}
 
 int main()
 {
