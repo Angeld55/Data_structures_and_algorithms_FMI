@@ -8,7 +8,7 @@ int binarySearch(const T* arr, int len, const T& searched)
 	int rightIndex = len - 1;
 	while (leftIndex <= rightIndex)
 	{
-		int midIndex = (leftIndex + (rightIndex - leftIndex) / 2;
+		int midIndex = (leftIndex + (rightIndex - leftIndex) / 2);
 
 		if (arr[midIndex] == searched)
 			return midIndex;
