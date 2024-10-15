@@ -10,7 +10,7 @@ void bubbleSort(T* arr, unsigned len)
     {
         unsigned lastSwappedIndex = 0;
 
-        for (int j = 0; j < end; j++)
+        for (int j = 0; j < end - i; j++)
         {
             if (arr[j] > arr[j + 1])
             {
