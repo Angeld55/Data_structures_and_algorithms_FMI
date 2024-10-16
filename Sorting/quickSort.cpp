@@ -7,7 +7,7 @@ size_t partition(T* pArr, size_t len)
     if(pArr[0] > pArr[len - 1])
         std::swap(pArr[0],  pArr[len - 1]);
 
-	T& partitioningElement = pArr[len-1];
+    T& partitioningElement = pArr[len-1];
     
     size_t left = 0;
     size_t right = len - 1;
