@@ -37,7 +37,7 @@ Iterator binarySearch(Iterator begin, Iterator end, const T& value)
         else if (*middle < value) 
             left = middle + 1;
         else 
-            right = middle;
+            right = middle - 1;
     }
     return end;  
 }
