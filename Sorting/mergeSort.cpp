@@ -59,3 +59,4 @@ int main()
 
 	for (int i = 0; i < SIZE; i++)
 		cout << arr1[i] << " ";
+}
