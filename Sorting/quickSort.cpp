@@ -1,8 +1,42 @@
 #include <iostream>
 using namespace std;
 
+template <typename T>
+size_t partition(T* arr, size_t len)
+{
+    T pivot = arr[len / 2];
+
+    int i = 0;
+    int j = len - 1;
+
+    while (true)
+    {
+        while (arr[i] < pivot)
+        {
+            i++;
+        }
+        while (arr[j] > pivot)
+        {
+            j--;
+        }
+
+        if (arr[i] == arr[j])
+        {
+            i++;
+        }
+        if (i < j)
+        {
+            std::swap(arr[i], arr[j]);
+        }
+        else
+        {
+            return j;
+        }
+    }
+}
+
 template <class T>
-size_t partition(T* pArr, size_t len)
+size_t advancedPartition(T* pArr, size_t len)
 {
     if (pArr[0] > pArr[len - 1])
         std::swap(pArr[0], pArr[len - 1]);
