@@ -3,7 +3,7 @@ using namespace std;
 
 // 6.0. Merge function - merges 2 sorted arrays
 template<typename T>
-void Merge(int* arr1, int len1, int* arr2, int len2)
+void Merge(T* arr1, int len1, T* arr2, int len2)
 {
 	T* resultArray = new T[len1 + len2];
 
