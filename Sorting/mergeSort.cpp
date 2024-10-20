@@ -10,7 +10,7 @@ void Merge(T* firstArr, size_t firstSize, T* secondArr, size_t secondSize, T* re
 	size_t secondIter = 0;
 
 	while(firstIter < firstSize && secondIter < secondSize)
-		resultArr[resultIter++] = (firstArr[firstIter] < secondArr[secondIter] ? firstArr[firstIter++] : secondArr[secondIter++]);
+		resultArr[resultIter++] = (firstArr[firstIter] <= secondArr[secondIter] ? firstArr[firstIter++] : secondArr[secondIter++]);
 
 	while(firstIter < firstSize)
 		resultArr[resultIter++] = firstArr[firstIter++];
