@@ -1,5 +1,5 @@
-| **Algorithm**     | **Best Case**    | **Average Case** | **Worst Case**   | **Space Complexity** | **Stable** | **Adaptive** | **Note**                                             |
-|-------------------|------------------|------------------|------------------|----------------------|------------|--------------|-----------------------------------------------------|
+| **Algorithm**     | **Best Case**      | **Average Case** | **Worst Case**   | **Space Complexity** | **Stable** | **Adaptive** | **Note**                                             |
+|-------------------|--------------------|------------------|------------------|----------------------|------------|--------------|-----------------------------------------------------|
 | **Bubble Sort**    | Θ(n)             | Θ(n²)            | Θ(n²)            | O(1)                 | Yes        | Yes          |                                                      |
 | **Selection Sort** | Θ(n²)            | Θ(n²)            | Θ(n²)            | O(1)                 | No         | No           | Minimizes the number of swaps                       |
 | **Insertion Sort** | Θ(n)             | Θ(n²)            | Θ(n²)            | O(1)                 | Yes        | Yes          | Efficient when elements are near their correct positions |
