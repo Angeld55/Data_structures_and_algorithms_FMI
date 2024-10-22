@@ -285,10 +285,11 @@ void vector<T>::reserve(size_t n)
 	T* new_data = static_cast<T*>(operator new(n * sizeof(T)));
 
 	for (size_t i = 0; i < size(); i++)
+        {
 		new (&new_data[i]) T(std::move(_data[i]));
-
-	//operator delete(_data, capacity() * sizeof(T));
-	delete[] _data;
+                _data[i].~T();
+	}
+	operator delete(_data, capacity() * sizeof(T));
 
 	_data = new_data;
 	_capacity = n;
