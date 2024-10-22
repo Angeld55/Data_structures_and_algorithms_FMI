@@ -190,10 +190,6 @@ void vector<T>::copy(const vector<T>& other)
 template <class T>
 void vector<T>::free()
 {
-
-	delete[] data;
-
-
 	// call destructor on constructed elements
 	for (size_t i = 0; i < size(); i++)
 		_data[i].~T();
@@ -292,7 +288,7 @@ void vector<T>::reserve(size_t n)
 		new (&new_data[i]) T(std::move(_data[i]));
 
 	//operator delete(_data, capacity() * sizeof(T));
-	delete[] data;
+	delete[] _data;
 
 	_data = new_data;
 	_capacity = n;
