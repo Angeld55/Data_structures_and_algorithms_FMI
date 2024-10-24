@@ -306,8 +306,10 @@ void vector<T>::shrink_to_fit()
 	T* new_data = static_cast<T*>(operator new(size() * sizeof(T)));
 
 	for (size_t i = 0; i < size(); i++)
+	{
 		new (&new_data[i]) T(std::move(_data[i]));
-
+		_data[i].~T();
+	}
 	operator delete(_data, capacity() * sizeof(T));
 
 	_capacity = _size;
