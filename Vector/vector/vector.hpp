@@ -22,7 +22,7 @@ class vector
 	vector(const vector& other);
 	vector& operator=(const vector& other);
 
-	vector(vector&& oher);
+	vector(vector&& other);
 	vector& operator=(vector&& other);
 
 	void push_back(const T& element);
@@ -70,12 +70,12 @@ class vector
 
 	reverse_iterator rbegin()
 	{
-		return {_data + size() - 1};
+    		return size() > 0 ? reverse_iterator(_data + size() - 1) : reverse_iterator(nullptr);
 	}
 
 	reverse_iterator rend()
 	{
-		return {_data - 1};
+    		return size() > 0 ? reverse_iterator(_data - 1) : reverse_iterator(nullptr);
 	}
 
 	const T& back() const
