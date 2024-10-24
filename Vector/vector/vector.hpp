@@ -110,6 +110,9 @@ class vector
 };
 
 // Constructs the container with count copies of elements with default value.
+// Why dont we call `new` here?
+// When you choose a memory managment strategy
+// to stick with it for concistency.
 template <class T>
 vector<T>::vector(size_t count)
 	: _data(static_cast<T*>(operator new(count * sizeof(T))))
