@@ -7,6 +7,7 @@ namespace Constants
 constexpr unsigned GROWTH_FACTOR = 2;
 }
 
+//It uses the default allocator. Could be done with template allocator.
 template <class T>
 class vector
 {
