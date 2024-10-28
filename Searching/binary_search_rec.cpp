@@ -13,7 +13,10 @@ int binarySearch(const int* arr, int len, const T& searched)
 		return midIndex;
 	
 	if (arr[midIndex] < searched)
-		return binarySearch(arr + midIndex + 1, len - midIndex - 1, searched);
+	{
+		int result = binarySearch(arr + midIndex + 1, len - midIndex - 1, searched);
+		return (result == -1) ? -1 : result + midIndex + 1;
+	}
 	else
 		return binarySearch(arr, midIndex, searched);
 }
