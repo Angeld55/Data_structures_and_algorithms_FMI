@@ -157,7 +157,7 @@ DoublyLinkedList<T>::DoublyLinkedList() : head(nullptr), tail(nullptr), count(0)
 template <typename T>
 bool DoublyLinkedList<T>::isEmpty() const
 {
-	return head == nullptr && tail == nullptr;
+	return head == nullptr;
 }
 
 template <typename T>
@@ -211,8 +211,9 @@ void DoublyLinkedList<T>::popBack()
 
 		delete toDelete;
 
-		count--;
 	}
+
+	count--;
 }
 
 template<typename T>
@@ -226,7 +227,6 @@ void DoublyLinkedList<T>::popFront()
 	{
 		delete head;
 		head = tail = nullptr;
-		count--;
 	}
 	else
 	{
@@ -236,16 +236,15 @@ void DoublyLinkedList<T>::popFront()
 		head = head->next;
 		
 		delete toDelete;
-
-		count--;
 	}
+
+	count--;
 }
 
 template <typename T>
 typename DoublyLinkedList<T>::DllIterator DoublyLinkedList<T>::insert(const T& element, const ConstDllIterator& it)
 {
-
-	if (it == cbegin())
+    if (it == cbegin())
     {
         pushFront(element);
         return begin();
@@ -253,19 +252,21 @@ typename DoublyLinkedList<T>::DllIterator DoublyLinkedList<T>::insert(const T& e
     else if (it == cend())
     {
         pushBack(element);
-        return end();
+        return DllIterator(*this, tail);
     }
-    
-    Node* current = it.currentElementPtr;
-	Node* newNode = new Node(element);
-	
-    newNode->next = current;
-    newNode->prev = current->prev;
-    current->prev->next = newNode;
-    current->prev = newNode;
-    count++;
+    else 
+    {
+        Node* current = it.currentElementPtr;
+        Node* newNode = new Node(element);
+        
+        newNode->next = current;
+        newNode->prev = current->prev;
+        current->prev->next = newNode;
+        current->prev = newNode;
+        count++;
 
-    return DllIterator(*this, newNode);
+        return DllIterator(*this, newNode);
+    }
 }
 
 template <typename T>
@@ -389,7 +390,7 @@ DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(DoublyLinkedList<T>&& other)
 	if (this != &other)
 	{
 		free();
-		moveFrom(other);
+		moveFrom(std::move(other));
 	}
 	return *this;
 }
@@ -418,6 +419,7 @@ void DoublyLinkedList<T>::moveFrom(DoublyLinkedList<T>&& other)
 	tail = other.tail;
 	count = other.count;
 	other.head = other.tail = nullptr;
+	other.count = 0;
 }
 
 
@@ -435,4 +437,3 @@ void DoublyLinkedList<T>::free()
 	head = tail = nullptr;
 	count = 0;
 }
-
