@@ -19,18 +19,22 @@ class DoublyLinkedList
     Node* head = nullptr;
     Node* tail = nullptr;
     void copyFrom(const DoublyLinkedList& other);
+    void moveFrom(DoublyLinkedList&& other);
     void free();
 
 public:
     DoublyLinkedList();
     DoublyLinkedList(const DoublyLinkedList<T>& other);
+    DoublyLinkedList(DoublyLinkedList<T>&& other);
+	
     DoublyLinkedList<T>& operator=(const DoublyLinkedList<T>& other);
+    DoublyLinkedList<T>& operator=(DoublyLinkedList<T>&& other);
     ~DoublyLinkedList();
 
-    void pushBack(const T& el); // O(1)
-    void pushFront(const T& el); // O(1)
-    void popBack(); // O(1)
-    void popFront(); // O(1)
+    void pushBack(const T& el);  //todo: add emplace. todo: add move semantics (also for insert)
+    void pushFront(const T& el); 
+    void popBack(); 
+    void popFront(); 
     
     const T& front() const;
     const T& back() const;
@@ -374,6 +378,23 @@ DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList<T>& o
 }
 
 template <typename T>
+DoublyLinkedList<T>::DoublyLinkedList(DoublyLinkedList<T>&& other)
+{
+	moveFrom(std::move(other));
+}
+
+template <typename T>
+DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(DoublyLinkedList<T>&& other)
+{
+	if (this != &other)
+	{
+		free();
+		moveFrom(other);
+	}
+	return *this;
+}
+
+template <typename T>
 DoublyLinkedList<T>::~DoublyLinkedList()
 {
 	free();
@@ -390,6 +411,16 @@ void DoublyLinkedList<T>::copyFrom(const DoublyLinkedList<T>& other)
 	}
 }
 
+template <typename T>
+void DoublyLinkedList<T>::moveFrom(DoublyLinkedList<T>&& other)
+{
+	head = other.head;
+	tail = other.tail;
+	count = other.count;
+	other.head = other.tail = nullptr;
+}
+
+
 template<typename T>
 void DoublyLinkedList<T>::free()
 {
@@ -404,3 +435,4 @@ void DoublyLinkedList<T>::free()
 	head = tail = nullptr;
 	count = 0;
 }
+
