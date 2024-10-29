@@ -10,7 +10,7 @@ class DoublyLinkedList
 
     struct Node
     {
-        Node(T data) : data(data), next(nullptr), prev(nullptr) {}
+        Node(const T& data) : data(data), next(nullptr), prev(nullptr) {}
         T data;
         Node* next;
         Node* prev;
