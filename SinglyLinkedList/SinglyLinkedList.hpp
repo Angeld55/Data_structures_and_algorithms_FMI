@@ -29,7 +29,7 @@ public:
 	~SinglyLinkedList();
 
 	void pushFront(const T& el);
-	void pushBack(const T& el);
+	void pushBack(const T& el);  //TODO: Add move pushs
 
 	void popFront();
 
