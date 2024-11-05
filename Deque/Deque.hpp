@@ -231,7 +231,6 @@ void Deque<T, AllocatorType>::copyFrom(const Deque<T, AllocatorType>& other)
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::moveFrom(Deque<T, AllocatorType>&& other)
 {
-	free();
 	data = other.data;
 	currentSize = other.currentSize;
 	currCapacity = other.currCapacity;
