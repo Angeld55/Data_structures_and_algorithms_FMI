@@ -1,5 +1,4 @@
 #include "Deque.hpp"
-#include <deque>
 #include <iostream>
 
 bool testPushBack()
@@ -319,8 +318,6 @@ int main()
 	std::cout << "Test Iterator Dereference: " << (testIteratorDereference() ? "PASSED" : "FAILED") << "\n";
 	std::cout << "Test Copy Cnstructor: " << (testCopyConstructor() ? "PASSED" : "FAILED") << "\n";
 	std::cout << "Test Move Constructor And Assignment: " << (testMoveAndAssignment() ? "PASSED" : "FAILED") << "\n";
-
-	std::deque<int> d;
 
 	return 0;
 }
