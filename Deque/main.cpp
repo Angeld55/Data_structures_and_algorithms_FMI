@@ -1,4 +1,6 @@
 #include "Deque.hpp"
+#include <deque>
+#include <iostream>
 
 bool testPushBack()
 {
@@ -122,7 +124,23 @@ bool testShrinkToFit()
 		}
 	}
 
-	return capacityMatchesSize && elementsIntact;
+	if(!(capacityMatchesSize && elementsIntact))
+		return false;
+
+	// Step 6: Empty the whole deque then try shrink_to_fit
+	// on an empty container.
+	while(deque.size()) { deque.popFront(); }
+	deque.shrinkToFit();
+	if(deque.size() != 0) return false;
+
+	deque.pushBack(1);
+	deque.pushBack(2);
+	deque.pushBack(3);
+	deque.pushBack(4);
+
+	if(deque.size() != 4 || deque.front() != 1 || deque.back() != 4) return false;
+
+	return true;
 }
 
 
@@ -213,6 +231,75 @@ bool testIteratorDereference() {
 	return true;
 }
 
+bool testCopyConstructor()
+{
+	Deque<int> deque;
+	deque.pushBack(1);
+	deque.pushBack(2);
+	deque.pushBack(3);
+
+	Deque<int> copy(deque);
+
+	if(deque.size() != copy.size()) return false;
+
+	while(copy.size())
+	{
+		if(copy.front() != deque.front()) return false;
+		copy.popFront();
+		deque.popFront();
+	}
+
+	if(deque.size() != copy.size()) return false;
+
+	return true;
+}
+
+bool testMoveAndAssignment()
+{
+	constexpr size_t SIZE = 4;
+
+	Deque<int> d;
+
+	for (size_t i = 0; i < SIZE; i++)
+		d.pushBack(i);
+
+	Deque<int> d1;
+	d1 = d;
+
+	for (size_t i = 0; i < d1.size(); i++)
+		if(d1[i] != d[i]) return false;
+	
+	Deque<int> moved(std::move(d1));
+
+	if(moved.size() != SIZE || d1.size() != 0) return false;
+
+	d1 = std::move(moved);
+	moved = std::move(d1);
+
+	if(moved.size() != SIZE || d1.size() != 0) return false;
+
+	for (size_t i = 0; i < d1.size(); i++)
+		if(moved[i] != d[i]) return false;
+	
+	while(moved.size())
+	{
+		if(moved.front() != d.front() || moved.back() != d.back())
+			return false;
+		moved.popBack();
+		d.popBack();
+
+		if(moved.isEmpty() || d.isEmpty())
+			break;
+
+		moved.popFront();
+		d.popFront();
+	}
+
+	if(!moved.isEmpty() || !d.isEmpty()) return false;
+
+	return true;
+}
+
 int main()
 {
 	std::cout << "Test Push Back: " << (testPushBack() ? "PASSED" : "FAILED") << "\n";
@@ -230,6 +317,10 @@ int main()
 	std::cout << "Test Iterator Equality: " << (testIteratorEquality() ? "PASSED" : "FAILED") << "\n";
 	std::cout << "Test Const Iterator: " << (testConstIterator() ? "PASSED" : "FAILED") << "\n";
 	std::cout << "Test Iterator Dereference: " << (testIteratorDereference() ? "PASSED" : "FAILED") << "\n";
+	std::cout << "Test Copy Cnstructor: " << (testCopyConstructor() ? "PASSED" : "FAILED") << "\n";
+	std::cout << "Test Move Constructor And Assignment: " << (testMoveAndAssignment() ? "PASSED" : "FAILED") << "\n";
+
+	std::deque<int> d;
 
 	return 0;
 }

@@ -1,21 +1,25 @@
-#include <iostream>
+#pragma once
+
 #include <memory>
+#include <stdexcept>
 
 template <class T, class AllocatorType = std::allocator<T>>
 class Deque
 {
 	T* data = nullptr;
 	size_t currentSize = 0;
-	size_t currCapacity = 0;
+	size_t currentCapacity = 0;
 	size_t head = 0;
 	size_t tail = 0;
 	AllocatorType myAlloc;
 
-	void moveIndex(size_t& index, bool forward);
+	void moveIndex(size_t& index, bool forward) const;
 	void copyFrom(const Deque<T, AllocatorType>& other);
-	void moveFrom(Deque<T, AllocatorType>&& other);
+	void moveFrom(Deque<T, AllocatorType>&& other) noexcept;
 	void free();
 	void resize(size_t newCapacity = 0);
+
+	size_t calculateCapacity() const;
 
 public:
 	Deque();
@@ -156,7 +160,6 @@ public:
 			return ConstIterator(deque, index - n);
 		}
 
-
 		const T& operator*() const
 		{
 			return deque.data[index];
@@ -195,32 +198,32 @@ public:
 
 // Implementation of member functions
 template <class T, class AllocatorType>
-Deque<T, AllocatorType>::Deque() : currCapacity(8), currentSize(0), head(0), tail(0)
+Deque<T, AllocatorType>::Deque() : currentCapacity(8), currentSize(0), head(0), tail(0)
 {
-	data = myAlloc.allocate(currCapacity);
+	data = myAlloc.allocate(currentCapacity);
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::moveIndex(size_t& index, bool forward)
+void Deque<T, AllocatorType>::moveIndex(size_t& index, bool forward) const
 {
+	if(currentCapacity == 0)
+		throw std::runtime_error("Trying to move index on deque with no capacity");
+	
 	if (forward)
 	{
-		(++index) %= currCapacity;
+		(++index) %= currentCapacity;
 	}
 	else
 	{
-		index = (index == 0) ? currCapacity - 1 : index - 1;
+		index = (index == 0) ? currentCapacity - 1 : index - 1;
 	}
 }
 
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::copyFrom(const Deque<T, AllocatorType>& other)
 {
-	currCapacity = other.currCapacity;
-	currentSize = other.currentSize;
-	head = other.head;
-	tail = other.tail;
-	data = myAlloc.allocate(currCapacity);
+	currentCapacity = other.currentCapacity;
+	data = myAlloc.allocate(currentCapacity);
 
 	for (size_t i = 0; i < other.size(); i++)
 	{
@@ -229,16 +232,18 @@ void Deque<T, AllocatorType>::copyFrom(const Deque<T, AllocatorType>& other)
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::moveFrom(Deque<T, AllocatorType>&& other)
+void Deque<T, AllocatorType>::moveFrom(Deque<T, AllocatorType>&& other) noexcept
 {
 	data = other.data;
 	currentSize = other.currentSize;
-	currCapacity = other.currCapacity;
+	currentCapacity = other.currentCapacity;
 	head = other.head;
 	tail = other.tail;
 
 	other.data = nullptr;
-	other.currentSize = other.currCapacity = 0;
+	// Destructor might fail otherwise.
+	other.head = other.tail = 0;
+	other.currentSize = other.currentCapacity = 0;
 }
 
 template <class T, class AllocatorType>
@@ -249,27 +254,30 @@ void Deque<T, AllocatorType>::free()
 		myAlloc.destroy(data + head);
 		moveIndex(head, true);
 	}
-	myAlloc.deallocate(data, currCapacity);
+	myAlloc.deallocate(data, currentCapacity);
 	data = nullptr;
-	currentSize = head = tail = currCapacity = 0;
+	currentSize = head = tail = currentCapacity = 0;
 }
 
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::resize(size_t newCapacity)
 {
-	if (newCapacity == 0) newCapacity = currCapacity * 2;
+	if (newCapacity == 0) 
+	{
+		newCapacity = calculateCapacity();
+	}
 
 	T* newData = myAlloc.allocate(newCapacity);
 	for (size_t i = 0; i < currentSize; i++)
 	{
 		myAlloc.construct(newData + i, std::move(operator[](i)));
-		myAlloc.destroy(data + ((head + i) % currCapacity));
+		myAlloc.destroy(data + ((head + i) % currentCapacity));
 	}
-	myAlloc.deallocate(data, currCapacity);
+	myAlloc.deallocate(data, currentCapacity);
 
 	head = 0;
 	tail = currentSize % newCapacity;
-	currCapacity = newCapacity;
+	currentCapacity = newCapacity;
 	data = newData;
 }
 
@@ -316,7 +324,7 @@ Deque<T, AllocatorType>& Deque<T, AllocatorType>::operator=(Deque<T, AllocatorTy
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::pushFront(const T& obj)
 {
-	if (currentSize >= currCapacity)
+	if (currentSize >= currentCapacity)
 		resize();
 	moveIndex(head, false);
 	myAlloc.construct(data + head, obj);
@@ -326,7 +334,7 @@ void Deque<T, AllocatorType>::pushFront(const T& obj)
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::pushFront(T&& obj)
 {
-	if (currentSize >= currCapacity)
+	if (currentSize >= currentCapacity)
 		resize();
 	moveIndex(head, false);
 	myAlloc.construct(data + head, std::move(obj));
@@ -336,7 +344,7 @@ void Deque<T, AllocatorType>::pushFront(T&& obj)
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::pushBack(const T& obj)
 {
-	if (currentSize >= currCapacity)
+	if (currentSize >= currentCapacity)
 		resize();
 	myAlloc.construct(data + tail, obj);
 	moveIndex(tail, true);
@@ -346,7 +354,7 @@ void Deque<T, AllocatorType>::pushBack(const T& obj)
 template <class T, class AllocatorType>
 void Deque<T, AllocatorType>::pushBack(T&& obj)
 {
-	if (currentSize >= currCapacity)
+	if (currentSize >= currentCapacity)
 		resize();
 	myAlloc.construct(data + tail, std::move(obj));
 	moveIndex(tail, true);
@@ -377,7 +385,7 @@ template <class T, class AllocatorType>
 template <typename... Args>
 void Deque<T, AllocatorType>::emplaceFront(Args&&... args)
 {
-	if (currentSize >= currCapacity)
+	if (currentSize >= currentCapacity)
 		resize();
 	moveIndex(head, false);
 	myAlloc.construct(data + head, std::forward<Args>(args)...);
@@ -388,7 +396,7 @@ template <class T, class AllocatorType>
 template <typename... Args>
 void Deque<T, AllocatorType>::emplaceBack(Args&&... args)
 {
-	if (currentSize >= currCapacity)
+	if (currentSize >= currentCapacity)
 		resize();
 	myAlloc.construct(data + tail, std::forward<Args>(args)...);
 	moveIndex(tail, true);
@@ -398,34 +406,41 @@ void Deque<T, AllocatorType>::emplaceBack(Args&&... args)
 template<class T, class AllocatorType>
 void Deque<T, AllocatorType>::shrinkToFit()
 {
-	if (currCapacity > currentSize)
+	if (currentCapacity > currentSize)
 	{
-		resize(currentSize); 
+		// If size is 0 then we double up the memory.
+		if(currentSize == 0)
+		{
+			free();
+			return;
+		}
+		
+		resize(currentSize);
 	}
 }
 
 template <class T, class AllocatorType>
 T& Deque<T, AllocatorType>::operator[](size_t ind)
 {
-	return data[(head + ind) % currCapacity];
+	return data[(head + ind) % currentCapacity];
 }
 
 template <class T, class AllocatorType>
 const T& Deque<T, AllocatorType>::operator[](size_t ind) const
 {
-	return data[(head + ind) % currCapacity];
+	return data[(head + ind) % currentCapacity];
 }
 
 template <class T, class AllocatorType>
 T& Deque<T, AllocatorType>::back()
 {
-	return data[(tail == 0 ? currCapacity : tail) - 1];
+	return data[(tail == 0 ? currentCapacity : tail) - 1];
 }
 
 template <class T, class AllocatorType>
 const T& Deque<T, AllocatorType>::back() const
 {
-	return data[(tail == 0 ? currCapacity : tail) - 1];
+	return data[(tail == 0 ? currentCapacity : tail) - 1];
 }
 
 template <class T, class AllocatorType>
@@ -455,5 +470,11 @@ size_t Deque<T, AllocatorType>::size() const
 template<class T, class AllocatorType>
 size_t Deque<T, AllocatorType>::capacity() const
 {
-	return currCapacity;
+	return currentCapacity;
+}
+
+template<class T, class AllocatorType>
+size_t Deque<T, AllocatorType>::calculateCapacity() const
+{
+	return currentCapacity ? currentCapacity * 2 : 1;
 }
