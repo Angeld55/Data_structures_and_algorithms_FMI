@@ -61,8 +61,9 @@ public:
 		Deque& deque;
 		size_t index; //(not in the physical array)
 
-	public:
 		Iterator(Deque& deque, int index) : deque(deque), index(index) {}
+
+	public:
 
 		Iterator& operator++(int)
 		{
@@ -121,8 +122,9 @@ public:
 		const Deque& deque;
 		size_t index; //semantic index (not in the physical array)
 
-	public:
 		ConstIterator(const Deque& deque, int index) : deque(deque), index(index) {}
+
+	public:
 
 		ConstIterator& operator++(int)
 		{
