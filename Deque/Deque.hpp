@@ -103,7 +103,7 @@ public:
 
 		T& operator*()
 		{
-			return deque.data[index];
+			return deque[index];
 		}
 
 		bool operator==(const Iterator& other)
@@ -164,7 +164,7 @@ public:
 
 		const T& operator*() const
 		{
-			return deque.data[index];
+			return deque[index];
 		}
 
 		bool operator==(const ConstIterator& other)
