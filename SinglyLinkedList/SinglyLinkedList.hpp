@@ -417,8 +417,10 @@ void SinglyLinkedList<T>::moveFrom(SinglyLinkedList<T>&& other)
 {
     head = other.head;
     tail = other.tail;
+    size = other.size;
+	
     other.head = other.tail = nullptr;
-    
+    other.size = 0;
 }
 
 template <typename T>
