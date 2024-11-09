@@ -55,21 +55,21 @@ public:
     DllIterator insert(const T& element, const ConstDllIterator& it);
     DllIterator remove(const DllIterator& it);
     
-    DllIterator begin() { return DllIterator(*this, head); }
-    DllIterator end() { return DllIterator(*this, nullptr); }
-    ConstDllIterator cbegin() const { return ConstDllIterator(*this, head); }
-    ConstDllIterator cend() const { return ConstDllIterator(*this, nullptr); }
+    DllIterator begin() { return DllIterator(this, head); }
+    DllIterator end() { return DllIterator(this, nullptr); }
+    ConstDllIterator cbegin() const { return ConstDllIterator(this, head); }
+    ConstDllIterator cend() const { return ConstDllIterator(this, nullptr); }
 
     class DllIterator
     {
         friend class DoublyLinkedList;
         Node* currentElementPtr;
-        DoublyLinkedList& list;
+        DoublyLinkedList* list;
 
     public:
         typedef std::bidirectional_iterator_tag iterator_category;
 
-        DllIterator(DoublyLinkedList& list, Node* currentElementPtr = nullptr) : list(list), currentElementPtr(currentElementPtr) {}
+        DllIterator(DoublyLinkedList* list, Node* currentElementPtr = nullptr) : list(list), currentElementPtr(currentElementPtr) {}
 
         T& operator*() { return currentElementPtr->data; }
         T* operator->() { return &currentElementPtr->data; }
@@ -90,7 +90,7 @@ public:
             if(currentElementPtr)
                 currentElementPtr = currentElementPtr->prev;
             else
-                currentElementPtr = list.tail;
+                currentElementPtr = list->tail;
             return *this;
         }
 
@@ -100,21 +100,21 @@ public:
             return copy;
         }
 
-        bool operator==(const DllIterator& rhs) const { return currentElementPtr == rhs.currentElementPtr; }
+        bool operator==(const DllIterator& rhs) const { return currentElementPtr == rhs.currentElementPtr && list == rhs.list; }
         bool operator!=(const DllIterator& rhs) const { return !(rhs == *this); }
     };
 
     class ConstDllIterator
     {
         Node* currentElementPtr;
-        const DoublyLinkedList& list; // Modified to const DoublyLinkedList
+        const DoublyLinkedList* list; // Modified to const DoublyLinkedList
 
         friend class DoublyLinkedList;
 
     public:
         typedef std::bidirectional_iterator_tag iterator_category;
 
-        ConstDllIterator(const DoublyLinkedList& list, Node* currentElementPtr = nullptr) : list(list), currentElementPtr(currentElementPtr) {}
+        ConstDllIterator(const DoublyLinkedList* list, Node* currentElementPtr = nullptr) : list(list), currentElementPtr(currentElementPtr) {}
         ConstDllIterator(const DllIterator& iter) : list(iter.list), currentElementPtr(iter.currentElementPtr){} //convert constructor
         
         const T& operator*() const { return currentElementPtr->data; }
@@ -136,7 +136,7 @@ public:
             if(currentElementPtr)
                 currentElementPtr = currentElementPtr->prev;
             else
-                currentElementPtr = list.tail;
+                currentElementPtr = list->tail;
             return *this;
         }
 
@@ -146,7 +146,7 @@ public:
             return copy;
         }
 
-        bool operator==(const ConstDllIterator& rhs) const { return currentElementPtr == rhs.currentElementPtr; }
+        bool operator==(const ConstDllIterator& rhs) const { return currentElementPtr == rhs.currentElementPtr && list == rhs.list; }
         bool operator!=(const ConstDllIterator& rhs) const { return !(rhs == *this); }
     };
 };
@@ -252,7 +252,7 @@ typename DoublyLinkedList<T>::DllIterator DoublyLinkedList<T>::insert(const T& e
     else if (it == cend())
     {
         pushBack(element);
-        return DllIterator(*this, tail);
+        return DllIterator(this, tail);
     }
     else 
     {
@@ -265,7 +265,7 @@ typename DoublyLinkedList<T>::DllIterator DoublyLinkedList<T>::insert(const T& e
         current->prev = newNode;
         count++;
 
-        return DllIterator(*this, newNode);
+        return DllIterator(this, newNode);
     }
 }
 
@@ -295,7 +295,7 @@ typename DoublyLinkedList<T>::DllIterator DoublyLinkedList<T>::remove(const DllI
         delete toDelete;
         count--;
 
-        return DllIterator(*this, nextNode);
+        return DllIterator(this, nextNode);
     }
 }
 
