@@ -8,7 +8,7 @@
 template <class T, typename Compare = std::less<T>>
 class Bst
 {
-public:
+private:
     struct Node
     {
         T data;
