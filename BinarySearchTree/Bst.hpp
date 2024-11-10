@@ -3,8 +3,6 @@
 #include <queue>
 #include <functional>
 
-
-
 template <class T, typename Compare = std::less<T>>
 class Bst
 {
