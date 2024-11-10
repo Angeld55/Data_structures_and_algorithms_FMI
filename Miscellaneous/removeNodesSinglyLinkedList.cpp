@@ -50,7 +50,8 @@ void freeList(Node* list)
     }
 }
 
-int main() {
+int main() 
+{
     // Create a sample list: 1 -> 2 -> 3 -> 4 -> 5
     Node* head = new Node{nullptr, 1};
     head->next = new Node{nullptr, 2};
