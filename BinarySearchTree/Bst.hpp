@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
-#include <queue>
 #include <functional>
+#include <stack>
+#include <vector>
 
 template <class T, typename Compare = std::less<T>>
 class Bst
@@ -36,6 +37,68 @@ public:
 
     size_t getSize() const;
     bool isEmpty() const;
+
+    class ForwardIterator
+    {
+    private:
+        std::stack<Node*> nodeStack;
+
+        void pushLeft(Node* node) 
+        {
+            while (node) 
+            {
+                nodeStack.push(node);
+                node = node->left;
+            }
+        }
+
+    public:
+        ForwardIterator(Node* root = nullptr) 
+        {
+            pushLeft(root);
+        }
+
+        T& operator*() const 
+        {
+            return nodeStack.top()->data;
+        }
+
+        ForwardIterator& operator++() 
+        {
+            Node* node = nodeStack.top();
+            nodeStack.pop();
+            if (node->right) {
+                pushLeft(node->right);
+            }
+            return *this;
+        }
+        ForwardIterator operator++(int)
+        {
+            ForwardIterator old = *this;
+            ++(*this);
+            return old;
+        }
+
+        bool operator!=(const ForwardIterator& other) const 
+        {
+            return nodeStack != other.nodeStack;
+        }
+
+        bool operator==(const ForwardIterator& other) const 
+        {
+            return nodeStack == other.nodeStack;
+        }
+    };
+
+    ForwardIterator begin() const 
+    {
+        return ForwardIterator(root);
+    }
+
+    ForwardIterator end() const 
+    {
+        return ForwardIterator(nullptr);
+    }
 };
 
 template <class T, typename Compare>
@@ -184,4 +247,15 @@ template <class T, typename Compare>
 Bst<T, Compare>::~Bst()
 {
     free(root);
+}
+
+void treeSort(std::vector<int>& v)
+{
+    Bst<int> bst;
+    for (int i = 0; i < v.size(); i++)
+        bst.insert(v.at(i));
+
+    unsigned index = 0;
+    for (auto it = bst.begin(); it != bst.end(); it++)
+        v.at(index++) = *it;
 }

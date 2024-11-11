@@ -76,12 +76,27 @@ bool testCustomComparator()
     return true;
 }
 
+bool testTreeSort()
+{
+    std::vector<int> v = { 9,8,3,1,2,4,5,7,6, 0 };
+    treeSort(v);
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (i != v.at(i))
+            return false;
+    }
+    return true;
+}
+
 int main()
 {
     std::cout << "Test Insert: " << (testInsert() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Contains: " << (testContains() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Remove: " << (testRemove() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Custom Comparator: " << (testCustomComparator() ? "Passed" : "Failed") << std::endl;
+    std::cout << "Test Tree sort: " << (testTreeSort() ? "Passed" : "Failed") << std::endl;
+
+   
 
     return 0;
 }
