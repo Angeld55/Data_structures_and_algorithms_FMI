@@ -270,7 +270,11 @@ void Deque<T, AllocatorType>::resize(size_t newCapacity)
 	}
 
 	T* newData = myAlloc.allocate(newCapacity);
-	for (size_t i = 0; i < currentSize; i++)
+	
+	// If the current size is greater than `new_capacity`, 
+    // the container is reduced to its first `new_capacity` elements.
+	size_t includedElementsCount = std::min(currentSize, newCapacity);
+	for (size_t i = 0; i < includedElementsCount; i++)
 	{
 		myAlloc.construct(newData + i, std::move(operator[](i)));
 		myAlloc.destroy(data + ((head + i) % currentCapacity));
