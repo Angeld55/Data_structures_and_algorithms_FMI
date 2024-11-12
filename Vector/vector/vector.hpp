@@ -1,14 +1,14 @@
 #pragma once
+
 #include "../iterator/iterator.hpp"
-#include <utility>
-#include <algorithm>
+#include <memory>
+
 namespace Constants
 {
 constexpr unsigned GROWTH_FACTOR = 2;
 }
 
-//It uses the default allocator. Could be done with template allocator.
-template <class T>
+template <class T, class Allocator = std::allocator<T>>
 class vector
 {
   public:
@@ -57,7 +57,7 @@ class vector
 	}
 	iterator end()
 	{
-		return iterator(_data + size());
+		return iterator(&_data[size()]);
 	}
 
 	const_iterator c_begin() const
@@ -66,17 +66,17 @@ class vector
 	}
 	const_iterator c_end() const
 	{
-		return const_iterator(_data + size());
+		return const_iterator(&_data[size()]);
 	}
 
 	reverse_iterator rbegin()
 	{
-    		return size() > 0 ? reverse_iterator(_data + size() - 1) : reverse_iterator(nullptr);
+		return {&_data[size() - 1]};
 	}
 
 	reverse_iterator rend()
 	{
-    		return size() > 0 ? reverse_iterator(_data - 1) : reverse_iterator(nullptr);
+		return {_data - 1};
 	}
 
 	const T& back() const
@@ -105,46 +105,44 @@ class vector
 	void move(vector&& other);
 	size_t calculate_capacity() const;
 
+	Allocator _allocator;
+
 	T* _data = nullptr;
 	size_t _size = 0;
 	size_t _capacity = 0;
 };
 
 // Constructs the container with count copies of elements with default value.
-// Why dont we call `new` here?
-// When you choose a memory managment strategy
-// to stick with it for concistency.
-template <class T>
-vector<T>::vector(size_t count)
-	: _data(static_cast<T*>(operator new(count * sizeof(T))))
+template <class T, class Allocator>
+vector<T, Allocator>::vector(size_t count)
+	: _data(_allocator.allocate(count))
 	, _size(count)
 	, _capacity(count)
 {
-	// default construct all elements
-	for (size_t i = 0; i < count; i++)
-		new (&_data[i]) T();
+	// Default construct all elements.
+	for (size_t i = 0; i < size(); i++)
+		_allocator.construct(&_data[i]);
 }
 
 // Constructs the container with count copies of elements with value initial.
-template <class T>
-vector<T>::vector(size_t count, const T& initial)
-	: _data(static_cast<T*>(operator new(count * sizeof(T))))
+template <class T, class Allocator>
+vector<T, Allocator>::vector(size_t count, const T& initial)
+	: _data(_allocator.allocate(count))
 	, _size(count)
 	, _capacity(count)
 {
-	// construct all elements copying initial
-	for (size_t i = 0; i < count; i++)
-		new (&_data[i]) T(initial);
+	for (size_t i = 0; i < size(); i++)
+		_allocator.construct(&_data[i], initial);
 }
 
-template <class T>
-vector<T>::vector(const vector& other)
+template <class T, class Allocator>
+vector<T, Allocator>::vector(const vector& other)
 {
 	copy(other);
 }
 
-template <class T>
-vector<T>& vector<T>::operator=(const vector& other)
+template <class T, class Allocator>
+vector<T, Allocator>& vector<T, Allocator>::operator=(const vector& other)
 {
 	if (this != &other)
 	{
@@ -154,14 +152,14 @@ vector<T>& vector<T>::operator=(const vector& other)
 	return *this;
 }
 
-template <class T>
-vector<T>::vector(vector&& other)
+template <class T, class Allocator>
+vector<T, Allocator>::vector(vector&& other)
 {
 	move(std::move(other));
 }
 
-template <class T>
-vector<T>& vector<T>::operator=(vector&& other)
+template <class T, class Allocator>
+vector<T, Allocator>& vector<T, Allocator>::operator=(vector&& other)
 {
 	if (this != &other)
 	{
@@ -171,39 +169,36 @@ vector<T>& vector<T>::operator=(vector&& other)
 	return *this;
 }
 
-template <class T>
-vector<T>::~vector()
+template <class T, class Allocator>
+vector<T, Allocator>::~vector()
 {
 	free();
 }
 
-template <class T>
-void vector<T>::copy(const vector<T>& other)
+template <class T, class Allocator>
+void vector<T, Allocator>::copy(const vector<T, Allocator>& other)
 {
-	// allocate enough memoty
-	_data = static_cast<T*>(operator new(other.capacity() * sizeof(T)));
-
-	// copy construct elements
+	_data = _allocator.allocate(other.capacity());
+	
+	// Copy construct the new memory
 	for (size_t i = 0; i < other.size(); i++)
-		new (&_data[i]) T(other[i]);
+		_allocator.construct(&_data[i], other[i]);
 
 	_size = other.size();
 	_capacity = other.capacity();
 }
 
-template <class T>
-void vector<T>::free()
+template <class T, class Allocator>
+void vector<T, Allocator>::free()
 {
-	// call destructor on constructed elements
 	for (size_t i = 0; i < size(); i++)
-		_data[i].~T();
-
-	// deallocate memory
-	operator delete(_data, capacity() * sizeof(T));
+		_allocator.destroy(&_data[i]);
+	
+	_allocator.deallocate(_data, capacity());
 }
 
-template <class T>
-void vector<T>::move(vector<T>&& other)
+template <class T, class Allocator>
+void vector<T, Allocator>::move(vector<T, Allocator>&& other)
 {
 	_size = other.size();
 	_capacity = other.capacity();
@@ -213,20 +208,20 @@ void vector<T>::move(vector<T>&& other)
 	other._size = other._capacity = 0;
 }
 
-template <class T>
-size_t vector<T>::size() const
+template <class T, class Allocator>
+size_t vector<T, Allocator>::size() const
 {
 	return _size;
 }
 
-template <class T>
-size_t vector<T>::capacity() const
+template <class T, class Allocator>
+size_t vector<T, Allocator>::capacity() const
 {
 	return _capacity;
 }
 
-template <class T>
-size_t vector<T>::calculate_capacity() const
+template <class T, class Allocator>
+size_t vector<T, Allocator>::calculate_capacity() const
 {
 	if (capacity() == 0)
 		return 1;
@@ -236,38 +231,35 @@ size_t vector<T>::calculate_capacity() const
 // Resizes the container to contain `n` elements, does nothing if `n` == size(). 
 // If the current size is greater than `n`, the container is reduced to its first count elements. 
 // If the current size is less than `n`, then additional default-inserted elements are appended.
-template <class T>
-void vector<T>::resize(size_t n)
+template <class T, class Allocator>
+void vector<T, Allocator>::resize(size_t n)
 {
 	if (n < size())
 	{
-		// call destructor on constructed elements
 		for (size_t i = n; i < size(); i++)
-			(_data + i)->~T();
-
+			_allocator.destroy(&_data[i]);
 		_size = n;
 	}
 	else if (n > size())
 	{
 		if (n <= capacity())
 		{
-			// default construct elements in range [size(), n)
 			for (size_t i = size(); i < n; i++)
-				new (&_data[i]) T();
-
+				_allocator.construct(&_data[i]);
+			
 			_size = n;
 		}
 		else
 		{
-			T* new_data = static_cast<T*>(operator new(n * sizeof(T)));
+			T* new_data = _allocator.allocate(n);
 
 			for (size_t i = 0; i < size(); i++)
-				new (&new_data[i]) T(std::move(_data[i]));
-
+				_allocator.construct(new_data, std::move(_data[i]));
+			
 			for (size_t i = size(); i < n; i++)
-				new (&new_data[i]) T();
+				_allocator.construct(&new_data[i]);
 
-			operator delete(_data, capacity() * sizeof(T));
+			_allocator.deallocate(_data, capacity());
 
 			_data = new_data;
 			_capacity = n;
@@ -280,20 +272,18 @@ void vector<T>::resize(size_t n)
 // of elements that the vector can hold without requiring reallocation) 
 // to a value that's greater or equal to `n`. If `n` is greater than
 // the current capacity(), new storage is allocated, otherwise the function does nothing. 
-template <class T>
-void vector<T>::reserve(size_t n)
+template <class T, class Allocator>
+void vector<T, Allocator>::reserve(size_t n)
 {
 	if (n <= capacity())
 		return;
 
-	T* new_data = static_cast<T*>(operator new(n * sizeof(T)));
+	T* new_data = _allocator.allocate(n);
 
 	for (size_t i = 0; i < size(); i++)
-        {
-		new (&new_data[i]) T(std::move(_data[i]));
-                _data[i].~T();
-	}
-	operator delete(_data, capacity() * sizeof(T));
+		_allocator.construct(&new_data[i], std::move(_data[i]));
+
+	_allocator.deallocate(_data, capacity());
 
 	_data = new_data;
 	_capacity = n;
@@ -301,53 +291,49 @@ void vector<T>::reserve(size_t n)
 
 // Requests the container to reduce its capacity to fit its size.
 // This may cause a reallocation, but has no effect on the vector size and cannot alter its elements.
-template <class T>
-void vector<T>::shrink_to_fit()
+template <class T, class Allocator>
+void vector<T, Allocator>::shrink_to_fit()
 {
 	if (capacity() == size())
 		return;
 
-	T* new_data = static_cast<T*>(operator new(size() * sizeof(T)));
-
+	T* new_data = _allocator.allocate(size());
 	for (size_t i = 0; i < size(); i++)
-	{
-		new (&new_data[i]) T(std::move(_data[i]));
-		_data[i].~T();
-	}
-	operator delete(_data, capacity() * sizeof(T));
+		_allocator.construct(new_data + i, std::move(_data[i]));
+	_allocator.deallocate(_data, capacity());
 
 	_capacity = _size;
 	_data = new_data;
 }
 
-template <class T>
-void vector<T>::push_back(const T& element)
+template <class T, class Allocator>
+void vector<T, Allocator>::push_back(const T& element)
 {
 	if (size() == capacity())
 		reserve(calculate_capacity());
 
-	new (&_data[_size++]) T(element);
+	_allocator.construct(_data[_size++], element);
 }
 
-template <class T>
-void vector<T>::push_back(T&& element)
+template <class T, class Allocator>
+void vector<T, Allocator>::push_back(T&& element)
 {
 	if (size() == capacity())
 		reserve(calculate_capacity());
 
-	new (&_data[_size++]) T(std::move(element));
+	_allocator.construct(&_data[_size++], std::move(element));
 }
 
 // Erases the specified elements from the container.
-template <class T>
-void vector<T>::erase(const_iterator position)
+template <class T, class Allocator>
+void vector<T, Allocator>::erase(const_iterator position)
 {
 	erase(position, position + 1);
 }
 
 // Erases the specified range from the container.
-template <class T>
-void vector<T>::erase(const_iterator first, const_iterator last)
+template <class T, class Allocator>
+void vector<T, Allocator>::erase(const_iterator first, const_iterator last)
 {
 	int deleted_count = last - first;
 
@@ -359,20 +345,24 @@ void vector<T>::erase(const_iterator first, const_iterator last)
 
 	if (last != c_end())
 	{
+		size_t construct_idx = begin_offset;
 		for (size_t i = end_offset; i < size(); i++)
-			new (&_data[begin_offset++]) T(std::move(_data[i]));
+		{
+			_allocator.construct(&_data[construct_idx], std::move(_data[i]));
+			++construct_idx;
+		}
 	}
 
 	for (size_t i = end_offset; i < size(); i++)
-		(_data + i)->~T();
-
+		_allocator.destroy(&_data[i]);
+	
 	_size -= deleted_count;
 }
 
 // Removes the last element of the container.
 // Exceptions: Throws nothing.
-template <class T>
-void vector<T>::pop_back()
+template <class T, class Allocator>
+void vector<T, Allocator>::pop_back()
 {
 	if (empty())
 		return;
@@ -382,45 +372,45 @@ void vector<T>::pop_back()
 
 // Appends a new element to the end of the container. 
 // The element is constructed through placement-new in-place.
-template <class T>
+template <class T, class Allocator>
 template <class... Args>
-void vector<T>::emplace_back(Args&&... args)
+void vector<T, Allocator>::emplace_back(Args&&... args)
 {
 	if (size() == capacity())
 		reserve(calculate_capacity());
 
-	new (&_data[_size++]) T(std::forward<Args>(args)...);
+	_allocator.construct(&_data[_size++], std::forward<Args>(args)...);
 }
 
-template <class T>
-T& vector<T>::operator[](size_t idx)
+template <class T, class Allocator>
+T& vector<T, Allocator>::operator[](size_t idx)
 {
 	return _data[idx];
 }
 
-template <class T>
-const T& vector<T>::operator[](size_t idx) const
+template <class T, class Allocator>
+const T& vector<T, Allocator>::operator[](size_t idx) const
 {
 	return _data[idx];
 }
 
-template <class T>
-T* vector<T>::data()
+template <class T, class Allocator>
+T* vector<T, Allocator>::data()
 {
 	return _data;
 }
 
-template <class T>
-void vector<T>::clear()
+template <class T, class Allocator>
+void vector<T, Allocator>::clear()
 {
 	for (size_t i = 0; i < size(); i++)
-		(_data + i)->~T();
-
+		_allocator.destroy(&_data[i]);
+	
 	_size = 0;
 }
 
-template <class T>
-bool vector<T>::empty() const
+template <class T, class Allocator>
+bool vector<T, Allocator>::empty() const
 {
 	return (size() == 0);
 }
