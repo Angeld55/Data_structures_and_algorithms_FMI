@@ -1,7 +1,4 @@
-#define TEST_DIR_VECTOR_ALLOC "vector-allocator/vector.hpp"
-#define TEST_DIR_VECTOR "vector/vector.hpp"
-
-#include TEST_DIR_VECTOR
+#include "vector/vector.hpp"
 #include <algorithm>
 #include <cassert>
 #include <chrono>
