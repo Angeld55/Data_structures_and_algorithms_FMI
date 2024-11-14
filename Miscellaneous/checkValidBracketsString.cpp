@@ -32,7 +32,8 @@ bool isCorrect(const std::string& str)
 		{
 			brackets.push(ch);
 		}
-		else {
+		else 
+		{
 			if (brackets.empty() || !isMatchingBracket(brackets.top(), ch))
 			{
 				return false;
