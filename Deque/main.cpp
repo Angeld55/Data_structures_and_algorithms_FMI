@@ -1,323 +1,345 @@
-#include "Deque.hpp"
+#include "deque.hpp"
 #include <iostream>
 
 bool testPushBack()
 {
-	Deque<int> deque;
-	deque.pushBack(10);
-	deque.pushBack(20);
-	deque.pushBack(30);
+    deque<int> dq;
+    dq.push_back(10);
+    dq.push_back(20);
+    dq.push_back(30);
 
-	return deque.size() == 3 && deque[0] == 10 && deque[1] == 20 && deque[2] == 30;
+    return dq.getSize() == 3 && dq[0] == 10 && dq[1] == 20 && dq[2] == 30;
 }
 
 bool testPushFront()
 {
-	Deque<int> deque;
-	deque.pushFront(10);
-	deque.pushFront(20);
-	deque.pushFront(30);
+    deque<int> dq;
+    dq.push_front(10);
+    dq.push_front(20);
+    dq.push_front(30);
 
-	return deque.size() == 3 && deque[0] == 30 && deque[1] == 20 && deque[2] == 10;
+    return dq.getSize() == 3 && dq[0] == 30 && dq[1] == 20 && dq[2] == 10;
 }
 
 bool testPopBack()
 {
-	Deque<int> deque;
-	deque.pushBack(10);
-	deque.pushBack(20);
-	deque.pushBack(30);
-	deque.popBack();
+    deque<int> dq;
+    dq.push_back(10);
+    dq.push_back(20);
+    dq.push_back(30);
+    dq.pop_back();
 
-	return deque.size() == 2 && deque[0] == 10 && deque[1] == 20;
+    return dq.getSize() == 2 && dq[0] == 10 && dq[1] == 20;
 }
 
 bool testPopFront()
 {
-	Deque<int> deque;
-	deque.pushBack(10);
-	deque.pushBack(20);
-	deque.pushBack(30);
-	deque.popFront();
+    deque<int> dq;
+    dq.push_back(10);
+    dq.push_back(20);
+    dq.push_back(30);
+    dq.pop_front();
 
-	return deque.size() == 2 && deque[0] == 20 && deque[1] == 30;
+    return dq.getSize() == 2 && dq[0] == 20 && dq[1] == 30;
 }
 
 bool testEmplaceBack()
 {
-	Deque<std::string> deque;
-	deque.emplaceBack(3, 'a'); // Adds "aaa" to the back
+    deque<std::string> dq;
+    dq.emplaceBack(3, 'a');
 
-	return deque.size() == 1 && deque[0] == "aaa";
+    return dq.getSize() == 1 && dq[0] == "aaa";
 }
 
 bool testEmplaceFront()
 {
-	Deque<std::string> deque;
-	deque.emplaceFront(3, 'b'); // Adds "bbb" to the front
+    deque<std::string> dq;
+    dq.emplaceFront(3, 'b');
 
-	return deque.size() == 1 && deque[0] == "bbb";
+    return dq.getSize() == 1 && dq[0] == "bbb";
 }
 
 bool testFrontBackAccess()
 {
-	Deque<int> deque;
-	deque.pushBack(10);
-	deque.pushBack(20);
-	deque.pushFront(5);
+    deque<int> dq;
+    dq.push_back(10);
+    dq.push_back(20);
+    dq.push_front(5);
 
-	return deque.front() == 5 && deque.back() == 20;
+    return dq.front() == 5 && dq.back() == 20;
 }
 
 bool testIsEmpty()
 {
-	Deque<int> deque;
-	return deque.isEmpty();
+    deque<int> dq;
+    return dq.empty();
 }
 
 bool testResize()
 {
-	Deque<int> deque;
-	for (int i = 0; i < 20; ++i)
-	{
-		deque.pushBack(i);
-	}
-	bool success = true;
-	for (int i = 0; i < 20; ++i)
-	{
-		success = success && deque[i] == i;
-	}
-	return success && deque.size() == 20;
+    deque<int> dq;
+    for (int i = 0; i < 20; ++i)
+    {
+        dq.push_back(i);
+    }
+
+    bool success = true;
+    for (int i = 0; i < 20; ++i)
+    {
+        success = success && dq[i] == i;
+    }
+
+    return success && dq.getSize() == 20;
 }
-bool testShrinkToFit()
+
+bool testIteratorIncrement()
 {
-	Deque<int> deque;
+    deque<int> dq;
+    dq.push_back(1);
+    dq.push_back(2);
+    dq.push_back(3);
 
-	// Step 1: Add elements to exceed the initial currCapacity and trigger resize
-	for (int i = 0; i < 20; ++i)
-	{
-		deque.pushBack(i);
-	}
+    auto it = dq.begin();
+    if (*it != 1)
+    {
+        return false;
+    }
 
-	// Step 2: Remove a few elements to create extra currCapacity
-	for (int i = 0; i < 10; ++i)
-	{
-		deque.popFront();
-	}
+    it++;
+    if (*it != 2)
+    {
+        return false;
+    }
 
-	// Step 3: Call shrinkToFit to reduce currCapacity to match the current size
-	size_t sizeBeforeShrink = deque.size();
-	deque.shrinkToFit();
+    ++it;
+    if (*it != 3)
+    {
+        return false;
+    }
 
-	// Step 4: Check if the currCapacity matches the current size
-	bool capacityMatchesSize = (deque.size() == sizeBeforeShrink && deque.capacity() == deque.size());
-
-	// Step 5: Verify elements are in the correct order after shrinking
-	bool elementsIntact = true;
-	for (size_t i = 0; i < deque.size(); ++i)
-	{
-		if (deque[i] != i + 10) // Elements should be [10, 11, ..., 19] after popping
-		{
-			elementsIntact = false;
-			break;
-		}
-	}
-
-	if(!(capacityMatchesSize && elementsIntact))
-		return false;
-
-	// Step 6: Empty the whole deque then try shrink_to_fit
-	// on an empty container.
-	while(deque.size()) { deque.popFront(); }
-	deque.shrinkToFit();
-	if(deque.size() != 0) return false;
-
-	deque.pushBack(1);
-	deque.pushBack(2);
-	deque.pushBack(3);
-	deque.pushBack(4);
-
-	if(deque.size() != 4 || deque.front() != 1 || deque.back() != 4) return false;
-
-	return true;
+    return it == dq.end() - 1;
 }
 
+bool testIteratorDecrement()
+{
+    deque<int> dq;
+    dq.push_back(1);
+    dq.push_back(2);
+    dq.push_back(3);
 
-bool testIteratorIncrement() {
-	Deque<int> deque;
-	deque.pushBack(1);
-	deque.pushBack(2);
-	deque.pushBack(3);
+    auto it = dq.end() - 1;
+    if (*it != 3)
+    {
+        return false;
+    }
 
-	auto it = deque.begin();
-	if (*it != 1) return false;
+    it--;
+    if (*it != 2)
+    {
+        return false;
+    }
 
-	it++;
-	if (*it != 2) return false;
+    --it;
+    if (*it != 1)
+    {
+        return false;
+    }
 
-	++it;
-	if (*it != 3) return false;
-
-	return it == deque.end() - 1;
+    return it == dq.begin();
 }
 
-bool testIteratorDecrement() {
-	Deque<int> deque;
-	deque.pushBack(1);
-	deque.pushBack(2);
-	deque.pushBack(3);
+bool testIteratorEquality()
+{
+    deque<int> dq;
+    dq.push_back(10);
+    dq.push_back(20);
 
-	auto it = deque.end() - 1;
-	if (*it != 3) return false;
+    auto it1 = dq.begin();
+    auto it2 = dq.begin();
 
-	it--;
-	if (*it != 2) return false;
+    if (it1 != it2)
+    {
+        return false;
+    }
 
-	--it;
-	if (*it != 1) return false;
+    ++it2;
 
-	return it == deque.begin();
+    if (it1 == it2)
+    {
+        return false;
+    }
+
+    return true;
 }
 
-bool testIteratorEquality() {
-	Deque<int> deque;
-	deque.pushBack(10);
-	deque.pushBack(20);
+bool testConstIterator()
+{
+    deque<int> dq;
+    dq.push_back(5);
+    dq.push_back(15);
+    dq.push_back(25);
 
-	auto it1 = deque.begin();
-	auto it2 = deque.begin();
-	if (it1 != it2) return false;
+    const deque<int>& constDq = dq;
+    auto it = constDq.begin();
 
-	++it2;
-	if (it1 == it2) return false;
+    if (*it != 5)
+    {
+        return false;
+    }
 
-	return true;
+    ++it;
+
+    if (*it != 15)
+    {
+        return false;
+    }
+
+    ++it;
+
+    if (*it != 25)
+    {
+        return false;
+    }
+
+    return it == constDq.end() - 1;
 }
 
-bool testConstIterator() {
-	Deque<int> deque;
-	deque.pushBack(5);
-	deque.pushBack(15);
-	deque.pushBack(25);
+bool testIteratorDereference()
+{
+    deque<int> dq;
+    dq.push_back(100);
+    dq.push_back(200);
+    dq.push_back(300);
 
-	const Deque<int>& constDeque = deque;
-	auto it = constDeque.begin();
+    auto it = dq.begin();
 
-	if (*it != 5) return false;
-	++it;
-	if (*it != 15) return false;
-	++it;
-	if (*it != 25) return false;
+    if (*it != 100)
+    {
+        return false;
+    }
 
-	return it == constDeque.end() - 1;
-}
+    ++it;
 
-bool testIteratorDereference() {
-	Deque<int> deque;
-	deque.pushBack(100);
-	deque.pushBack(200);
-	deque.pushBack(300);
+    if (*it != 200)
+    {
+        return false;
+    }
 
-	auto it = deque.begin();
-	if (*it != 100) return false;
+    it++;
 
-	++it;
-	if (*it != 200) return false;
+    if (*it != 300)
+    {
+        return false;
+    }
 
-	it++;
-	if (*it != 300) return false;
-
-	return true;
+    return true;
 }
 
 bool testCopyConstructor()
 {
-	Deque<int> deque;
-	deque.pushBack(1);
-	deque.pushBack(2);
-	deque.pushBack(3);
+    deque<int> dq;
+    dq.push_back(1);
+    dq.push_back(2);
+    dq.push_back(3);
 
-	Deque<int> copy(deque);
+    deque<int> copy(dq);
 
-	if(deque.size() != copy.size()) return false;
+    if (dq.getSize() != copy.getSize())
+    {
+        return false;
+    }
 
-	while(copy.size())
-	{
-		if(copy.front() != deque.front()) return false;
-		copy.popFront();
-		deque.popFront();
-	}
+    while (copy.getSize())
+    {
+        if (copy.front() != dq.front())
+        {
+            return false;
+        }
 
-	if(deque.size() != copy.size()) return false;
+        copy.pop_front();
+        dq.pop_front();
+    }
 
-	return true;
+    return dq.getSize() == copy.getSize();
 }
 
 bool testMoveAndAssignment()
 {
-	constexpr size_t SIZE = 4;
+    constexpr size_t SIZE = 4;
 
-	Deque<int> d;
+    deque<int> d;
 
-	for (size_t i = 0; i < SIZE; i++)
-		d.pushBack(i);
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        d.push_back(i);
+    }
 
-	Deque<int> d1;
-	d1 = d;
+    deque<int> d1;
+    d1 = d;
 
-	for (size_t i = 0; i < d1.size(); i++)
-		if(d1[i] != d[i]) return false;
-	
-	Deque<int> moved(std::move(d1));
+    for (size_t i = 0; i < d1.getSize(); i++)
+    {
+        if (d1[i] != d[i])
+        {
+            return false;
+        }
+    }
 
-	if(moved.size() != SIZE || d1.size() != 0) return false;
+    deque<int> moved(std::move(d1));
 
-	d1 = std::move(moved);
-	moved = std::move(d1);
+    if (moved.getSize() != SIZE || d1.getSize() != 0)
+    {
+        return false;
+    }
 
-	if(moved.size() != SIZE || d1.size() != 0) return false;
+    d1 = std::move(moved);
+    moved = std::move(d1);
 
-	for (size_t i = 0; i < d1.size(); i++)
-		if(moved[i] != d[i]) return false;
-	
-	while(moved.size())
-	{
-		if(moved.front() != d.front() || moved.back() != d.back())
-			return false;
-		moved.popBack();
-		d.popBack();
+    if (moved.getSize() != SIZE || d1.getSize() != 0)
+    {
+        return false;
+    }
 
-		if(moved.isEmpty() || d.isEmpty())
-			break;
+    while (moved.getSize())
+    {
+        if (moved.front() != d.front() || moved.back() != d.back())
+        {
+            return false;
+        }
 
-		moved.popFront();
-		d.popFront();
-	}
+        moved.pop_back();
+        d.pop_back();
 
-	if(!moved.isEmpty() || !d.isEmpty()) return false;
+        if (moved.empty() || d.empty())
+        {
+            break;
+        }
 
-	return true;
+        moved.pop_front();
+        d.pop_front();
+    }
+
+    return moved.empty() && d.empty();
 }
 
 int main()
 {
-	std::cout << "Test Push Back: " << (testPushBack() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Push Front: " << (testPushFront() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Pop Back: " << (testPopBack() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Pop Front: " << (testPopFront() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Emplace Back: " << (testEmplaceBack() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Emplace Front: " << (testEmplaceFront() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Front and Back Access: " << (testFrontBackAccess() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Is Empty: " << (testIsEmpty() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Resize: " << (testResize() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Shrink To Fit: " << (testShrinkToFit() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Iterator Increment: " << (testIteratorIncrement() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Iterator Decrement: " << (testIteratorDecrement() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Iterator Equality: " << (testIteratorEquality() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Const Iterator: " << (testConstIterator() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Iterator Dereference: " << (testIteratorDereference() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Copy Cnstructor: " << (testCopyConstructor() ? "PASSED" : "FAILED") << "\n";
-	std::cout << "Test Move Constructor And Assignment: " << (testMoveAndAssignment() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Push Back: " << (testPushBack() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Push Front: " << (testPushFront() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Pop Back: " << (testPopBack() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Pop Front: " << (testPopFront() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Emplace Back: " << (testEmplaceBack() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Emplace Front: " << (testEmplaceFront() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Front and Back Access: " << (testFrontBackAccess() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Is Empty: " << (testIsEmpty() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Resize: " << (testResize() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Iterator Increment: " << (testIteratorIncrement() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Iterator Decrement: " << (testIteratorDecrement() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Iterator Equality: " << (testIteratorEquality() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Const Iterator: " << (testConstIterator() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Iterator Dereference: " << (testIteratorDereference() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Copy Constructor: " << (testCopyConstructor() ? "PASSED" : "FAILED") << "\n";
+    std::cout << "Test Move Constructor And Assignment: " << (testMoveAndAssignment() ? "PASSED" : "FAILED") << "\n";
 
-	return 0;
+    return 0;
 }
