@@ -1,40 +1,31 @@
 #pragma once
 
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 
 template <class T, class AllocatorType = std::allocator<T>>
-class Deque
+class deque
 {
-	T* data = nullptr;
-	size_t currentSize = 0;
-	size_t currentCapacity = 0;
-	size_t head = 0;
-	size_t tail = 0;
-	AllocatorType myAlloc;
-
-	void moveIndex(size_t& index, bool forward) const;
-	void copyFrom(const Deque<T, AllocatorType>& other);
-	void moveFrom(Deque<T, AllocatorType>&& other) noexcept;
-	void free();
-	void resize(size_t newCapacity = 0);
-
-	size_t calculateCapacity() const;
-
 public:
-	Deque();
-	Deque(const Deque<T, AllocatorType>& other);
-	Deque(Deque<T, AllocatorType>&& other) noexcept;
-	Deque& operator=(const Deque<T, AllocatorType>& other);
-	Deque& operator=(Deque<T, AllocatorType>&& other) noexcept;
-	~Deque();
+	deque();
 
-	void pushFront(const T& obj);
-	void pushFront(T&& obj);
-	void pushBack(const T& obj);
-	void pushBack(T&& obj);
-	void popFront();
-	void popBack();
+	deque(const deque<T, AllocatorType>& other);
+	deque& operator=(const deque<T, AllocatorType>& other);
+
+	deque(deque<T, AllocatorType>&& other) noexcept;
+	deque& operator=(deque<T, AllocatorType>&& other) noexcept;
+
+	~deque() noexcept;
+
+	void push_front(const T& obj);
+	void push_front(T&& obj);
+
+	void push_back(const T& obj);
+	void push_back(T&& obj);
+
+	void pop_front();
+	void pop_back();
 
 	template <typename... Args>
 	void emplaceFront(Args&&... args);
@@ -42,271 +33,360 @@ public:
 	template <typename... Args>
 	void emplaceBack(Args&&... args);
 
-	void shrinkToFit();
-
-	T& operator[](size_t ind);
 	const T& operator[](size_t ind) const;
+	T& operator[](size_t ind);
 
-	T& back();
-	const T& back() const;
-	T& front();
 	const T& front() const;
-	bool isEmpty() const;
-	size_t size() const;
-	size_t capacity() const;
+	const T& back() const;
 
-	class Iterator
+	T& front();
+	T& back();
+
+	size_t getSize() const;
+	bool empty() const;
+
+	class DequeIterator
 	{
-		friend class Deque;
-		Deque& deque;
-		size_t index; //(not in the physical array)
-
-		Iterator(Deque& deque, int index) : deque(deque), index(index) {}
-
 	public:
-
-		Iterator& operator++(int)
+		DequeIterator& operator++(int)
 		{
 			index++;
 			return *this;
 		}
 
-		Iterator operator++()
+		DequeIterator operator++()
 		{
-			Iterator old = *this;
+			DequeIterator old = *this;
 			index++;
 			return old;
 		}
 
-		Iterator& operator--(int)
+		DequeIterator& operator--(int)
 		{
 			index--;
 			return *this;
 		}
 
-		Iterator operator--()
+		DequeIterator operator--()
 		{
-			Iterator old = *this;
+			DequeIterator old = *this;
 			index--;
 			return old;
 		}
 
-		Iterator operator+(int n)
+		DequeIterator operator+(int n)
 		{
-			return Iterator(deque, index + n);
+			return DequeIterator(d, index + n);
 		}
 
-		Iterator operator-(int n)
+		DequeIterator operator-(int n)
 		{
-			return Iterator(deque, index - n);
+			return DequeIterator(d, index - n);
 		}
 
 		T& operator*()
 		{
-			return deque[index];
+			return d[index];
 		}
 
-		bool operator==(const Iterator& other)
+		bool operator==(const DequeIterator& other)
 		{
 			return index == other.index;
 		}
-		bool operator!=(const Iterator& other)
+
+		bool operator!=(const DequeIterator& other)
 		{
 			return index != other.index;
 		}
+
+	private:
+		deque& d;
+		size_t index; // semantic index (not in the physical array)
+		DequeIterator(deque& d, int index) : d(d), index(index) {}
+
+		friend class deque;
 	};
 
-	class ConstIterator
+	class ConstDequeIterator
 	{
-		friend class Deque;
-		const Deque& deque;
-		size_t index; //semantic index (not in the physical array)
-
-		ConstIterator(const Deque& deque, int index) : deque(deque), index(index) {}
-
 	public:
-
-		ConstIterator& operator++(int)
+		ConstDequeIterator& operator++(int)
 		{
 			index++;
 			return *this;
 		}
 
-		ConstIterator operator++()
+		ConstDequeIterator operator++()
 		{
-			ConstIterator old = *this;
+			ConstDequeIterator old = *this;
 			index++;
 			return old;
 		}
 
-		ConstIterator& operator--(int)
+		ConstDequeIterator& operator--(int)
 		{
 			index--;
 			return *this;
 		}
 
-		ConstIterator operator--()
+		ConstDequeIterator operator--()
 		{
-			ConstIterator old = *this;
+			ConstDequeIterator old = *this;
 			index--;
 			return old;
 		}
 
-		ConstIterator operator+(int n)
+		ConstDequeIterator operator+(int n)
 		{
-			return ConstIterator(deque, index + n);
+			return ConstDequeIterator(d, index + n);
 		}
 
-		ConstIterator operator-(int n)
+		ConstDequeIterator operator-(int n)
 		{
-			return ConstIterator(deque, index - n);
+			return ConstDequeIterator(d, index - n);
 		}
 
 		const T& operator*() const
 		{
-			return deque[index];
+			return d[index];
 		}
 
-		bool operator==(const ConstIterator& other)
+		bool operator==(const ConstDequeIterator& other)
 		{
 			return index == other.index;
 		}
-		bool operator!=(const ConstIterator& other)
+
+		bool operator!=(const ConstDequeIterator& other)
 		{
 			return index != other.index;
 		}
+
+	private:
+		const deque& d;
+		size_t index; // semantic index (not in the physical array)
+		ConstDequeIterator(const deque& d, int index) : d(d), index(index) {}
+
+		friend class deque;
 	};
 
-	Deque::Iterator begin()
+	deque::DequeIterator begin()
 	{
-		return Iterator(*this, 0);
+		return DequeIterator(*this, 0);
 	}
 
-	Deque::Iterator end()
+	deque::DequeIterator end()
 	{
-		return Iterator(*this, size());
+		return DequeIterator(*this, getSize());
 	}
 
-	Deque::ConstIterator begin() const
+	deque::ConstDequeIterator begin() const
 	{
-		return ConstIterator(*this, 0);
+		return ConstDequeIterator(*this, 0);
 	}
 
-	Deque::ConstIterator end() const
+	deque::ConstDequeIterator end() const
 	{
-		return ConstIterator(*this, size());
+		return ConstDequeIterator(*this, getSize());
 	}
+	
+private:
+	T* data = nullptr;
+
+	size_t size = 0;
+	size_t capacity = 0;
+	size_t head = 0;
+	size_t tail = 0;
+
+	AllocatorType myAlloc;
+
+	void moveIndex(size_t& index, bool forward) const;
+
+	void copyFrom(const deque<T, AllocatorType>& other);
+	void moveFrom(deque<T, AllocatorType>&& other) noexcept;
+	void free();
+
+	void resize(size_t newCapacity = 0);
+
+	size_t calculateCapacity() const;
 };
 
-// Implementation of member functions
 template <class T, class AllocatorType>
-Deque<T, AllocatorType>::Deque() : currentCapacity(8), currentSize(0), head(0), tail(0)
+void deque<T, AllocatorType>::push_front(const T& obj)
 {
-	data = myAlloc.allocate(currentCapacity);
+	if (size >= capacity)
+	{
+		resize();
+	}
+	moveIndex(head, false);
+	std::construct_at(data + head, obj);
+	size++;
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::moveIndex(size_t& index, bool forward) const
+void deque<T, AllocatorType>::push_front(T&& obj)
 {
-	if(currentCapacity == 0)
+	if (size >= capacity)
+	{
+		resize();
+	}
+	moveIndex(head, false);
+	std::construct_at(data + head, std::move(obj));
+	size++;
+}
+
+template <class T, class AllocatorType>
+void deque<T, AllocatorType>::push_back(const T& obj)
+{
+	if (size >= capacity)
+	{
+		resize();
+	}
+	std::construct_at(data + tail, obj);
+	moveIndex(tail, true);
+	size++;
+}
+
+template <class T, class AllocatorType>
+void deque<T, AllocatorType>::push_back(T&& obj)
+{
+	if (size >= capacity)
+	{
+		resize();
+	}
+	std::construct_at(data + tail, std::move(obj));
+	moveIndex(tail, true);
+	size++;
+}
+
+template <class T, class AllocatorType>
+void deque<T, AllocatorType>::pop_front()
+{
+	if (empty())
+	{
+		throw std::out_of_range("deque is empty");
+	}
+	std::destroy_at(data + head);
+	moveIndex(head, true);
+	size--;
+}
+
+template <class T, class AllocatorType>
+void deque<T, AllocatorType>::pop_back()
+{
+	if (empty())
+	{
+		throw std::out_of_range("deque is empty");
+	}
+	moveIndex(tail, false);
+	std::destroy_at(data + tail);
+	size--;
+}
+
+template <class T, class AllocatorType>
+template <typename... Args>
+void deque<T, AllocatorType>::emplaceFront(Args&&... args)
+{
+	if (size >= capacity)
+	{
+		resize();
+	}
+	moveIndex(head, false);
+	std::construct_at(data + head, std::forward<Args>(args)...);
+	size++;
+}
+
+template <class T, class AllocatorType>
+template <typename... Args>
+void deque<T, AllocatorType>::emplaceBack(Args&&... args)
+{
+	if (size >= capacity)
+	{
+		resize();
+	}
+	std::construct_at(data + tail, std::forward<Args>(args)...);
+	moveIndex(tail, true);
+	size++;
+}
+
+template <class T, class AllocatorType>
+const T& deque<T, AllocatorType>::operator[](size_t ind) const
+{
+	return data[(head + ind) % capacity];
+}
+
+template <class T, class AllocatorType>
+T& deque<T, AllocatorType>::operator[](size_t ind)
+{
+	return data[(head + ind) % capacity];
+}
+
+template <class T, class AllocatorType>
+const T& deque<T, AllocatorType>::front() const
+{
+	return data[head];
+}
+
+template <class T, class AllocatorType>
+const T& deque<T, AllocatorType>::back() const
+{
+	return data[(tail == 0 ? capacity : tail) - 1];
+}
+
+template <class T, class AllocatorType>
+T& deque<T, AllocatorType>::front()
+{
+	return data[head];
+}
+
+template <class T, class AllocatorType>
+T& deque<T, AllocatorType>::back()
+{
+	return data[(tail == 0 ? capacity : tail) - 1];
+}
+
+template <class T, class AllocatorType>
+size_t deque<T, AllocatorType>::getSize() const
+{
+	return size;
+}
+
+template <class T, class AllocatorType>
+bool deque<T, AllocatorType>::empty() const
+{
+	return size == 0;
+}
+
+template <class T, class AllocatorType>
+void deque<T, AllocatorType>::moveIndex(size_t& index, bool forward) const
+{
+	if (capacity == 0)
+	{
 		throw std::runtime_error("Trying to move index on deque with no capacity");
-	
+	}
 	if (forward)
 	{
-		(++index) %= currentCapacity;
+		(++index) %= capacity;
 	}
 	else
 	{
-		index = (index == 0) ? currentCapacity - 1 : index - 1;
+		index = (index == 0) ? capacity - 1 : index - 1;
 	}
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::copyFrom(const Deque<T, AllocatorType>& other)
+deque<T, AllocatorType>::deque() : size(0), capacity(8), head(0), tail(0)
 {
-	currentCapacity = other.currentCapacity;
-	data = myAlloc.allocate(currentCapacity);
-
-	for (size_t i = 0; i < other.size(); i++)
-	{
-		pushBack(other[i]);
-	}
+	data = myAlloc.allocate(capacity);
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::moveFrom(Deque<T, AllocatorType>&& other) noexcept
-{
-	data = other.data;
-	currentSize = other.currentSize;
-	currentCapacity = other.currentCapacity;
-	head = other.head;
-	tail = other.tail;
-
-	other.data = nullptr;
-	// Destructor might fail otherwise.
-	other.head = other.tail = 0;
-	other.currentSize = other.currentCapacity = 0;
-}
-
-template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::free()
-{
-	while (head != tail)
-	{
-		myAlloc.destroy(data + head);
-		moveIndex(head, true);
-	}
-	myAlloc.deallocate(data, currentCapacity);
-	data = nullptr;
-	currentSize = head = tail = currentCapacity = 0;
-}
-
-template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::resize(size_t newCapacity)
-{
-	if (newCapacity == 0) 
-	{
-		newCapacity = calculateCapacity();
-	}
-
-	T* newData = myAlloc.allocate(newCapacity);
-	
-	// If the current size is greater than `new_capacity`, 
-    // the container is reduced to its first `new_capacity` elements.
-	size_t includedElementsCount = std::min(currentSize, newCapacity);
-	for (size_t i = 0; i < includedElementsCount; i++)
-	{
-		myAlloc.construct(newData + i, std::move(operator[](i)));
-		myAlloc.destroy(data + ((head + i) % currentCapacity));
-	}
-	myAlloc.deallocate(data, currentCapacity);
-
-	head = 0;
-	tail = currentSize % newCapacity;
-	currentCapacity = newCapacity;
-	data = newData;
-}
-
-template <class T, class AllocatorType>
-Deque<T, AllocatorType>::~Deque()
-{
-	free();
-}
-
-template <class T, class AllocatorType>
-Deque<T, AllocatorType>::Deque(const Deque<T, AllocatorType>& other)
+deque<T, AllocatorType>::deque(const deque<T, AllocatorType>& other)
 {
 	copyFrom(other);
 }
 
 template <class T, class AllocatorType>
-Deque<T, AllocatorType>::Deque(Deque<T, AllocatorType>&& other) noexcept
-{
-	moveFrom(std::move(other));
-}
-
-template <class T, class AllocatorType>
-Deque<T, AllocatorType>& Deque<T, AllocatorType>::operator=(const Deque<T, AllocatorType>& other)
+deque<T, AllocatorType>& deque<T, AllocatorType>::operator=(const deque<T, AllocatorType>& other)
 {
 	if (this != &other)
 	{
@@ -317,7 +397,13 @@ Deque<T, AllocatorType>& Deque<T, AllocatorType>::operator=(const Deque<T, Alloc
 }
 
 template <class T, class AllocatorType>
-Deque<T, AllocatorType>& Deque<T, AllocatorType>::operator=(Deque<T, AllocatorType>&& other) noexcept
+deque<T, AllocatorType>::deque(deque<T, AllocatorType>&& other) noexcept
+{
+	moveFrom(std::move(other));
+}
+
+template <class T, class AllocatorType>
+deque<T, AllocatorType>& deque<T, AllocatorType>::operator=(deque<T, AllocatorType>&& other) noexcept
 {
 	if (this != &other)
 	{
@@ -328,159 +414,81 @@ Deque<T, AllocatorType>& Deque<T, AllocatorType>::operator=(Deque<T, AllocatorTy
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::pushFront(const T& obj)
+deque<T, AllocatorType>::~deque() noexcept
 {
-	if (currentSize >= currentCapacity)
-		resize();
-	moveIndex(head, false);
-	myAlloc.construct(data + head, obj);
-	currentSize++;
+	free();
 }
 
 template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::pushFront(T&& obj)
+void deque<T, AllocatorType>::copyFrom(const deque<T, AllocatorType>& other)
 {
-	if (currentSize >= currentCapacity)
-		resize();
-	moveIndex(head, false);
-	myAlloc.construct(data + head, std::move(obj));
-	currentSize++;
-}
-
-template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::pushBack(const T& obj)
-{
-	if (currentSize >= currentCapacity)
-		resize();
-	myAlloc.construct(data + tail, obj);
-	moveIndex(tail, true);
-	currentSize++;
-}
-
-template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::pushBack(T&& obj)
-{
-	if (currentSize >= currentCapacity)
-		resize();
-	myAlloc.construct(data + tail, std::move(obj));
-	moveIndex(tail, true);
-	currentSize++;
-}
-
-template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::popFront()
-{
-	if (isEmpty())
-		throw std::out_of_range("Deque is empty");
-	myAlloc.destroy(data + head);
-	moveIndex(head, true);
-	currentSize--;
-}
-
-template <class T, class AllocatorType>
-void Deque<T, AllocatorType>::popBack()
-{
-	if (isEmpty())
-		throw std::out_of_range("Deque is empty");
-	moveIndex(tail, false);
-	myAlloc.destroy(data + tail);
-	currentSize--;
-}
-
-template <class T, class AllocatorType>
-template <typename... Args>
-void Deque<T, AllocatorType>::emplaceFront(Args&&... args)
-{
-	if (currentSize >= currentCapacity)
-		resize();
-	moveIndex(head, false);
-	myAlloc.construct(data + head, std::forward<Args>(args)...);
-	currentSize++;
-}
-
-template <class T, class AllocatorType>
-template <typename... Args>
-void Deque<T, AllocatorType>::emplaceBack(Args&&... args)
-{
-	if (currentSize >= currentCapacity)
-		resize();
-	myAlloc.construct(data + tail, std::forward<Args>(args)...);
-	moveIndex(tail, true);
-	currentSize++;
-}
-
-template<class T, class AllocatorType>
-void Deque<T, AllocatorType>::shrinkToFit()
-{
-	if (currentCapacity > currentSize)
+	capacity = other.capacity;
+	data = myAlloc.allocate(capacity);
+	for (size_t i = 0; i < other.getSize(); i++)
 	{
-		// If size is 0 then we double up the memory.
-		if(currentSize == 0)
-		{
-			free();
-			return;
-		}
-		
-		resize(currentSize);
+		push_back(other[i]);
 	}
 }
 
 template <class T, class AllocatorType>
-T& Deque<T, AllocatorType>::operator[](size_t ind)
+void deque<T, AllocatorType>::moveFrom(deque<T, AllocatorType>&& other) noexcept
 {
-	return data[(head + ind) % currentCapacity];
+	data = other.data;
+	size = other.size;
+	capacity = other.capacity;
+	head = other.head;
+	tail = other.tail;
+
+	other.data = nullptr;
+	other.size = other.capacity = other.head = other.tail = 0;
 }
 
 template <class T, class AllocatorType>
-const T& Deque<T, AllocatorType>::operator[](size_t ind) const
+void deque<T, AllocatorType>::free()
 {
-	return data[(head + ind) % currentCapacity];
+	// this check is needed in the case of full deque (when size == capacity)
+    	// because then head == tail and elements won't be destroyed
+    	if (head == tail && size >= 1)
+    	{
+        	std::destroy_at(data + head);
+		moveIndex(head, true);
+    	}
+	while (head != tail)
+	{
+		std::destroy_at(data + head);
+		moveIndex(head, true);
+	}
+	myAlloc.deallocate(data, capacity);
+	data = nullptr;
+	size = capacity = head = tail = 0;
 }
 
 template <class T, class AllocatorType>
-T& Deque<T, AllocatorType>::back()
+void deque<T, AllocatorType>::resize(size_t newCapacity)
 {
-	return data[(tail == 0 ? currentCapacity : tail) - 1];
-}
+	if (newCapacity == 0)
+	{
+		newCapacity = calculateCapacity();
+	}
 
-template <class T, class AllocatorType>
-const T& Deque<T, AllocatorType>::back() const
-{
-	return data[(tail == 0 ? currentCapacity : tail) - 1];
-}
+	T* newData = myAlloc.allocate(newCapacity);
+	
+	size_t includedElementsCount = std::min(size, newCapacity);
+	for (size_t i = 0; i < includedElementsCount; i++)
+	{
+		std::construct_at(newData + i, std::move(operator[](i)));
+		std::destroy_at(data + ((head + i) % capacity));
+	}
+	myAlloc.deallocate(data, capacity);
+	data = newData;
 
-template <class T, class AllocatorType>
-T& Deque<T, AllocatorType>::front()
-{
-	return data[head];
-}
-
-template <class T, class AllocatorType>
-const T& Deque<T, AllocatorType>::front() const
-{
-	return data[head];
-}
-
-template <class T, class AllocatorType>
-bool Deque<T, AllocatorType>::isEmpty() const
-{
-	return currentSize == 0;
-}
-
-template <class T, class AllocatorType>
-size_t Deque<T, AllocatorType>::size() const
-{
-	return currentSize;
+	head = 0;
+	tail = size;
+	capacity = newCapacity;
 }
 
 template<class T, class AllocatorType>
-size_t Deque<T, AllocatorType>::capacity() const
+size_t deque<T, AllocatorType>::calculateCapacity() const
 {
-	return currentCapacity;
-}
-
-template<class T, class AllocatorType>
-size_t Deque<T, AllocatorType>::calculateCapacity() const
-{
-	return currentCapacity ? currentCapacity * 2 : 1;
+	return capacity ? capacity * 2 : 1;
 }
