@@ -38,7 +38,7 @@ template <typename T>
 void LinkedQueue<T>::free()
 {
 	Node* iter = head;
-	while (iter!=nullptr)
+	while (iter != nullptr)
 	{
 		Node* prev = iter;
 		iter = iter->next;
@@ -76,7 +76,7 @@ LinkedQueue<T>::LinkedQueue(const LinkedQueue& other)
 template <typename T>
 LinkedQueue<T> LinkedQueue<T>::operator=(const LinkedQueue& other)
 {
-	if (this!=&other)
+	if (this != &other)
 	{
 		free();
 		copyFrom(other);
@@ -88,7 +88,7 @@ template <typename T>
 void LinkedQueue<T>::enqueue(const T& el)
 {
 	Node* newNode = new Node(el);
-	if (head == nullptr && tail == nullptr)//if its empty
+	if (isEmpty())//if its empty
 	{
 		head = newNode;
 		tail = newNode;
