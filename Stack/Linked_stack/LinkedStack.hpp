@@ -111,13 +111,11 @@ void LinkedStack<T>::pop()
 		throw std::logic_error("The LinkedStack is empty");
 	else if (head->next == nullptr) //only one element left
 	{
-		T el = head->data;
 		delete head;
 		head = nullptr;
 	}
 	else
 	{
-		T el = head->data;
 		Node* temp = head->next;
 		delete head;
 		head = temp;
