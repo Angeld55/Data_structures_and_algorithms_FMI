@@ -117,7 +117,6 @@ void LinkedQueue<T>::dequeue()
 	}
 	else
 	{
-		T el = head->data;
 		Node* temp = head->next;
 		
 		delete head;
