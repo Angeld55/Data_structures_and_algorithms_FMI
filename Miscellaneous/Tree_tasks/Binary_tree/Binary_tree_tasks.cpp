@@ -96,15 +96,7 @@ bool isPermutation(Node* root )
 {
 	vector<bool> temp(countElements(root)); // F F F F F F F F... F
 
-	if (!markOccurrencesHelper(root, temp))
-		return false;
-
-	for (int i = 0; i < temp.size(); i++)
-	{
-		if (!temp[i])
-			return false;
-	}
-	return true;
+	return markOccurrencesHelper(root,temp);
 }
 
 string getStringOnLevel(Node* root, int level)
