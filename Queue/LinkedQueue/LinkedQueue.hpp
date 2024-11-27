@@ -88,7 +88,7 @@ template <typename T>
 void LinkedQueue<T>::enqueue(const T& el)
 {
 	Node* newNode = new Node(el);
-	if (isEmpty())//if its empty
+	if (isEmpty())
 	{
 		head = newNode;
 		tail = newNode;
