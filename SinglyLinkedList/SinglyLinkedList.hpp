@@ -160,7 +160,7 @@ public:
 
 	};
 	
-	ConstSllIterator begin()
+	SllIterator begin()
 	{
 		return SllIterator(head);
 	}
@@ -317,7 +317,11 @@ typename SinglyLinkedList<T>::SllIterator SinglyLinkedList<T>::insertAfter(const
 
 	newNode->next = itNode->next;
 	itNode->next = newNode;
-    size++;
+    	size++;
+	if (itNode == tail)
+    	{
+           tail = newNode;
+   	}
 	return SinglyLinkedList<T>::SllIterator(newNode);
 }
 
@@ -325,7 +329,7 @@ typename SinglyLinkedList<T>::SllIterator SinglyLinkedList<T>::insertAfter(const
 template <typename T>
 typename SinglyLinkedList<T>::SllIterator SinglyLinkedList<T>::removeAfter(const typename SinglyLinkedList<T>::ConstSllIterator& it)
 {
-    if(it == end() || getSize() == 1)
+    if(it == end() || it.currentElementPtr->next == nullptr)
         return end();
         
 	Node* toDelete = (it + 1).currentElementPtr;
