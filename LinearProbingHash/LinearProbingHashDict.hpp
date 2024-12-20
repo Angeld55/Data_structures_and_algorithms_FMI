@@ -42,35 +42,43 @@ public:
     size_t getSize() const;
 
 private:
-    bool containsElementAtIndex(size_t index) const;
+    static bool containsElementAtIndex(const std::vector<std::optional<element>>& data, size_t index)
+    {
+        return data[index] != std::nullopt && data[index] != tombstone;
+
+    }
+    void resize(size_t newN);
 
     std::vector<std::optional<element>> data;
     const element tombstone;
     size_t size;
-    size_t n; // Table size
     size_t k; // Probe step
-
+    const double maxLoadFactor = 0.8;
     Hasher hasher;
 };
 
 template <class KeyType, class ValueType, class Hasher>
 LinearProbingHash<KeyType, ValueType, Hasher>::LinearProbingHash(size_t table_size, size_t probe_step)
-    : n(table_size), k(probe_step), tombstone(std::make_pair(KeyType(), ValueType())), size(0)
+    : k(probe_step), tombstone(std::make_pair(KeyType(), ValueType())), size(0)
 {
-    data.resize(n);
+    data.resize(table_size);
 }
 
 template <class KeyType, class ValueType, class Hasher>
 void LinearProbingHash<KeyType, ValueType, Hasher>::add(const KeyType& key, const ValueType& value)
 {
-    int indexToPut = hasher(key) % n;
+    double loadFactor = (double)size / data.size();
+    if (loadFactor > maxLoadFactor)
+        resize(data.size() * 2);
+
+    int indexToPut = hasher(key) % data.size();
 
     while (containsElementAtIndex(indexToPut))
     {
         if (data[indexToPut]->first == key)
             throw std::logic_error("Already exists!");
 
-        (indexToPut += k) %= n;
+        (indexToPut += k) %= data.size();
     }
     data[indexToPut] = { key, value };
     size++;
@@ -79,7 +87,7 @@ void LinearProbingHash<KeyType, ValueType, Hasher>::add(const KeyType& key, cons
 template <class KeyType, class ValueType, class Hasher>
 void LinearProbingHash<KeyType, ValueType, Hasher>::remove(const KeyType& key)
 {
-    int index = hasher(key) % n;
+    int index = hasher(key) % data.size();
 
     while (data[index] != std::nullopt)
     {
@@ -89,14 +97,14 @@ void LinearProbingHash<KeyType, ValueType, Hasher>::remove(const KeyType& key)
             size--;
             break;
         }
-        (index += k) %= n;
+        (index += k) %= data.size();
     }
 }
 
 template <class KeyType, class ValueType, class Hasher>
 class LinearProbingHash<KeyType, ValueType, Hasher>::Iterator LinearProbingHash<KeyType, ValueType, Hasher>::get(const KeyType& key) const
 {
-    int index = hasher(key) % n;
+    int index = hasher(key) % data.size();
 
     while (data[index] != std::nullopt)
     {
@@ -104,7 +112,7 @@ class LinearProbingHash<KeyType, ValueType, Hasher>::Iterator LinearProbingHash<
         {
             return Iterator(index, *this);
         }
-        (index += k) %= n;
+        (index += k) %= data.size();
     }
     return end(); // not found!!
 }
@@ -135,10 +143,19 @@ size_t LinearProbingHash<KeyType, ValueType, Hasher>::getSize() const
 }
 
 template <class KeyType, class ValueType, class Hasher>
-bool LinearProbingHash<KeyType, ValueType, Hasher>::containsElementAtIndex(size_t index) const
+void LinearProbingHash<KeyType, ValueType, Hasher>::resize(size_t newSize)
 {
-    return data[index] != std::nullopt && data[index] != tombstone;
+    std::vector<element> oldData(newSize);
+    oldData.swap(data);
+    size = 0;
+
+    for (int i = 0; i < oldData.size(); i++)
+    {
+        if (containsElementAtIndex(oldData[i]))
+            add(oldData[i]->first, oldData[i]->second);
+    }
 }
+
 
 
 template <class KeyType, class ValueType, class Hasher>
@@ -188,3 +205,4 @@ bool LinearProbingHash<KeyType, ValueType, Hasher>::Iterator::operator!=(const I
 {
     return index != other.index;
 }
+
