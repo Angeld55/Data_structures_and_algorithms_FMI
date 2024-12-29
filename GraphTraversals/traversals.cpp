@@ -20,6 +20,8 @@ public:
     void DFS_ITER(size_t start) const;
     void DFS_REC(size_t start) const;
     int BFS_shortest_path(size_t start, size_t end) const;
+    int BFS_shortest_path_vector(size_t start, size_t end) const;
+
     bool containsCycle() const;
 
 };
@@ -97,9 +99,36 @@ int Graph::BFS_shortest_path(size_t start, size_t end) const
     return -1;
 }
 
+int Graph::BFS_shortest_path_vector(size_t start, size_t end) const
+{
+    std::vector<size_t> currLevel = { start };
+    size_t dist = 0;
+    std::vector<bool> visited(adj.size(), false);
+
+    while (!currLevel.empty())
+    {
+        std::vector<size_t> nextLevel;
+
+        for (size_t currNode : currLevel)
+        {
+            for (size_t currNodeChild : adj[currNode])
+            {
+                if (visited[currNodeChild])
+                    continue;
+                visited[currNodeChild] = true;
+                if (currNodeChild == end)
+                    return dist + 1;
+                else
+                    nextLevel.push_back(currNodeChild);
+            }
+        }
+        currLevel.swap(nextLevel);
+    }
+    return -1;
+}
+
 void Graph::DFS_ITER(size_t start) const
 {
-
     std::vector<bool> visited(adj.size(), false);
 
     std::stack<size_t> s;
@@ -114,7 +143,7 @@ void Graph::DFS_ITER(size_t start) const
             continue;
 
         visited[current] = true;
-        std::cout << current  << " ";
+        std::cout << current << " ";
 
         for (auto neighbor : adj[current])
         {
