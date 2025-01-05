@@ -180,7 +180,7 @@ void InsertionOrderHashMap<Key, Value, Hash>::resize()
     std::vector<std::forward_list<typename std::list<Element>::iterator>> newHashTable(newSize);
 
     for (auto it = data.begin(); it != data.end(); ++it) {
-        size_t newHashCode = getHashCode(it->first) % newSize;
+        size_t newHashCode = getHash(it->first) % newSize;
         newHashTable[newHashCode].push_front(it);
     }
 
