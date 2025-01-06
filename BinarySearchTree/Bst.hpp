@@ -11,8 +11,16 @@ private:
     struct Node
     {
         T data;
+        size_t subtreeSize = 1;
         Node* left;
         Node* right;
+        static size_t getSubtreeSize(const Node* ptr)
+        {
+            if (!ptr)
+                return 0;
+            else
+                return ptr->subtreeSize;
+        }
         Node(const T& data, Node* left = nullptr, Node* right = nullptr) : data(data), left(left), right(right) {}
     };
 
@@ -24,12 +32,28 @@ private:
     void free(Node* current);
     Node* copy(Node* current);
 
+    const Node& getNodeByIndexRec(const Node& curr, size_t index) const
+    {
+        size_t leftSubtreeSize = Node::getSubtreeSize(curr.left);
+        if (leftSubtreeSize == index)
+            return curr;
+        else if (leftSubtreeSize > index)
+            return getNodeByIndexRec(*curr.left, index);
+        else
+            return getNodeByIndexRec(*curr.right, index - leftSubtreeSize - 1);
+    }
+
 public:
     Bst() = default;
     explicit Bst(const Compare& comparator) : comp(comparator) {}
     Bst(const Bst<T, Compare>& other);
     Bst<T, Compare>& operator=(const Bst<T, Compare>& other);
     ~Bst();
+
+    const T& operator[](size_t index) const
+    {
+        return getNodeByIndexRec(*root, index).data;
+    }
 
     bool insert(const T& data);
     bool contains(const T& data) const;
@@ -108,6 +132,7 @@ bool Bst<T, Compare>::insert(const T& data)
 
     while (*current)
     {
+        (*current)->subtreeSize++;
         if (comp(data, (*current)->data))
             current = &(*current)->left;
         else if (comp((*current)->data, data))

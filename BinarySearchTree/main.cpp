@@ -90,13 +90,22 @@ bool testTreeSort()
 
 int main()
 {
+    Bst<int> b;
+    b.insert(3);
+    b.insert(1);
+    b.insert(2);
+    b.insert(4);
+    b.insert(0);
+
+    for (int i = 0; i < b.getSize(); i++)
+        std::cout << b[i] << " ";
+
     std::cout << "Test Insert: " << (testInsert() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Contains: " << (testContains() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Remove: " << (testRemove() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Custom Comparator: " << (testCustomComparator() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Tree sort: " << (testTreeSort() ? "Passed" : "Failed") << std::endl;
 
-   
-
+  
     return 0;
 }
