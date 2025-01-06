@@ -22,7 +22,7 @@ void printRootToLeafPaths(const Node* root, std::string& str) //DFS / str could 
 void free(Node* root)
 {
     for (Node* child : root->children)
-        delete child;
+        free(child);
     delete root;
 }
 
