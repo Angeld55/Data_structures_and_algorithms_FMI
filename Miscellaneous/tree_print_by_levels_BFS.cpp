@@ -27,7 +27,7 @@ void printByLevels(const Node* root) //BFS!
 void free(Node* root)
 {
     for (Node* child : root->children)
-        delete child;
+        free(child);
     delete root;
 }
 
