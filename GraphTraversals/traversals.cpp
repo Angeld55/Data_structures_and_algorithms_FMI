@@ -2,7 +2,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
-
+#include <algorithm>
 
 class Graph
 {
@@ -11,6 +11,7 @@ class Graph
 
     void dfs_help_rec(size_t start, std::vector<bool>& visited, std::vector<size_t>& result) const;
     bool contains_cycle_rec(size_t start, std::vector<bool>& visited, std::vector<bool>& stack) const;
+	void topo_sort_rec(size_t start, std::vector<bool>& visited, std::vector<size_t>& st) const;
 
 public:
     Graph(size_t vertexCount, bool isOriented);
@@ -23,6 +24,8 @@ public:
     int BFS_shortest_path_vector(size_t start, size_t end) const;
 
     bool containsCycle() const;
+    
+    std::vector<size_t> topoSort() const;
 
 };
 
@@ -204,6 +207,33 @@ bool Graph::containsCycle() const
     return false;
 }
 
+void Graph::topo_sort_rec(size_t start, std::vector<bool>& visited, std::vector<size_t>& st) const
+{
+	visited[start] = true;
+	for (int i = 0; i < adj[start].size(); i++)
+	{
+		size_t neihbor = adj[start][i];
+		if (!visited[neihbor])
+			topo_sort_rec(neihbor, visited, st);
+	}
+	st.push_back(start);
+}
+
+std::vector<size_t> Graph::topoSort() const
+{
+	std::vector<bool> visited(adj.size());
+	std::vector<size_t> result;
+
+	for (int i = 0; i < adj.size(); i++)
+	{
+		if (!visited[i])
+			topo_sort_rec(i, visited, result);
+	}
+
+    std::reverse(result.begin(), result.end());
+
+	return std::move(result);
+}
 
 int main()
 {
