@@ -36,6 +36,34 @@ void Graph::addEdge(size_t start, size_t end)
         adj[end].push_back((int)start);
 }
 
+void Graph::BFS(size_t start) const
+{
+	std::vector<size_t> result;
+
+	std::vector<bool> visited(adj.size());
+
+	std::queue<size_t> q;
+	q.push(start);
+	visited[start] = true;
+
+	while (!q.empty())
+	{
+		size_t currentVertex = q.front();
+		q.pop();
+
+		for (int i = 0; i < adj[currentVertex].size(); i++)
+		{
+			size_t neighbor = adj[currentVertex][i];
+			if (visited[neighbor])
+				continue;
+			
+			std::cout << neighbor << std::endl;
+			visited[neighbor] = true;
+			q.push(neighbor);
+		}
+	}
+}
+
 int Graph::BFS_shortest_path(size_t start, size_t end) const
 {
     if (start == end) return 0;
