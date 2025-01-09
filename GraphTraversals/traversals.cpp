@@ -12,7 +12,8 @@ class Graph
     void dfs_help_rec(size_t start, std::vector<bool>& visited, std::vector<size_t>& result) const;
     bool contains_cycle_rec(size_t start, std::vector<bool>& visited, std::vector<bool>& stack) const;
 	void topo_sort_rec(size_t start, std::vector<bool>& visited, std::vector<size_t>& st) const;
-
+    
+    void connected_components_bfs(size_t start, std::vector<bool>& visited) const;
 public:
     Graph(size_t vertexCount, bool isOriented);
     void addEdge(size_t start, size_t end);
@@ -24,8 +25,8 @@ public:
     int BFS_shortest_path_vector(size_t start, size_t end) const;
 
     bool containsCycle() const;
-    
     std::vector<size_t> topoSort() const;
+    size_t getConnectedComponentsCount() const;
 
 };
 
@@ -41,8 +42,6 @@ void Graph::addEdge(size_t start, size_t end)
 
 void Graph::BFS(size_t start) const
 {
-	std::vector<size_t> result;
-
 	std::vector<bool> visited(adj.size());
 
 	std::queue<size_t> q;
@@ -234,6 +233,47 @@ std::vector<size_t> Graph::topoSort() const
 
 	return std::move(result);
 }
+
+void Graph::connected_components_bfs(size_t start, std::vector<bool>& visited) const
+{
+	std::queue<size_t> q;
+	q.push(start);
+	visited[start] = true;
+
+	while (!q.empty())
+	{
+		size_t currentVertex = q.front();
+		q.pop();
+
+		for (int i = 0; i < adj[currentVertex].size(); i++)
+		{
+			size_t neighbor = adj[currentVertex][i];
+			if (visited[neighbor])
+				continue;
+			
+			visited[neighbor] = true;
+			q.push(neighbor);
+		}
+	}
+}
+
+size_t Graph::getConnectedComponentsCount() const
+{
+    size_t connectedComponentsCount = 0;
+    std::vector<bool> visited(adj.size(), false);
+    
+    for(int i = 0; i < adj.size(); i++)
+    {
+        if(!visited[i])
+        {
+            connectedComponentsCount++;
+            connected_components_bfs(i, visited);
+        }
+            
+    }
+}
+
+
 
 int main()
 {
