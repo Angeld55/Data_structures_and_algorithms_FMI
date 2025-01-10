@@ -271,6 +271,7 @@ size_t Graph::getConnectedComponentsCount() const
         }
             
     }
+    return connectedComponentsCount;
 }
 
 
