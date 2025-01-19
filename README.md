@@ -25,9 +25,8 @@
 
 # Overview
 
-## Vector
-- **Structure:**
-  - Allocator
+## Vector / Dynamic Array
+  - with allocator
 - **Iterators:**
   - Iterator
   - Const Iterator
@@ -35,7 +34,7 @@
 
 ## Singly Linked List
 - **Structure:**
-  - Linked Nodes
+  - Linked Nodes (with next pointer)
 - **Iterators:**
   - Iterator
   - Const Iterator
