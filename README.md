@@ -21,3 +21,59 @@
 ### Практикум на Група 2, ИС
 -----
 - [Линк към repository-то](https://github.com/KristinaKalemdzhieva/Data_structures_and_algorithms_pract_FMI)
+
+
+# Data Structures Overview
+
+1. **Vector**  
+   - With allocator  
+   - Iterator  
+   - Const Iterator  
+   - Reverse Iterator  
+
+2. **Singly Linked List**  
+   - Iterator  
+   - Const Iterator  
+
+3. **Doubly Linked List**  
+   - Iterator  
+   - Const Iterator  
+
+4. **Stack**  
+   - Implementations:  
+     - Linked  
+     - Array  
+     - Template container  
+
+5. **Queue**  
+   - Implementations:  
+     - Linked  
+     - Array  
+     - Template container  
+
+6. **Deque**  
+   - Implementations:  
+     - Linked  
+     - Array  
+   - Includes:  
+     - Iterator  
+
+7. **Set/Map**  
+   - Based on Binary Search Tree  
+   - Includes:  
+     - Const Iterator  
+     - Custom Comparator  
+
+8. **Priority Queue**  
+   - Based on Binary Heap  
+
+9. **Unordered Map/Set**  
+   - Separate Chaining:  
+     - Includes Const Iterator  
+     - Template Hasher  
+   - Linear Probing:  
+     - Includes Const Iterator  
+     - Template Hasher  
+
+10. **Disjoint Set**  
+    - By Height/Size  
