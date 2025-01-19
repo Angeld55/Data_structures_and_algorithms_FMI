@@ -1,10 +1,10 @@
 #include <iostream>
-#include "Bst.hpp"
+#include "Set.hpp"
 
 
 bool testInsert()
 {
-    Bst<int> tree;
+    Set<int> tree;
 
     if (!tree.insert(10)) return false;
     if (!tree.insert(5)) return false;
@@ -22,7 +22,7 @@ bool testInsert()
 
 bool testContains()
 {
-    Bst<int> tree;
+    Set<int> tree;
     tree.insert(10);
     tree.insert(5);
     tree.insert(20);
@@ -37,7 +37,7 @@ bool testContains()
 
 bool testRemove()
 {
-    Bst<int> tree;
+    Set<int> tree;
     tree.insert(10);
     tree.insert(5);
     tree.insert(20);
@@ -59,9 +59,8 @@ bool testRemove()
 
 bool testCustomComparator()
 {
-    // Bst with a custom comparator for descending order
     auto comp = [](int a, int b) { return a > b; };
-    Bst<int, decltype(comp)> tree(comp);
+    Set<int, decltype(comp)> tree(comp);
 
     tree.insert(10);
     tree.insert(5);
@@ -76,36 +75,19 @@ bool testCustomComparator()
     return true;
 }
 
-bool testTreeSort()
-{
-    std::vector<int> v = { 9,8,3,1,2,4,5,7,6, 0 };
-    treeSort(v);
-    for (int i = 0; i < v.size(); i++)
-    {
-        if (i != v.at(i))
-            return false;
-    }
-    return true;
-}
-
 int main()
 {
-    Bst<int> b;
+    Set<int> b;
     b.insert(3);
     b.insert(1);
     b.insert(2);
     b.insert(4);
     b.insert(0);
 
-    for (int i = 0; i < b.getSize(); i++)
-        std::cout << b[i] << " ";
-
     std::cout << "Test Insert: " << (testInsert() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Contains: " << (testContains() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Remove: " << (testRemove() ? "Passed" : "Failed") << std::endl;
     std::cout << "Test Custom Comparator: " << (testCustomComparator() ? "Passed" : "Failed") << std::endl;
-    std::cout << "Test Tree sort: " << (testTreeSort() ? "Passed" : "Failed") << std::endl;
 
-  
     return 0;
 }

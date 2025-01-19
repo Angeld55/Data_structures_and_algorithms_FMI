@@ -5,55 +5,33 @@
 #include <vector>
 
 template <class T, typename Compare = std::less<T>>
-class Bst
+class Set
 {
 private:
     struct Node
     {
         T data;
-        size_t subtreeSize = 1;
         Node* left;
         Node* right;
-        static size_t getSubtreeSize(const Node* ptr)
-        {
-            if (!ptr)
-                return 0;
-            else
-                return ptr->subtreeSize;
-        }
-        Node(const T& data, Node* left = nullptr, Node* right = nullptr) : data(data), left(left), right(right) {}
+
+        Node(const T& data, Node* left = nullptr, Node* right = nullptr)
+            : data(data), left(left), right(right) {}
     };
 
     Node* root = nullptr;
     size_t size = 0;
-    Compare comp; // comparator instance
+    Compare comp; 
 
     Node** findMinNode(Node** root);
     void free(Node* current);
     Node* copy(Node* current);
 
-    const Node& getNodeByIndexRec(const Node& curr, size_t index) const
-    {
-        size_t leftSubtreeSize = Node::getSubtreeSize(curr.left);
-        if (leftSubtreeSize == index)
-            return curr;
-        else if (leftSubtreeSize > index)
-            return getNodeByIndexRec(*curr.left, index);
-        else
-            return getNodeByIndexRec(*curr.right, index - leftSubtreeSize - 1);
-    }
-
 public:
-    Bst() = default;
-    explicit Bst(const Compare& comparator) : comp(comparator) {}
-    Bst(const Bst<T, Compare>& other);
-    Bst<T, Compare>& operator=(const Bst<T, Compare>& other);
-    ~Bst();
-
-    const T& operator[](size_t index) const
-    {
-        return getNodeByIndexRec(*root, index).data;
-    }
+    Set() = default;
+    explicit Set(const Compare& comparator) : comp(comparator) {}
+    Set(const Set<T, Compare>& other);
+    Set<T, Compare>& operator=(const Set<T, Compare>& other);
+    ~Set();
 
     bool insert(const T& data);
     bool contains(const T& data) const;
@@ -62,14 +40,14 @@ public:
     size_t getSize() const;
     bool isEmpty() const;
 
-    class ForwardIterator
+    class ConstIterator
     {
     private:
         std::stack<Node*> nodeStack;
 
-        void pushLeft(Node* node) 
+        void pushLeft(Node* node)
         {
-            while (node) 
+            while (node)
             {
                 nodeStack.push(node);
                 node = node->left;
@@ -77,17 +55,17 @@ public:
         }
 
     public:
-        ForwardIterator(Node* root = nullptr) 
+        ConstIterator(Node* root = nullptr)
         {
             pushLeft(root);
         }
 
-        T& operator*() const 
+        const T& operator*() const
         {
             return nodeStack.top()->data;
         }
 
-        ForwardIterator& operator++() 
+        ConstIterator& operator++()
         {
             Node* node = nodeStack.top();
             nodeStack.pop();
@@ -96,49 +74,48 @@ public:
             }
             return *this;
         }
-        ForwardIterator operator++(int)
+        ConstIterator operator++(int)
         {
-            ForwardIterator old = *this;
+            ConstIterator old = *this;
             ++(*this);
             return old;
         }
 
-        bool operator!=(const ForwardIterator& other) const 
+        bool operator!=(const ConstIterator& other) const
         {
             return nodeStack != other.nodeStack;
         }
 
-        bool operator==(const ForwardIterator& other) const 
+        bool operator==(const ConstIterator& other) const
         {
             return nodeStack == other.nodeStack;
         }
     };
 
-    ForwardIterator begin() const 
+    ConstIterator cbegin() const
     {
-        return ForwardIterator(root);
+        return ConstIterator(root);
     }
 
-    ForwardIterator end() const 
+    ConstIterator cend() const
     {
-        return ForwardIterator(nullptr);
+        return ConstIterator(nullptr);
     }
 };
 
 template <class T, typename Compare>
-bool Bst<T, Compare>::insert(const T& data)
+bool Set<T, Compare>::insert(const T& data)
 {
     Node** current = &root;
 
     while (*current)
     {
-        (*current)->subtreeSize++;
         if (comp(data, (*current)->data))
             current = &(*current)->left;
         else if (comp((*current)->data, data))
             current = &(*current)->right;
         else
-            return false; // Data already exists
+            return false; 
     }
     *current = new Node(data);
     size++;
@@ -146,7 +123,7 @@ bool Bst<T, Compare>::insert(const T& data)
 }
 
 template <class T, typename Compare>
-bool Bst<T, Compare>::contains(const T& data) const
+bool Set<T, Compare>::contains(const T& data) const
 {
     Node* current = root;
 
@@ -163,7 +140,7 @@ bool Bst<T, Compare>::contains(const T& data) const
 }
 
 template <class T, typename Compare>
-typename Bst<T, Compare>::Node** Bst<T, Compare>::findMinNode(Node** root)
+typename Set<T, Compare>::Node** Set<T, Compare>::findMinNode(Node** root)
 {
     Node** current = root;
 
@@ -175,7 +152,7 @@ typename Bst<T, Compare>::Node** Bst<T, Compare>::findMinNode(Node** root)
 }
 
 template <class T, typename Compare>
-bool Bst<T, Compare>::remove(const T& data)
+bool Set<T, Compare>::remove(const T& data)
 {
     Node** current = &root;
 
@@ -194,16 +171,19 @@ bool Bst<T, Compare>::remove(const T& data)
 
     Node* toDelete = *current;
 
+    // No children
     if (!(*current)->left && !(*current)->right)
-        *current = nullptr; // Node has no children
+        *current = nullptr;
+    // Only left child
     else if (!(*current)->right)
-        *current = (*current)->left; // Node has only left child
+        *current = (*current)->left;
+    // Only right child
     else if (!(*current)->left)
-        *current = (*current)->right; // Node has only right child
+        *current = (*current)->right;
+    // Two children
     else
     {
         Node** rightMin = findMinNode(&(*current)->right);
-        
         *current = *rightMin;
         *rightMin = (*rightMin)->right;
 
@@ -216,19 +196,19 @@ bool Bst<T, Compare>::remove(const T& data)
 }
 
 template <class T, typename Compare>
-size_t Bst<T, Compare>::getSize() const
+size_t Set<T, Compare>::getSize() const
 {
     return size;
 }
 
 template <class T, typename Compare>
-bool Bst<T, Compare>::isEmpty() const
+bool Set<T, Compare>::isEmpty() const
 {
     return getSize() == 0;
 }
 
 template <class T, typename Compare>
-typename Bst<T, Compare>::Node* Bst<T, Compare>::copy(Node* current)
+typename Set<T, Compare>::Node* Set<T, Compare>::copy(Node* current)
 {
     if (!current)
         return nullptr;
@@ -239,7 +219,7 @@ typename Bst<T, Compare>::Node* Bst<T, Compare>::copy(Node* current)
 }
 
 template <class T, typename Compare>
-void Bst<T, Compare>::free(Node* current)
+void Set<T, Compare>::free(Node* current)
 {
     if (!current)
         return;
@@ -249,14 +229,14 @@ void Bst<T, Compare>::free(Node* current)
 }
 
 template <class T, typename Compare>
-Bst<T, Compare>::Bst(const Bst<T, Compare>& other) : comp(other.comp)
+Set<T, Compare>::Set(const Set<T, Compare>& other) : comp(other.comp)
 {
     root = copy(other.root);
     size = other.size;
 }
 
 template <class T, typename Compare>
-Bst<T, Compare>& Bst<T, Compare>::operator=(const Bst<T, Compare>& other)
+Set<T, Compare>& Set<T, Compare>::operator=(const Set<T, Compare>& other)
 {
     if (this != &other)
     {
@@ -269,18 +249,7 @@ Bst<T, Compare>& Bst<T, Compare>::operator=(const Bst<T, Compare>& other)
 }
 
 template <class T, typename Compare>
-Bst<T, Compare>::~Bst()
+Set<T, Compare>::~Set()
 {
     free(root);
-}
-
-void treeSort(std::vector<int>& v)
-{
-    Bst<int> bst;
-    for (int i = 0; i < v.size(); i++)
-        bst.insert(v.at(i));
-
-    unsigned index = 0;
-    for (auto it = bst.begin(); it != bst.end(); it++)
-        v.at(index++) = *it;
 }

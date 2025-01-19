@@ -1,5 +1,4 @@
-#include "main.h"
-#include <iostream>
+#include "InsertionOrderHashMap.hpp"
 
 int main() 
 {
@@ -10,18 +9,17 @@ int main()
     map.add("cherry", 30);
 
     std::cout << "Contents of the map:\n";
-    for (auto it = map.cbegin(); it != map.cend(); ++it) {
+    for (auto it = map.cbegin(); it != map.cend(); ++it) 
         std::cout << (*it).first << ": " << (*it).second << "\n";
-    }
+    
 
     std::cout << "\nFinding 'banana':\n";
     auto found = map.find("banana");
-    if (found != map.cend()) {
+    if (found != map.cend()) 
         std::cout << (*found).first << ": " << (*found).second << "\n";
-    }
-    else {
+    else 
         std::cout << "Key not found.\n";
-    }
+    
 
     std::cout << "\nRemoving 'apple'...\n";
     map.remove("apple");

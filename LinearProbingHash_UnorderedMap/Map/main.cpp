@@ -1,19 +1,19 @@
-#include "LinearProbingHashDict.hpp"
+#include "HashMap.hpp"
 int main() 
 {
-    LinearProbingHash<std::string, int> hashTable;
+    HashMap<std::string, int> hashTable;
 
     hashTable.add("apple", 10);
     hashTable.add("banana", 20);
     hashTable.add("cherry", 30);
 
-    for (auto it = hashTable.begin(); it != hashTable.end(); it++)
+    for (auto it = hashTable.cbegin(); it != hashTable.cend(); it++)
     {
         std::cout << (*it).first << " " << (*it).second << std::endl;
     }
 
     auto it = hashTable.get("banana");
-    if (it != hashTable.end()) 
+    if (it != hashTable.cend()) 
     {
         std::cout << "Found: " << (*it).first << " -> " << (*it).second << std::endl;
 
