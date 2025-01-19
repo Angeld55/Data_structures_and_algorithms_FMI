@@ -23,57 +23,86 @@
 - [Линк към repository-то](https://github.com/KristinaKalemdzhieva/Data_structures_and_algorithms_pract_FMI)
 
 
-# Data Structures Overview
+# Overview
 
-1. **Vector**  
-   - With allocator  
-   - Iterator  
-   - Const Iterator  
-   - Reverse Iterator  
+## Vector
+- **Structure:**
+  - Allocator
+- **Iterators:**
+  - Iterator
+  - Const Iterator
+  - Reverse Iterator
 
-2. **Singly Linked List**  
-   - Iterator  
-   - Const Iterator  
+## Singly Linked List
+- **Structure:**
+  - Linked Nodes
+- **Iterators:**
+  - Iterator
+  - Const Iterator
 
-3. **Doubly Linked List**  
-   - Iterator  
-   - Const Iterator  
+## Doubly Linked List
+- **Structure:**
+  - Linked Nodes (with both previous and next pointers)
+- **Iterators:**
+  - Iterator
+  - Const Iterator
 
-4. **Stack**  
-   - Implementations:  
-     - Linked  
-     - Array  
-     - Template container  
+## Stack
+- **Structure:**
+  - Linked Implementation
+  - Array Implementation
+  - Template Container Implementation
 
-5. **Queue**  
-   - Implementations:  
-     - Linked  
-     - Array  
-     - Template container  
+## Queue
+- **Structure:**
+  - Linked Implementation
+  - Array Implementation
+  - Template Container Implementation
 
-6. **Deque**  
-   - Implementations:  
-     - Linked  
-     - Array  
-   - Includes:  
-     - Iterator  
+## Deque
+- **Structure:**
+  - Linked Implementation
+  - Array Implementation
+- **Iterators:**
+  - Iterator
 
-7. **Set/Map**  
-   - Based on Binary Search Tree  
-   - Includes:  
-     - Const Iterator  
-     - Custom Comparator  
+## Set/Map
+- **Structure:**
+  - Binary Search Tree
+- **Iterators:**
+  - Const Iterator
+- **Additional Features:**
+  - Custom Comparator
 
-8. **Priority Queue**  
-   - Based on Binary Heap  
+## Priority Queue
+- **Structure:**
+  - Binary Heap
 
-9. **Unordered Map/Set**  
-   - Separate Chaining:  
-     - Includes Const Iterator  
-     - Template Hasher  
-   - Linear Probing:  
-     - Includes Const Iterator  
-     - Template Hasher  
+## Unordered Map/Set
+- **Structure:**
+  - Separate Chaining
+- **Iterators:**
+  - Const Iterator
+- **Additional Features:**
+  - Template Hasher
 
-10. **Disjoint Set**  
-    - By Height/Size  
+## Unordered Map/Set (Preserves Insertion Order)
+- **Structure:**
+  - Separate Chaining
+- **Iterators:**
+  - Const Iterator
+- **Additional Features:**
+  - Template Hasher
+
+## Unordered Map/Set (Linear Probing)
+- **Structure:**
+  - Linear Probing
+- **Iterators:**
+  - Const Iterator
+- **Additional Features:**
+  - Template Hasher
+
+## Disjoint Set
+- **Structure:**
+  - Union by Height
+  - Union by Size
