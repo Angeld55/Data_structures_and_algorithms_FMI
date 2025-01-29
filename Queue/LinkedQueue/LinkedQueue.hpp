@@ -23,7 +23,7 @@ class LinkedQueue
 public:
 	LinkedQueue();
 	LinkedQueue(const LinkedQueue& other);
-	LinkedQueue operator=(const LinkedQueue& other);
+	LinkedQueue& operator=(const LinkedQueue& other);
 	~LinkedQueue();
 
 	void enqueue(const T&); // O(1)
@@ -74,7 +74,7 @@ LinkedQueue<T>::LinkedQueue(const LinkedQueue& other)
 }
 
 template <typename T>
-LinkedQueue<T> LinkedQueue<T>::operator=(const LinkedQueue& other)
+LinkedQueue<T>& LinkedQueue<T>::operator=(const LinkedQueue& other)
 {
 	if (this != &other)
 	{

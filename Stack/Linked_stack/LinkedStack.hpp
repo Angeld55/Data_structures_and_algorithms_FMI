@@ -21,7 +21,7 @@ public:
 
 	LinkedStack();
 	LinkedStack(const LinkedStack& other);
-	LinkedStack operator=(const LinkedStack& other);
+	LinkedStack& operator=(const LinkedStack& other);
 	~LinkedStack();
 
 
@@ -80,7 +80,7 @@ LinkedStack<T>::LinkedStack(const LinkedStack& other)
 }
 
 template <typename T>
-LinkedStack<T> LinkedStack<T>::operator=(const LinkedStack& other)
+LinkedStack<T>& LinkedStack<T>::operator=(const LinkedStack& other)
 {
 	if (this != &other)
 	{
