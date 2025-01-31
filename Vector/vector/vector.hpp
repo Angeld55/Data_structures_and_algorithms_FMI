@@ -312,7 +312,7 @@ void vector<T, Allocator>::push_back(const T& element)
 	if (size() == capacity())
 		reserve(calculate_capacity());
 
-	_allocator.construct(_data[_size++], element);
+	_allocator.construct(&_data[_size++], element);
 }
 
 template <class T, class Allocator>
