@@ -254,7 +254,7 @@ void vector<T, Allocator>::resize(size_t n)
 			T* new_data = _allocator.allocate(n);
 
 			for (size_t i = 0; i < size(); i++)
-				_allocator.construct(new_data, std::move(_data[i]));
+				_allocator.construct(&new_data[i], std::move(_data[i]));
 			
 			for (size_t i = size(); i < n; i++)
 				_allocator.construct(&new_data[i]);
