@@ -254,7 +254,7 @@ void vector<T, Allocator>::resize(size_t n)
 			T* new_data = _allocator.allocate(n);
 
 			for (size_t i = 0; i < size(); i++)
-				_allocator.construct(new_data, std::move(_data[i]));
+				_allocator.construct(&new_data[i], std::move(_data[i]));
 			
 			for (size_t i = size(); i < n; i++)
 				_allocator.construct(&new_data[i]);
@@ -312,7 +312,7 @@ void vector<T, Allocator>::push_back(const T& element)
 	if (size() == capacity())
 		reserve(calculate_capacity());
 
-	_allocator.construct(_data[_size++], element);
+	_allocator.construct(&_data[_size++], element);
 }
 
 template <class T, class Allocator>
@@ -348,12 +348,12 @@ void vector<T, Allocator>::erase(const_iterator first, const_iterator last)
 		size_t construct_idx = begin_offset;
 		for (size_t i = end_offset; i < size(); i++)
 		{
-			_allocator.construct(&_data[construct_idx], std::move(_data[i]));
+			_data[construct_idx] =  std::move(_data[i]);
 			++construct_idx;
 		}
 	}
 
-	for (size_t i = end_offset; i < size(); i++)
+	for (size_t i = size() - deleted_count; i < size(); i++)
 		_allocator.destroy(&_data[i]);
 	
 	_size -= deleted_count;

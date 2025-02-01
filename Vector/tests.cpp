@@ -161,6 +161,57 @@ void erase_tests()
 	assert(v.empty());
 }
 
+struct char_holder
+{
+	static int destructor_called;
+	static int instances_created;
+
+	char_holder(char ch) : ch(new char(ch)){ ++instances_created; }
+
+	char_holder(const char_holder& other) = delete;
+	char_holder(char_holder&& other) noexcept
+	{
+		ch = other.ch;
+		other.ch = nullptr;
+	}
+	char_holder& operator=(const char_holder& other) = delete;
+
+	char_holder& operator=(char_holder&& other) noexcept
+	{
+		if(this != &other)
+		{
+			ch = other.ch;
+			other.ch = nullptr;
+		}
+		return *this;
+	}
+
+	~char_holder() 
+	{ 
+		delete ch; 
+		++destructor_called; 
+	}
+
+	char* ch = nullptr;
+};
+
+int char_holder::destructor_called = 0;
+int char_holder::instances_created = 0;
+
+void erase_issue_test()
+{
+	vector<char_holder> v;
+	std::string data = "abcde";
+
+	for(char c : data)
+		v.emplace_back(c);
+	
+	assert(v.size() == 5);
+	v.erase(v.begin() + 1, v.end() - 1);
+
+	assert(v.size() == 2 && *v[0].ch == 'a' && *v[1].ch == 'e' && char_holder::destructor_called == 3);
+}
+
 int called = 0;
 
 struct constructor_called
@@ -300,6 +351,7 @@ void run_all()
 	tests.push_back(erase_tests);
 	tests.push_back(erase_test);
 	tests.push_back(iterator_tests);
+	tests.push_back(erase_issue_test);
 
 	for (const auto& func : tests)
 	{
@@ -310,6 +362,8 @@ void run_all()
 	{
 		c_thread.join();
 	}
+
+	assert(char_holder::destructor_called == char_holder::instances_created);
 }
 
 int main()
