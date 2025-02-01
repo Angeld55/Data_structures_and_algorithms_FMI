@@ -161,18 +161,19 @@ void erase_tests()
 	assert(v.empty());
 }
 
-struct char_holder
+class char_holder
 {
+public:
 	static int destructor_called;
 	static int instances_created;
 
-	char_holder(char ch) : ch(new char(ch)){ ++instances_created; }
+	char_holder(char ch) : _ch(new char(ch)){ ++instances_created; }
 
 	char_holder(const char_holder& other) = delete;
+
 	char_holder(char_holder&& other) noexcept
 	{
-		ch = other.ch;
-		other.ch = nullptr;
+		move(std::move(other));
 	}
 	char_holder& operator=(const char_holder& other) = delete;
 
@@ -180,19 +181,34 @@ struct char_holder
 	{
 		if(this != &other)
 		{
-			ch = other.ch;
-			other.ch = nullptr;
+			free();
+			move(std::move(other));
 		}
 		return *this;
 	}
 
+	char get() const { return *_ch; }
+
 	~char_holder() 
 	{ 
-		delete ch; 
-		++destructor_called; 
+		free();
+		++destructor_called;
 	}
 
-	char* ch = nullptr;
+private:
+
+	void move(char_holder&& other)
+	{
+		_ch = other._ch;
+		other._ch = nullptr;
+	}
+
+	void free()
+	{
+		delete _ch; 
+	}
+
+	char* _ch = nullptr;
 };
 
 int char_holder::destructor_called = 0;
@@ -209,7 +225,7 @@ void erase_issue_test()
 	assert(v.size() == 5);
 	v.erase(v.begin() + 1, v.end() - 1);
 
-	assert(v.size() == 2 && *v[0].ch == 'a' && *v[1].ch == 'e' && char_holder::destructor_called == 3);
+	assert(v.size() == 2 && v[0].get() == 'a' && v[1].get() == 'e' && char_holder::destructor_called == 3);
 }
 
 int called = 0;
