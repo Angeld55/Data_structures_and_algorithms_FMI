@@ -342,18 +342,20 @@ void vector<T, Allocator>::erase(const_iterator first, const_iterator last)
 
 	int begin_offset = first - begin();
 	int end_offset = last - begin();
+	
+	size_t construct_idx = begin_offset;
 
 	if (last != c_end())
 	{
-		size_t construct_idx = begin_offset;
+		
 		for (size_t i = end_offset; i < size(); i++)
 		{
 			_allocator.construct(&_data[construct_idx], std::move(_data[i]));
 			++construct_idx;
 		}
 	}
-
-	for (size_t i = end_offset; i < size(); i++)
+	//трием излишъка, след последния нужен елемент, който вече сме преместили
+	for (size_t i = construct_idx; i < size(); i++)
 		_allocator.destroy(&_data[i]);
 	
 	_size -= deleted_count;
