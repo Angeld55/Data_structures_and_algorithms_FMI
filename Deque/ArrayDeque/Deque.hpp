@@ -48,26 +48,26 @@ public:
 	class DequeIterator
 	{
 	public:
-		DequeIterator& operator++(int)
+		DequeIterator& operator++()
 		{
 			index++;
 			return *this;
 		}
 
-		DequeIterator operator++()
+		DequeIterator operator++(int)
 		{
 			DequeIterator old = *this;
 			index++;
 			return old;
 		}
 
-		DequeIterator& operator--(int)
+		DequeIterator& operator--()
 		{
 			index--;
 			return *this;
 		}
 
-		DequeIterator operator--()
+		DequeIterator operator--(int)
 		{
 			DequeIterator old = *this;
 			index--;
@@ -110,26 +110,26 @@ public:
 	class ConstDequeIterator
 	{
 	public:
-		ConstDequeIterator& operator++(int)
+		ConstDequeIterator& operator++()
 		{
 			index++;
 			return *this;
 		}
 
-		ConstDequeIterator operator++()
+		ConstDequeIterator operator++(int)
 		{
 			ConstDequeIterator old = *this;
 			index++;
 			return old;
 		}
 
-		ConstDequeIterator& operator--(int)
+		ConstDequeIterator& operator--()
 		{
 			index--;
 			return *this;
 		}
 
-		ConstDequeIterator operator--()
+		ConstDequeIterator operator--(int)
 		{
 			ConstDequeIterator old = *this;
 			index--;
