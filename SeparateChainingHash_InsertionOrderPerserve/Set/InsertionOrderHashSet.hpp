@@ -31,8 +31,8 @@ public:
 
     InsertionOrderHashSet();
 
-    void add(const Key& key);
-    void remove(const Key& key);
+    bool add(const Key& key); //would be better if add and remove return iterators!
+    bool remove(const Key& key);
     ConstIterator find(const Key& key) const;
     ConstIterator cbegin() const;
     ConstIterator cend() const;
@@ -102,7 +102,7 @@ InsertionOrderHashSet<Key, Hash>::InsertionOrderHashSet()
 }
 
 template <typename Key, typename Hash>
-void InsertionOrderHashSet<Key, Hash>::add(const Key& key)
+bool InsertionOrderHashSet<Key, Hash>::add(const Key& key)
 {
     if (loadFactor() >= maxLoadFactor)
     {
@@ -115,21 +115,22 @@ void InsertionOrderHashSet<Key, Hash>::add(const Key& key)
     auto it = std::find_if(bucket.begin(), bucket.end(),
         [&key](auto listIt) { return *listIt == key; });
     if (it != bucket.end()) {
-        return;
+        return false;
     }
 
     data.push_back(key);
     auto insertedIt = --data.end();
     bucket.push_front(insertedIt);
+    return true;
 }
 
 template <typename Key, typename Hash>
-void InsertionOrderHashSet<Key, Hash>::remove(const Key& key)
+bool InsertionOrderHashSet<Key, Hash>::remove(const Key& key)
 {
     size_t hashCode = getHashCode(key);
     auto& bucket = hashTable[hashCode];
 
-    bucket.remove_if([this, &key](const auto& listIt) {
+    size_t removed = bucket.remove_if([this, &key](const auto& listIt) {
         if (*listIt == key)
         {
             data.erase(listIt);
@@ -137,6 +138,7 @@ void InsertionOrderHashSet<Key, Hash>::remove(const Key& key)
         }
         return false;
         });
+    return removed;
 }
 
 template <typename Key, typename Hash>
