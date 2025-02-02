@@ -32,8 +32,8 @@ public:
     };
 
     InsertionOrderHashMap();
-    void add(const Key& key, const Value& value);
-    void remove(const Key& key);
+    bool add(const Key& key, const Value& value); //TODO: to return iterators
+    bool remove(const Key& key);
     ConstIterator find(const Key& key) const;
     ConstIterator cbegin() const;
     ConstIterator cend() const;
@@ -106,7 +106,7 @@ bool InsertionOrderHashMap<Key, Value, Hash>::ConstIterator::operator!=(const Co
 
 // Public methods
 template <typename Key, typename Value, typename Hash>
-void InsertionOrderHashMap<Key, Value, Hash>::add(const Key& key, const Value& value)
+bool InsertionOrderHashMap<Key, Value, Hash>::add(const Key& key, const Value& value)
 {
     if (loadFactor() >= maxLoadFactor) {
         resize();
@@ -118,24 +118,26 @@ void InsertionOrderHashMap<Key, Value, Hash>::add(const Key& key, const Value& v
         return it->first == key;
         });
 
-    if (iter != bucket.end()) return;
+    if (iter != bucket.end()) return false;
 
     data.emplace_back(key, value);
     bucket.push_front(--data.end());
+    return true;
 }
 
 template <typename Key, typename Value, typename Hash>
-void InsertionOrderHashMap<Key, Value, Hash>::remove(const Key& key)
+bool InsertionOrderHashMap<Key, Value, Hash>::remove(const Key& key)
 {
     size_t hashCode = getHashCode(key);
     auto& bucket = hashTable[hashCode];
-    bucket.remove_if([this, &key](const auto& it) {
+    size_t removedCount = bucket.remove_if([this, &key](const auto& it) {
         if (it->first == key) {
             data.erase(it);
             return true;
         }
         return false;
         });
+    return removedCount;
 }
 
 template <typename Key, typename Value, typename Hash>
