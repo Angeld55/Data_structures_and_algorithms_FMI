@@ -73,7 +73,7 @@ public:
         return *this;
     }
 
-    vector_iterator<T>& operator--(int)
+    vector_iterator<T> operator--(int)
     {
         vector_iterator it = *this;
         --(*this);
@@ -152,7 +152,7 @@ public:
         return *this;
     }
 
-    reverse_vector_iterator<T>& operator--(int)
+    reverse_vector_iterator<T> operator--(int)
     {
         reverse_vector_iterator it = *this;
         --(*this);
