@@ -107,7 +107,7 @@ int Graph::BFS_shortest_path_vector(size_t start, size_t end) const
     std::vector<size_t> currLevel = { start };
     size_t dist = 0;
     std::vector<bool> visited(adj.size(), false);
-
+    visited[start] = true;
     while (!currLevel.empty())
     {
         std::vector<size_t> nextLevel;
@@ -126,6 +126,7 @@ int Graph::BFS_shortest_path_vector(size_t start, size_t end) const
             }
         }
         currLevel.swap(nextLevel);
+	dist++;
     }
     return -1;
 }
