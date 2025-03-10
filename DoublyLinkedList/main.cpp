@@ -213,6 +213,28 @@ bool testIteratorDecrement() {
     std::cout << "testIteratorDecrement failed\n";
     return false;
 }
+bool testIteratorAssignment() {
+    DoublyLinkedList<int> list;
+    list.pushBack(1);
+    list.pushBack(2);
+    list.pushBack(3);
+
+    auto it1 = list.begin();
+    ++it1;
+
+    auto it2 = list.begin();
+    it2 = it1;
+
+    if (*it2 == 2) {
+        std::cout << "testIteratorAssignment passed\n";
+        return true;
+    } 
+    else {
+        std::cout << "testIteratorAssignment failed\n";
+        return false;
+    }
+}
+
 
 int main() {
     int passedTests = 0;
@@ -232,8 +254,8 @@ int main() {
     passedTests += testAssignmentOperator();
     passedTests += testIteratorIncrement();
     passedTests += testIteratorDecrement();
-
-    std::cout << passedTests << " out of 16 tests passed\n";
+    passedTests += testIteratorAssignment();
+    std::cout << passedTests << " out of 17 tests passed\n";
     return 0;
 }
 
