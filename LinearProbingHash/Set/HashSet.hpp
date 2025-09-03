@@ -89,6 +89,7 @@ template <class KeyType, class Hasher>
 void HashSet<KeyType, Hasher>::remove(const KeyType& key)
 {
     int index = hasher(key) % data.size();
+    int start=index;
     while (data[index].data.has_value())
     {
         if (!data[index].tombstone && *data[index].data == key)
@@ -98,6 +99,7 @@ void HashSet<KeyType, Hasher>::remove(const KeyType& key)
             break;
         }
         (index += k) %= data.size();
+        if(index==start) return; //nothing to remove
     }
 }
 
@@ -105,6 +107,7 @@ template <class KeyType, class Hasher>
 typename HashSet<KeyType, Hasher>::ConstIterator HashSet<KeyType, Hasher>::get(const KeyType& key) const
 {
     int index = hasher(key) % data.size();
+    int start=index;
     while (data[index].data.has_value())
     {
         if (!data[index].tombstone && *data[index].data == key)
@@ -112,6 +115,7 @@ typename HashSet<KeyType, Hasher>::ConstIterator HashSet<KeyType, Hasher>::get(c
             return ConstIterator(index, *this);
         }
         (index += k) %= data.size();
+        if(index==start) break; // starts cycling, thus we break; 
     }
     return cend();
 }
