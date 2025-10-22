@@ -5,20 +5,20 @@ template<class T>
 class const_vector_iterator
 {
 public:
-    const_vector_iterator(T* passedVal) : memPointer{passedVal} {}
-    const_vector_iterator(T* passedVal, size_t _push) : memPointer{passedVal + _push} {}
+    explicit const_vector_iterator(T* passedVal) : memPointer{ passedVal } {}
+    const_vector_iterator(T* passedVal, size_t _push) : memPointer{ passedVal + _push } {}
 
-    const_vector_iterator<T> operator+(int off) const
+    const_vector_iterator operator+(int off) const
     {
-        return {memPointer + off};
+        return { memPointer + off };
     }
 
-    const_vector_iterator<T> operator-(int off) const
+    const_vector_iterator operator-(int off) const
     {
-        return {memPointer - off};
+        return { memPointer - off };
     }
 
-    int operator-(const_vector_iterator<T> other) const
+    int operator-(const const_vector_iterator& other) const
     {
         return memPointer - other.memPointer;
     }
@@ -44,36 +44,38 @@ public:
     }
 
 private:
-    T* memPointer;
+    const T* memPointer;
 };
+
+
 
 template<class T>
 class vector_iterator
 {
 public:
-    vector_iterator(T* passedVal) : memPointer{passedVal} {};
-    vector_iterator(T* passedVal, size_t _push) : memPointer{passedVal + _push} {};
+    explicit vector_iterator(T* passedVal) : memPointer{ passedVal } {};
+    vector_iterator(T* passedVal, size_t _push) : memPointer{ passedVal + _push } {};
 
-    vector_iterator<T>& operator++()
+    vector_iterator& operator++()
     {
         memPointer++;
         return *this;
     }
 
-    vector_iterator<T> operator++(int)
+    vector_iterator operator++(int)
     {
         vector_iterator it = *this;
         ++(*this);
         return it;
     }
 
-    vector_iterator<T>& operator--()
+    vector_iterator& operator--()
     {
         memPointer--;
         return *this;
     }
 
-    vector_iterator<T> operator--(int)
+    vector_iterator operator--(int)
     {
         vector_iterator it = *this;
         --(*this);
@@ -85,14 +87,14 @@ public:
         return const_vector_iterator<T>(memPointer);
     }
 
-    vector_iterator<T> operator+(int off) const
+    vector_iterator operator+(int off) const
     {
-        return {memPointer + off};
+        return { memPointer + off };
     }
 
-    vector_iterator<T> operator-(int off) const
+    vector_iterator operator-(int off) const
     {
-        return {memPointer - off};
+        return { memPointer - off };
     }
 
     T* operator->()
@@ -110,12 +112,12 @@ public:
         return *(memPointer);
     }
 
-    bool operator==(const vector_iterator<T>& it) const
+    bool operator==(const vector_iterator& it) const
     {
         return (memPointer == it.memPointer);
     }
 
-    bool operator!=(const vector_iterator<T>& it) const
+    bool operator!=(const vector_iterator& it) const
     {
         return !(memPointer == it.memPointer);
     }
@@ -130,43 +132,43 @@ template<class T>
 class reverse_vector_iterator
 {
 public:
-    reverse_vector_iterator(T* passedVal) : memPointer{passedVal} {};
-    reverse_vector_iterator(T* passedVal, size_t _push) : memPointer{passedVal + _push} {};
+    explicit reverse_vector_iterator(T* passedVal) : memPointer{ passedVal } {};
+    reverse_vector_iterator(T* passedVal, size_t _push) : memPointer{ passedVal + _push } {};
 
-    reverse_vector_iterator<T>& operator++()
+    reverse_vector_iterator& operator++()
     {
         memPointer--;
         return *this;
     }
 
-    reverse_vector_iterator<T> operator++(int)
+    reverse_vector_iterator operator++(int)
     {
         reverse_vector_iterator it = *this;
         ++(*this);
         return it;
     }
 
-    reverse_vector_iterator<T>& operator--()
+    reverse_vector_iterator& operator--()
     {
         memPointer++;
         return *this;
     }
 
-    reverse_vector_iterator<T> operator--(int)
+    reverse_vector_iterator operator--(int)
     {
         reverse_vector_iterator it = *this;
         --(*this);
         return it;
     }
 
-    reverse_vector_iterator<T> operator+(int off) const
+    reverse_vector_iterator operator+(int off) const
     {
-        return {memPointer - off};
+        return { memPointer - off };
     }
 
-    reverse_vector_iterator<T> operator-(int off) const
+    reverse_vector_iterator operator-(int off) const
     {
-        return {memPointer + off};
+        return { memPointer + off };
     }
 
     T* operator->()
@@ -184,12 +186,12 @@ public:
         return *(memPointer);
     }
 
-    bool operator==(const reverse_vector_iterator<T>& it) const
+    bool operator==(const reverse_vector_iterator& it) const
     {
         return (memPointer == it.memPointer);
     }
 
-    bool operator!=(const reverse_vector_iterator<T>& it) const
+    bool operator!=(const reverse_vector_iterator& it) const
     {
         return !(memPointer == it.memPointer);
     }
