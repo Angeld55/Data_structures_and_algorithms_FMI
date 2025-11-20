@@ -22,7 +22,7 @@ bool isMatchingBracket(char ch1, char ch2)
 	return false;
 }
 
-bool isCorrect(const std::string& str)
+bool checkValidBrackets(const std::string& str)
 {
 	std::stack<char> brackets;
 
@@ -35,13 +35,8 @@ bool isCorrect(const std::string& str)
 		else 
 		{
 			if (brackets.empty() || !isMatchingBracket(brackets.top(), ch))
-			{
 				return false;
-			}
-			else
-			{
-				brackets.pop();
-			}
+			brackets.pop();
 		}
 	}
 	return brackets.empty();
@@ -49,5 +44,5 @@ bool isCorrect(const std::string& str)
 
 int main()
 {
-	std::cout << isCorrect("()");
+	std::cout << checkValidBrackets("()");
 }

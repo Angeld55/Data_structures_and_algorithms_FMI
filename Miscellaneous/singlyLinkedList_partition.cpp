@@ -7,7 +7,6 @@ struct Node
 	Node(int value, Node* ptr = nullptr) : data(value), next(ptr) {}
 };
 
-
 void push_back(Node*& begin, Node*& end, Node* toAdd)
 {
 	if (begin == nullptr)
@@ -40,12 +39,9 @@ Node* partition(Node* list, const PredicateType& pred)
 		list = list->next;
 	}
 	if (trueListEnd)
-	{
 		trueListEnd->next = falseListBegin;
-	}
 	if(falseListEnd)
 		falseListEnd->next = nullptr;
-
 
 	return trueListBegin != nullptr ? trueListBegin : falseListBegin;
 }
