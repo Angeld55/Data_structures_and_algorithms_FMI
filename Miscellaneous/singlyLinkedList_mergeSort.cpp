@@ -13,7 +13,9 @@ void print(const Node* root)
 {
     while(root)
     {
-        std::cout << root->data << " ";
+        std::cout << root->data;
+        if(root->next)
+            std::cout << "->";
         root = root->next;
     }
     std::cout << std::endl;
@@ -74,8 +76,10 @@ Node* mergeLists(Node* first, Node* second)
 
 Node* getMid(Node* list)
 {
+    if(!list)
+        return nullptr;
     Node* slow = list;
-    Node* fast = list ->next;
+    Node* fast = list->next; //not the first, so in the even case we chose the first mid (needed due to spliting logic in MS)  
     
     while(fast && fast->next)
     {
@@ -107,9 +111,8 @@ Node* mergeSort(Node* list)
 
 int main()
 {
-    Node* list = new Node(20, new Node(14, new Node(7)));
+    Node* list = new Node(20, new Node(14, new Node(7, new Node(3))));
     list = mergeSort(list);
     print(list);
     freeList(list);
-    list = nullptr;
 }
