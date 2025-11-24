@@ -9,8 +9,8 @@ struct Node {
 };
 
 struct PartitionResult {
-    Node* lessHead;          // елементи, които удовлетворяват предиката
-    Node* greaterEqualHead;  // останалите елементи
+    Node* trueHead;
+    Node* falseHead;
 };
 
 struct ListSegment {
@@ -28,39 +28,37 @@ void push_back(Node*& begin, Node*& end, Node* toAdd)
     {
         end->next = toAdd;
         end = toAdd;
-        ///toAdd->next = nullptr !!! NO! You need this pointer in the next iteration of the partition func
     }
 }
 
 template <class PredicateType>
 PartitionResult partition(Node* list, const PredicateType& pred)
 {
-    Node* trueListBegin = nullptr;
-    Node* trueListEnd   = nullptr;
+    Node* trueBegin = nullptr;
+    Node* trueEnd   = nullptr;
 
-    Node* falseListBegin = nullptr;
-    Node* falseListEnd   = nullptr;
+    Node* falseBegin = nullptr;
+    Node* falseEnd   = nullptr;
 
     while (list != nullptr)
     {
         if (pred(list->data))
-            push_back(trueListBegin, trueListEnd, list);
+            push_back(trueBegin, trueEnd, list);
         else
-            push_back(falseListBegin, falseListEnd, list);
+            push_back(falseBegin, falseEnd, list);
 
         list = list->next;
     }
 
-    if (trueListEnd)
-        trueListEnd->next = nullptr;
+    if (trueEnd)
+        trueEnd->next = nullptr;
 
-    if (falseListEnd)
-        falseListEnd->next = nullptr;
+    if (falseEnd)
+        falseEnd->next = nullptr;
 
-    return { trueListBegin, falseListBegin };
+    return { trueBegin, falseBegin };
 }
 
-// <begin, end>
 std::pair<Node*, Node*> concatLists(Node* leftBegin, Node* leftEnd,
                                     Node* rightBegin, Node* rightEnd)
 {
@@ -84,15 +82,11 @@ ListSegment quickSort(Node* list)
     PartitionResult parts =
         partition(list, [pivot](int el) { return el < pivot; });
 
-    Node* pivotPtr = parts.greaterEqualHead;  // We choose the first el as pivot
+    Node* pivotPtr = parts.falseHead;
 
-    // sort all elements < pivot
-    ListSegment left  = quickSort(parts.lessHead);
+    ListSegment left  = quickSort(parts.trueHead);
+    ListSegment right = quickSort(pivotPtr->next);
 
-    // sort all elements >= pivot
-    ListSegment right = quickSort(pivotPtr->next); // we skip the pivot!!
-
-    // push_front the pivot infront of the right segment
     pivotPtr->next = right.head;
     right.head = pivotPtr;
     if (!right.tail)
