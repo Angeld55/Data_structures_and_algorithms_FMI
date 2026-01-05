@@ -16,12 +16,12 @@ class LinkedStack
 	Node* head;
 
 	void free();
-	void copyFrom(const LinkedStack& other);
+	void copyFrom(const LinkedStack<T>& other);
 public:
 
 	LinkedStack();
-	LinkedStack(const LinkedStack& other);
-	LinkedStack operator=(const LinkedStack& other);
+	LinkedStack(const LinkedStack<T>& other);
+	LinkedStack<T>& operator=(const LinkedStack<T>& other);
 	~LinkedStack();
 
 
@@ -45,7 +45,7 @@ void LinkedStack<T>::free()
 }
 
 template <typename T>
-void LinkedStack<T>::copyFrom(const LinkedStack& other)
+void LinkedStack<T>::copyFrom(const LinkedStack<T>& other)
 {
 	head = nullptr;
 	if (other.isEmpty())
@@ -74,13 +74,13 @@ LinkedStack<T>::LinkedStack()
 }
 
 template <typename T>
-LinkedStack<T>::LinkedStack(const LinkedStack& other)
+LinkedStack<T>::LinkedStack(const LinkedStack<T>& other)
 {
 	copyFrom(other);
 }
 
 template <typename T>
-LinkedStack<T> LinkedStack<T>::operator=(const LinkedStack& other)
+LinkedStack<T>& LinkedStack<T>::operator=(const LinkedStack<T>& other)
 {
 	if (this != &other)
 	{
